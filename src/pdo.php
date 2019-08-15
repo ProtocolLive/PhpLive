@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PHP-Live/
-// Version 201903071104
+// Version 2019081500
 
 function Erro($msg){
   // Backtrace = 1
