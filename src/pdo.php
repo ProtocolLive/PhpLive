@@ -40,9 +40,11 @@ function SqlConnect($Drive, $Ip, $User, $Pass, $Db, $CharSet = "utf8", &$Conn = 
       $Conn = &$DbLastConn;
     }
     $Conn = new PDO("$Drive:host=$Ip;dbname=$Db;charset=$CharSet", $User, $Pass);
-    $Conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    if(ini_get("display_errors") == true){
+      $Conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION || PDO::ERRMODE_WARNING);
+    }
   }catch(PDOException $e){
-    if(ini_get("display_errors") or ! isset($ErrPdo[$e->getCode()])){
+    if(ini_get("display_errors") == true or isset($ErrPdo[$e->getCode()]) == false){
       Erro($e->getMessage());
     }else{
       Erro($ErrPdo[$e->getCode()]);
@@ -50,7 +52,7 @@ function SqlConnect($Drive, $Ip, $User, $Pass, $Db, $CharSet = "utf8", &$Conn = 
   }
 }
 
-function SQL($Query, $Params = null, $Log = null, $User = null, $Target = null, &$Conn = null){
+function SQL($Query, $Params = null, $Log = null, $User = null, $Target = null, &$Conn = null, $ShowDump = false){
   global $ErrPdo, $DbLastConn;
   try{
     if($Conn == null){
@@ -60,30 +62,34 @@ function SQL($Query, $Params = null, $Log = null, $User = null, $Target = null, 
 	      $Conn = &$DbLastConn;
       }
     }
-    $Query = Limpa($Query);
+    $Query = Clean($Query);
     $comando = explode(" ", $Query);
     $comando = strtolower($comando[0]);
     $result = $Conn->prepare($Query);
-    if(!is_null($Params)){
-      foreach($Params as $Param){
+    if($Params != null){
+      foreach($Params as &$Param){
         if(count($Param) != 3){
           Erro("Quantidade incorreta de parâmetros ao especificar um placehole");
         }else{
-          if($Param[2] == PDO::PARAM_INT){
+          if($Param[2] == PDO::PARAM_INT and strpos($Param[1], ",") !== false){
             $Param[1] = str_replace(",", ".", $Param[1]);
+            $Param[2] = PDO::PARAM_STR;
           }
           $result->bindValue($Param[0], $Param[1], $Param[2]);
         }
       }
     }
     $result->execute();
+    if($ShowDump == true){
+      $result->debugDumpParams();
+    }
     if($comando == "select" or $comando == "show" or $comando == "call"){
       $retorno = $result->fetchAll();
     }elseif($comando == "insert"){
       $retorno = $Conn->lastInsertId();
     }
-    if(!is_null($Log) and !is_null($User)){
-      SqlLog($User, $Query, $Params, $Log, $Target, $Conn);
+    if($Log != null and $User != null){
+      SqlLog($User, $result->debugDumpParams(), $Log, $Target, $Conn);
     }
     if(isset($retorno)){
       return $retorno;
@@ -97,7 +103,7 @@ function SQL($Query, $Params = null, $Log = null, $User = null, $Target = null, 
   }
 }
 
-function Limpa($Query){
+function Clean($Query){
   $Query = str_replace("\n", "", $Query);
   $Query = str_replace("\t", "", $Query);
   $Query = str_replace("\r", " ", $Query);
@@ -105,60 +111,15 @@ function Limpa($Query){
   return $Query;
 }
 
-function SqlLog($User, $Query, $Params, $Tipo, $Target, $Conn){
-  $Query = PlaceHoles($Query, $Params);
-  $lixo = "insert into sys_logs(timestamp,user_id,tipo,ip,ipreverso,agent,query";
-  if($Target != null){
-    $lixo .= ",target";
-  }
-  $lixo .= ") values(?,?,?,?,?,?,?";
-  if($Target != null){
-    $lixo .= ",?";
-  }
-  $lixo .= ")";
-  $lixo = $Conn->prepare($lixo);
+function SqlLog($User, $Dump, $Tipo, $Target, $Conn){
+  $lixo = $Conn->prepare("insert into sys_logs(timestamp,user_id,tipo,ip,ipreverse,agent,query,target) values(?,?,?,?,?,?,?,?)");
   $lixo->bindValue(1, time(), PDO::PARAM_INT);
   $lixo->bindValue(2, $User, PDO::PARAM_INT);
   $lixo->bindValue(3, $Tipo, PDO::PARAM_INT);
   $lixo->bindValue(4, $_SERVER["REMOTE_ADDR"], PDO::PARAM_STR);
   $lixo->bindValue(5, gethostbyaddr($_SERVER["REMOTE_ADDR"]), PDO::PARAM_STR);
   $lixo->bindValue(6, $_SERVER["HTTP_USER_AGENT"], PDO::PARAM_STR);
-  $lixo->bindValue(7, $Query, PDO::PARAM_STR);
-  if($Target != null){
-    $lixo->bindValue(8, $Target, PDO::PARAM_INT);
-  }
+  $lixo->bindValue(7, $Dump, PDO::PARAM_STR);
+  $lixo->bindValue(8, $Target, $Target == null? PDO::PARAM_NULL : PDO::PARAM_INT);
   $lixo->execute();
-}
-
-function PlaceHoles($Query, $Params){
-  foreach($Params as $Param){
-    if(is_numeric($Param[0])){
-      if($Param[2] == PDO::PARAM_STR){
-        $Query = preg_replace("/\?/", "'" . $Param[1] . "'", $Query, 1);
-      }elseif($Param[2] == PDO::PARAM_NULL){
-        $Query = preg_replace("/\?/", "null", $Query, 1);
-      }else{
-        $Query = preg_replace("/\?/", $Param[1], $Query, 1);
-      }
-    }else{
-      if($Param[2] == PDO::PARAM_STR){
-        $Query = str_replace($Param[0], "'" . $Param[1] . "'", $Query);
-      }elseif($Param[2] == PDO::PARAM_NULL){
-        $Query = str_replace($Param[0], "null", $Query);
-      }else{
-        $Query = str_replace($Param[0], $Param[1], $Query);
-      }
-    }
-  }
-  return $Query;
-}
-
-function SQLdebug($Query, $Params = null, $Log = null, $User = null, $Target = null, $Conn = null){
-  echo "Query: |$Query|<br>";
-  echo "Query editada: " . PlaceHoles($Query, $Params) . "<br>";
-  echo "Comando: |" . strtoupper(reset(explode(" ", $Query))) . "|<br>";
-  $result = SQL($Query, $Params, $Log, $User, $Target, $Conn);
-  echo "<pre>";
-  var_dump($result);
-  die();
 }
