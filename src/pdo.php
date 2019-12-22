@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PHP-Live/
-// Version 2019122200
+// Version 2019122201
 
 $DbLastConn = null;
 $DbPrefix = null;
@@ -175,15 +175,16 @@ function InsertHoles($Fields){
  * @param array $Options
  */
 function SqlLog($Options = []){
-  $lixo = $Options["Conn"]->prepare("insert into ##sys_logs" . 
+  global $DbPrefix;
+  $temp = $Options["Conn"]->prepare("insert into " . $DbPrefix != null? "##" : null . "sys_logs" .
     InsertHoles("timestamp,user_id,type,ip,ipreverse,agent,query,target"));
-  $lixo->bindValue(1, time(), PDO::PARAM_INT);
-  $lixo->bindValue(2, $Options["User"], PDO::PARAM_INT);
-  $lixo->bindValue(3, $Options["Type"], PDO::PARAM_INT);
-  $lixo->bindValue(4, $_SERVER["REMOTE_ADDR"], PDO::PARAM_STR);
-  $lixo->bindValue(5, gethostbyaddr($_SERVER["REMOTE_ADDR"]), PDO::PARAM_STR);
-  $lixo->bindValue(6, $_SERVER["HTTP_USER_AGENT"], PDO::PARAM_STR);
-  $lixo->bindValue(7, $Options["Dump"], PDO::PARAM_STR);
-  $lixo->bindValue(8, $Options["Target"], $Options["Target"] == null? PDO::PARAM_NULL : PDO::PARAM_INT);
-  $lixo->execute();
+  $temp->bindValue(1, time(), PDO::PARAM_INT);
+  $temp->bindValue(2, $Options["User"], PDO::PARAM_INT);
+  $temp->bindValue(3, $Options["Type"], PDO::PARAM_INT);
+  $temp->bindValue(4, $_SERVER["REMOTE_ADDR"], PDO::PARAM_STR);
+  $temp->bindValue(5, gethostbyaddr($_SERVER["REMOTE_ADDR"]), PDO::PARAM_STR);
+  $temp->bindValue(6, $_SERVER["HTTP_USER_AGENT"], PDO::PARAM_STR);
+  $temp->bindValue(7, $Options["Dump"], PDO::PARAM_STR);
+  $temp->bindValue(8, $Options["Target"], $Options["Target"] == null? PDO::PARAM_NULL : PDO::PARAM_INT);
+  $temp->execute();
 }
