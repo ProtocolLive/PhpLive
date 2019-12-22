@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PHP-Live/
-// Version 2019081500
+// Version 2019122100
 
 function Erro($msg){
   // Backtrace = 1
@@ -32,16 +32,28 @@ $ErrPdo = [
 ];
 
 $DbLastConn = null;
+$DbPrefix = null;
 
-function SqlConnect($Drive, $Ip, $User, $Pass, $Db, $CharSet = "utf8", &$Conn = null){
-  global $ErrPdo, $DbLastConn;
+// Options
+// Prefix (str) Change ## for the tables prefix
+//    select * from ##users (Prefix = "sys") -> select * from sys_users
+// Charset (str) UTF8 as default
+// Conn (pointer) Return an object of connection
+function SqlConnect($Drive, $Ip, $User, $Pass, $Db, $Options = null){
+  global $ErrPdo, $DbLastConn, $DbPrefix;
+  if(isset($Options["Charset"]) == false){
+    $Options["Charset"] = "utf8";
+  }
   try{
-    if($Conn == null){
-      $Conn = &$DbLastConn;
+    if(isset($Options["Conn"]) == false){
+      $Options["Conn"] = &$DbLastConn;
     }
-    $Conn = new PDO("$Drive:host=$Ip;dbname=$Db;charset=$CharSet", $User, $Pass);
+    if(isset($Options["Prefix"])){
+      $DbPrefix = $Options["Prefix"];
+    }
+    $Options["Conn"] = new PDO("$Drive:host=$Ip;dbname=$Db;charset=" . $Options["Charset"], $User, $Pass);
     if(ini_get("display_errors") == true){
-      $Conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION || PDO::ERRMODE_WARNING);
+      $Options["Conn"]->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION || PDO::ERRMODE_WARNING);
     }
   }catch(PDOException $e){
     if(ini_get("display_errors") == true or isset($ErrPdo[$e->getCode()]) == false){
@@ -52,20 +64,29 @@ function SqlConnect($Drive, $Ip, $User, $Pass, $Db, $CharSet = "utf8", &$Conn = 
   }
 }
 
-function SQL($Query, $Params = null, $Log = null, $User = null, $Target = null, &$Conn = null, $ShowDump = false){
-  global $ErrPdo, $DbLastConn;
+// Options:
+// Log (int) Event to be logged
+// User (int) User executing the query
+// Target (int) User efected
+// Conn (object) Connection
+// Debug (boolean) Dump the query for debug
+function SQL($Query, $Params = null, $Options = []){
+  global $ErrPdo, $DbLastConn, $DbPrefix;
   try{
-    if($Conn == null){
+    if(isset($Options["Conn"]) == false){
       if($DbLastConn == null){
 	      Erro("Você não iniciou uma conexão a um banco de dados");
       }else{
-	      $Conn = &$DbLastConn;
+	      $Options["Conn"] = &$DbLastConn;
       }
     }
     $Query = Clean($Query);
+    if($DbPrefix != null){
+      $Query = str_replace("##", $DbPrefix . "_", $Query);
+    }
     $comando = explode(" ", $Query);
     $comando = strtolower($comando[0]);
-    $result = $Conn->prepare($Query);
+    $result = $Options["Conn"]->prepare($Query);
     if($Params != null){
       foreach($Params as &$Param){
         if(count($Param) != 3){
@@ -80,7 +101,7 @@ function SQL($Query, $Params = null, $Log = null, $User = null, $Target = null, 
       }
     }
     $result->execute();
-    if($ShowDump == true){
+    if(isset($Options["Debug"]) and $Options["Debug"] == true){
       $result->debugDumpParams();
     }
     if($comando == "select" or $comando == "show" or $comando == "call"){
@@ -88,8 +109,9 @@ function SQL($Query, $Params = null, $Log = null, $User = null, $Target = null, 
     }elseif($comando == "insert"){
       $retorno = $Conn->lastInsertId();
     }
-    if($Log != null and $User != null){
-      SqlLog($User, $result->debugDumpParams(), $Log, $Target, $Conn);
+    if(isset($Options["Log"]) and $Options["Log"] != null and 
+    isset($Options["User"]) and $Options["User"] != null){
+      SqlLog($Options["User"], $result->debugDumpParams(), $Options["Log"], $Options["Target"], $Options["Conn"]);
     }
     if(isset($retorno)){
       return $retorno;
