@@ -1,7 +1,22 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PHP-Live/
-// Version 2019122100
+// Version 2019122200
+
+$DbLastConn = null;
+$DbPrefix = null;
+$ErrPdo = [
+  "01000" => "Foram utilizados dados incorretos em um campo do banco de dados",
+  "1040" => "Foi atingido o limite de conexões ao banco de dados",
+  "1045" => "Acesso negado ao banco de dados",
+  "2002" => "Não foi possível se conectar ao banco de dados. Atualize a página ou tente de novo em alguns minutos",
+  "23000" => "Não foi possível atualizar o banco de dados devido a uma restrição de registro. Isso pode ocorrer quando você tentou cadastrar um dado duplicado ou apagar um dado que depende de outro",
+  "42000" => "Erro de sintaxe no comando do banco de dados",
+  "42S02" => "Tabela inexistente no banco de dados",
+  "42S22" => "Campo inexistente na tabela do banco de dados",
+  "HY000" => "Tipo de valor incompatível com o campo do banco de dados",
+  "HY093" => "Quantidade incorreta de parâmetros especificado"
+];
 
 function Erro($msg){
   // Backtrace = 1
@@ -18,28 +33,21 @@ function Erro($msg){
   die();
 }
 
-$ErrPdo = [
-  "01000" => "Foram utilizados dados incorretos em um campo do banco de dados",
-  "1040" => "Foi atingido o limite de conexões ao banco de dados",
-  "1045" => "Acesso negado ao banco de dados",
-  "2002" => "Não foi possível se conectar ao banco de dados. Atualize a página ou tente de novo em alguns minutos",
-  "23000" => "Não foi possível atualizar o banco de dados devido a uma restrição de registro. Isso pode ocorrer quando você tentou cadastrar um dado duplicado ou apagar um dado que depende de outro",
-  "42000" => "Erro de sintaxe no comando do banco de dados",
-  "42S02" => "Tabela inexistente no banco de dados",
-  "42S22" => "Campo inexistente na tabela do banco de dados",
-  "HY000" => "Tipo de valor incompatível com o campo do banco de dados",
-  "HY093" => "Quantidade incorreta de parâmetros especificado"
-];
-
-$DbLastConn = null;
-$DbPrefix = null;
-
 // Options
 // Prefix (str) Change ## for the tables prefix
 //    select * from ##users (Prefix = "sys") -> select * from sys_users
 // Charset (str) UTF8 as default
 // Conn (pointer) Return an object of connection
-function SqlConnect($Drive, $Ip, $User, $Pass, $Db, $Options = null){
+/**
+ * @param string $Drive
+ * @param string $Ip
+ * @param string $User
+ * @param string $Pwd
+ * @param string $Db
+ * @param string $Ip
+ * @param array $Options
+ */
+function SqlConnect($Drive, $Ip, $User, $Pwd, $Db, $Options = null){
   global $ErrPdo, $DbLastConn, $DbPrefix;
   if(isset($Options["Charset"]) == false){
     $Options["Charset"] = "utf8";
@@ -51,7 +59,7 @@ function SqlConnect($Drive, $Ip, $User, $Pass, $Db, $Options = null){
     if(isset($Options["Prefix"])){
       $DbPrefix = $Options["Prefix"];
     }
-    $Options["Conn"] = new PDO("$Drive:host=$Ip;dbname=$Db;charset=" . $Options["Charset"], $User, $Pass);
+    $Options["Conn"] = new PDO("$Drive:host=$Ip;dbname=$Db;charset=" . $Options["Charset"], $User, $Pwd);
     if(ini_get("display_errors") == true){
       $Options["Conn"]->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION || PDO::ERRMODE_WARNING);
     }
@@ -70,7 +78,13 @@ function SqlConnect($Drive, $Ip, $User, $Pass, $Db, $Options = null){
 // Target (int) User efected
 // Conn (object) Connection
 // Debug (boolean) Dump the query for debug
-function SQL($Query, $Params = null, $Options = []){
+/**
+ * @param string $Query
+ * @param array $Params
+ * @param array $Options
+ * @return mixed
+ */
+function SQL($Query, $Params = null, $Options = null){
   global $ErrPdo, $DbLastConn, $DbPrefix;
   try{
     if(isset($Options["Conn"]) == false){
@@ -125,6 +139,10 @@ function SQL($Query, $Params = null, $Options = []){
   }
 }
 
+/**
+ * @param string $Query
+ * @return string
+ */
 function Clean($Query){
   $Query = str_replace("\n", "", $Query);
   $Query = str_replace("\t", "", $Query);
@@ -133,15 +151,39 @@ function Clean($Query){
   return $Query;
 }
 
-function SqlLog($User, $Dump, $Tipo, $Target, $Conn){
-  $lixo = $Conn->prepare("insert into sys_logs(timestamp,user_id,tipo,ip,ipreverse,agent,query,target) values(?,?,?,?,?,?,?,?)");
+/**
+ * @param string $Fields
+ * @return string
+ */
+function InsertHoles($Fields){
+  $count = substr_count($Fields, ",");
+  $return = "";
+  for($i = 0; $i <= $count; $i++){
+    $return .= "?,";
+  }
+  $return = substr($return, 0, -1);
+  return "(" . $Fields . ") values(" . $return . ")";
+}
+
+// Options:
+// Conn (object) The database connection
+// User (int) User executing the query
+// Dump (str) The dump created by SQL function
+// Type (int) Action identification
+// Target (int) User afected by query
+/**
+ * @param array $Options
+ */
+function SqlLog($Options = []){
+  $lixo = $Options["Conn"]->prepare("insert into ##sys_logs" . 
+    InsertHoles("timestamp,user_id,type,ip,ipreverse,agent,query,target"));
   $lixo->bindValue(1, time(), PDO::PARAM_INT);
-  $lixo->bindValue(2, $User, PDO::PARAM_INT);
-  $lixo->bindValue(3, $Tipo, PDO::PARAM_INT);
+  $lixo->bindValue(2, $Options["User"], PDO::PARAM_INT);
+  $lixo->bindValue(3, $Options["Type"], PDO::PARAM_INT);
   $lixo->bindValue(4, $_SERVER["REMOTE_ADDR"], PDO::PARAM_STR);
   $lixo->bindValue(5, gethostbyaddr($_SERVER["REMOTE_ADDR"]), PDO::PARAM_STR);
   $lixo->bindValue(6, $_SERVER["HTTP_USER_AGENT"], PDO::PARAM_STR);
-  $lixo->bindValue(7, $Dump, PDO::PARAM_STR);
-  $lixo->bindValue(8, $Target, $Target == null? PDO::PARAM_NULL : PDO::PARAM_INT);
+  $lixo->bindValue(7, $Options["Dump"], PDO::PARAM_STR);
+  $lixo->bindValue(8, $Options["Target"], $Options["Target"] == null? PDO::PARAM_NULL : PDO::PARAM_INT);
   $lixo->execute();
 }
