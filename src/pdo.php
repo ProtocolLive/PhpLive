@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PHP-Live/
-// Version 2019122201
+// Version 2019122202
 
 $DbLastConn = null;
 $DbPrefix = null;
@@ -176,6 +176,13 @@ function InsertHoles($Fields){
  */
 function SqlLog($Options = []){
   global $DbPrefix;
+  if(isset($Options["Conn"]) == false){
+    if($DbLastConn == null){
+      Erro("Você não iniciou uma conexão a um banco de dados");
+    }else{
+      $Options["Conn"] = &$DbLastConn;
+    }
+  }
   $temp = $Options["Conn"]->prepare("insert into " . $DbPrefix != null? "##" : null . "sys_logs" .
     InsertHoles("timestamp,user_id,type,ip,ipreverse,agent,query,target"));
   $temp->bindValue(1, time(), PDO::PARAM_INT);
