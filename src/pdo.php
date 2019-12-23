@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
-// https://github.com/ProtocolLive/PHP-Live/
-// Version 2019122202
+// https://github.com/ProtocolLive/PhpLive/
+// Version 2019122203
 
 $DbLastConn = null;
 $DbPrefix = null;
@@ -121,7 +121,7 @@ function SQL($Query, $Params = null, $Options = null){
     if($comando == "select" or $comando == "show" or $comando == "call"){
       $retorno = $result->fetchAll();
     }elseif($comando == "insert"){
-      $retorno = $Conn->lastInsertId();
+      $retorno = $Options["Conn"]->lastInsertId();
     }
     if(isset($Options["Log"]) and $Options["Log"] != null and 
     isset($Options["User"]) and $Options["User"] != null){
