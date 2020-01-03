@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2019122600
+// Version 2020010300
 
 $DbLastConn = null;
 $DbPrefix = null;
@@ -109,6 +109,10 @@ function SQL($Query, $Params = null, $Options = null){
           if($Param[2] == PDO::PARAM_INT and strpos($Param[1], ",") !== false){
             $Param[1] = str_replace(",", ".", $Param[1]);
             $Param[2] = PDO::PARAM_STR;
+          }elseif($Param[2] == PDO::PARAM_INT and strpos($Param[1], ".") !== false){
+            $Param[2] = PDO::PARAM_STR;
+          }elseif($Param[2] == PDO::PARAM_BOOL){
+            $Param[1] = $Param[1] == "true"? true: false;
           }
           $result->bindValue($Param[0], $Param[1], $Param[2]);
         }
