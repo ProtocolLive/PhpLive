@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-01-14-00
+// Version 2020-01-16-00
 
 $DbLastConn = null;
 $DbPrefix = null;
@@ -33,25 +33,21 @@ function Erro($msg){
   die();
 }
 
-// Options
-// Prefix (str) Change ## for the tables prefix
-//    select * from ##users (Prefix = "sys") -> select * from sys_users
-// Charset (str) UTF8 as default
-// Conn (pointer) Return an object of connection
 /**
- * @param string $Drive
+ * @param string $Drive (Optional) MySql as default
  * @param string $Ip
  * @param string $User
  * @param string $Pwd
  * @param string $Db
- * @param string $Ip
- * @param array $Options
+ * @param string $Prefix (Optional) Change ## for the tables prefix Ex: select * from ##users (Prefix = "sys") -> select * from sys_users
+ * @param string $Charset (Optional) UTF8 as default
+ * @param object #Conn (Optional) Return an object of connection
  */
-function SqlConnect($Drive, $Ip, $User, $Pwd, $Db, $Options = null){
+function SqlConnect($Options = []){
   global $ErrPdo, $DbLastConn, $DbPrefix;
-  if(isset($Options["Charset"]) == false){
-    $Options["Charset"] = "utf8";
-  }
+  if(isset($Options["Drive"]) == false) $Options["Drive"] = "mysql";
+  if(isset($Options["Charset"]) == false) $Options["Charset"] = "utf8";
+
   try{
     if(isset($Options["Conn"]) == false){
       $Options["Conn"] = &$DbLastConn;
@@ -59,7 +55,11 @@ function SqlConnect($Drive, $Ip, $User, $Pwd, $Db, $Options = null){
     if(isset($Options["Prefix"])){
       $DbPrefix = $Options["Prefix"];
     }
-    $Options["Conn"] = new PDO("$Drive:host=$Ip;dbname=$Db;charset=" . $Options["Charset"], $User, $Pwd);
+    $Options["Conn"] = new PDO(
+      $Options["Drive"] . ":host=" . $Options["Ip"] . ";dbname=" . $Options["Db"] . ";charset=" . $Options["Charset"],
+      $Options["User"],
+      $Options["Pwd"]
+    );
     if(ini_get("display_errors") == true){
       $Options["Conn"]->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION || PDO::ERRMODE_WARNING);
     }
@@ -72,19 +72,17 @@ function SqlConnect($Drive, $Ip, $User, $Pwd, $Db, $Options = null){
   }
 }
 
-// Options:
-// Log (int) Event to be logged
-// User (int) User executing the query
-// Target (int) User efected
-// Conn (object) Connection
-// Debug (boolean) Dump the query for debug
 /**
  * @param string $Query
  * @param array $Params
- * @param array $Options
+ * @param int $Log (Options)(Optional) Event to be logged
+ * @param int $User (Options)(Optional) User executing the query
+ * @param int $Target (Options)(Optional) User efected
+ * @param object $Conn (Options)(Optional) Connection
+ * @param boolean $Debug (Options)(Optional) Dump the query for debug
  * @return mixed
  */
-function SQL($Query, $Params = null, $Options = null){
+function SQL($Query, $Params = null, $Options = []){
   global $ErrPdo, $DbLastConn, $DbPrefix;
   try{
     if(isset($Options["Conn"]) == false){
@@ -170,14 +168,12 @@ function InsertHoles($Fields){
   return "(" . $Fields . ") values(" . $return . ")";
 }
 
-// Options:
-// Conn (object) The database connection
-// User (int) User executing the query
-// Dump (str) The dump created by SQL function
-// Type (int) Action identification
-// Target (int) User afected by query
 /**
- * @param array $Options
+ * @param object $Conn (Optional)
+ * @param int $User User executing the query
+ * @param string $Dump The dump created by SQL function
+ * @param int $Type Action identification
+ * @param int $Target User afected by query
  */
 function SqlLog($Options = []){
   global $DbPrefix;
