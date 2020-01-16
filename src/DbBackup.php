@@ -1,11 +1,13 @@
 <?php
-// Version 2020-01-16-03
+// Version 2020-01-16-04
 
 function DbBackup($Options = []){
   if(isset($Options["Folder"]) == false) $Options["Folder"] = "/sql/";
 
   $date = date("YmdHis");
-  $folder = __DIR__ . $Options["Folder"];
+  // Prevent the GithubImport folder
+  $folder = substr(__DIR__, 0, strrpos(__DIR__, "/"));
+  $folder .=  $Options["Folder"];
   $delete = [];
 
   if(file_exists($folder) == false){
@@ -47,5 +49,5 @@ function DbBackup($Options = []){
   foreach($delete as $file){
     unlink($file);
   }
-  return $Options["Folder"] . $date . ".zip";
+  return $folder . $date . ".zip";
 }
