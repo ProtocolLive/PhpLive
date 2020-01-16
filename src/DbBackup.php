@@ -1,11 +1,12 @@
 <?php
-// Version 2020-01-16-01
+// Version 2020-01-16-02
 
 function DbBackup($Options = []){
   if(isset($Options["Folder"]) == false) $Options["Folder"] = "/sql/";
 
   $date = date("YmdHis");
   $folder = __DIR__ . $Options["Folder"];
+  $delete = [];
 
   if(file_exists($folder) == false){
     mkdir($folder);
@@ -15,6 +16,7 @@ function DbBackup($Options = []){
   $zip->open($folder . $date . ".zip", ZipArchive::CREATE);
   foreach($tables as $table){
     $file = fopen($folder . $table[0] . ".sql", "w");
+    $delete[] = $folder . $table[0] . ".sql";
     fwrite($file, "insert into " . $table[0] . " values\n");
     $result = SQL("select * from " . $table[0]);
     $lines = count($result);
@@ -40,8 +42,10 @@ function DbBackup($Options = []){
     }
     fclose($file);
     $zip->addFile($folder . $table[0] . ".sql", $table[0] . ".sql");
-    unlink($folder . $table[0] . ".sql");
   }
   $zip->close();
+  foreach($delete as $file){
+    unlink($file);
+  }
   return $folder . $date . ".zip";
 }
