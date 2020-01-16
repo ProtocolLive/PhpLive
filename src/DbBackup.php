@@ -1,5 +1,5 @@
 <?php
-// Version 2020-01-16-00
+// Version 2020-01-16-01
 
 function DbBackup($Options = []){
   if(isset($Options["Folder"]) == false) $Options["Folder"] = "/sql/";
@@ -39,8 +39,8 @@ function DbBackup($Options = []){
       }
     }
     fclose($file);
-    $zip->addFile($folder . $tabela[0] . ".sql", $tabela[0] . ".sql");
-    unlink($folder . $tabela[0] . ".sql");
+    $zip->addFile($folder . $table[0] . ".sql", $table[0] . ".sql");
+    unlink($folder . $table[0] . ".sql");
   }
   $zip->close();
   return $folder . $date . ".zip";
