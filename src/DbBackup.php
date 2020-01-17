@@ -1,5 +1,5 @@
 <?php
-// Version 2020-01-16-05
+// Version 2020-01-17-00
 
 function DbBackup($Options = []){
   if(isset($Options["Folder"]) == false) $Options["Folder"] = "/sql/";
@@ -49,5 +49,5 @@ function DbBackup($Options = []){
   foreach($delete as $file){
     unlink($file);
   }
-  return $Options["Folder"] . $date . ".zip";
+  return substr($_SERVER["REQUEST_URI"], 0, strrpos($_SERVER["REQUEST_URI"], "/")) . $Options["Folder"] . $date . ".zip";
 }
