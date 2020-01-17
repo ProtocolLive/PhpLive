@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-01-16-00
+// Version 2020-01-17-00
 
 $DbLastConn = null;
 $DbPrefix = null;
@@ -105,7 +105,6 @@ function SQL($Query, $Params = null, $Options = []){
           Erro("Quantidade incorreta de parâmetros ao especificar um placehole");
         }else{
           if($Param[2] == PDO::PARAM_INT){
-            $Param[1] = str_replace(".", "", $Param[1]);
             $Param[1] = str_replace(",", ".", $Param[1]);
             if(strpos($Param[1], ".") !== false){
               $Param[2] = PDO::PARAM_STR;
