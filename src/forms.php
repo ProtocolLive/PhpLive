@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-01-21-07
+// Version 2020-01-21-08
 
 function Form($Options = []){
   if(session_name() == "PHPSESSID"){
@@ -65,6 +65,9 @@ function Form($Options = []){
     }else{
       echo $field["label"] . ":<br>";
       echo "<input type=\"" . $field["type"] . "\" name=\"" . $field["name"] . "\"";
+      if($field["size"] != null){
+        echo " size=\"" . $field["size"] . "\"";
+      }
       if(isset($Options["Data"])){
         echo " value=\"" . $Options["Data"][$field["name"]] . "\"";
       }

@@ -10,7 +10,7 @@ CREATE TABLE `forms_forms`(
 CREATE TABLE `forms_fields`(
   `field_id` int UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `form_id` int UNSIGNED NOT NULL,
-  `label` varchar(10),
+  `label` varchar(16),
   `name` varchar(15),
   `onlyedit` tinyint UNSIGNED NOT NULL DEFAULT 0,
   `type` varchar(10) NOT NULL,
