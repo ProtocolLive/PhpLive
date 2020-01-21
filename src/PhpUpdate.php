@@ -1,18 +1,18 @@
 <?php
 //Protocol Corporation Ltda.
-//https://github.com/protocollive
-//Version 2018061201
+//https://github.com/ProtocolLive/PhpLive
+//Version 2020-01-21-00
 
 function PhpUpdate($Linux = false){
   if(extension_loaded("openssl") == false){
     return false;
   }
-  if($Linux = false){
+  if($Linux == false){
     $pagina = @fopen("https://windows.php.net/download/", "r");
     if($pagina !== null and $pagina !== false){
       do{
-	$linha = fgets($pagina);
-      }while(strpos($linha, "id=\"php-7.3\"") === false);
+        $linha = fgets($pagina);
+      }while(strpos($linha, "id=\"php-7.4\"") === false);
       $linha = substr($linha, strpos($linha, "(") + 1);
       $linha = substr($linha, 0, strpos($linha, ")"));
     }
@@ -20,7 +20,7 @@ function PhpUpdate($Linux = false){
     $pagina = fopen("https://secure.php.net/downloads.php", "r");
     if($pagina !== null and $pagina !== false){
       do{
-	$linha = fgets($pagina);
+        $linha = fgets($pagina);
       }while(strpos($linha, "release-state") === false);
       $linha = fgets($pagina);
       $linha = substr($linha, strpos($linha, "PHP") + 4);
