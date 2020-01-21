@@ -1,12 +1,13 @@
-CREATE TABLE `forms_forms` (
+CREATE TABLE `forms_forms`(
   `form_id` int UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `site` varchar(10),
   `form` varchar(10) NOT NULL,
   `method` varchar(10) NOT NULL,
-  `action` varchar(100)
+  `action` varchar(100),
+  `autocomplete` tinyint UNSIGNED NOT NULL DEFAULT 1
 );
 
-CREATE TABLE `forms_fields` (
+CREATE TABLE `forms_fields`(
   `field_id` int UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `form_id` int UNSIGNED NOT NULL,
   `field` varchar(10) NOT NULL,

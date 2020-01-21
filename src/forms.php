@@ -26,6 +26,9 @@ function Form($Options = []){
   }else{
     echo " method=\"" . $form[0]["method"] . "\" action=\"" . $form[0]["action"] . "\"";
   }
+  if($form[0]["autocomplete"] == "off"){
+    echo " autocomplete=\"off\"";
+  }
   echo ">";
   if(isset($Options["Data"]) == false){
     $edit = " and onlyedit=0";
