@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-01-21-06
+// Version 2020-01-21-07
 
 function Form($Options = []){
   if(session_name() == "PHPSESSID"){
@@ -30,7 +30,7 @@ function Form($Options = []){
     echo " autocomplete=\"off\"";
   }
   echo ">";
-  if(isset($Options["Edit"]) == false){
+  if(isset($Options["Data"]) == false){
     $edit = " and onlyedit=0";
   }
   $fields = SQL("select *
@@ -46,7 +46,7 @@ function Form($Options = []){
       echo $field["label"] . ":<br>";
       echo "<select name=\"" . $field["name"] . "\">";
       echo "<option value=\"0\" selected disabled></option>";
-      foreach($Options["Datas"][$field["name"]] as $select){
+      foreach($Options["Selects"][$field["name"]] as $select){
         echo "<option value=\"" . $select[0] . "\">" . $select[1] . "</option>";
       }
       echo "</select><br>";
@@ -58,8 +58,8 @@ function Form($Options = []){
       echo "> " . $field["label"] . "<br>";
     }elseif($field["type"] == "hidden"){
       echo "<input type=\"" . $field["type"] . "\" name=\"" . $field["name"] . "\"";
-      if(isset($Options["Data"])){
-        echo " value=\"" . $Options["Data"][$field["name"]] . "\"";
+      if(isset($Options["Hiddens"])){
+        echo " value=\"" . $Options["Hiddens"][$field["name"]] . "\"";
       }
       echo "><br>";
     }else{
