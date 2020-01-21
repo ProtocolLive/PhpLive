@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-01-21-03
+// Version 2020-01-21-04
 
 function Form($Options = []){
   if(session_name() == "PHPSESSID"){
@@ -26,7 +26,7 @@ function Form($Options = []){
   }else{
     echo " method=\"" . $form[0]["method"] . "\" action=\"" . $form[0]["action"] . "\"";
   }
-  if($form[0]["autocomplete"] == "off"){
+  if($form[0]["autocomplete"] == 0){
     echo " autocomplete=\"off\"";
   }
   echo ">";
