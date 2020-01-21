@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-01-21-02
+// Version 2020-01-21-03
 
 function Form($Options = []){
   if(session_name() == "PHPSESSID"){
@@ -27,10 +27,14 @@ function Form($Options = []){
     echo " method=\"" . $form[0]["method"] . "\" action=\"" . $form[0]["action"] . "\"";
   }
   echo ">";
+  if(isset($Options["Data"]) == false){
+    $edit = " and onlyedit=0";
+  }
   $fields = SQL("select *
     from forms_fields
     where form_id=?
-      and type<>'submit'", [
+      and type<>'submit'" .
+      $edit, [
     [1, $form[0]["form_id"], PDO::PARAM_INT]
   ]);
   foreach($fields as $field){
