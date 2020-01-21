@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-01-21-00
+// Version 2020-01-21-01
 
 function Form($Options = []){
   if(session_name() == "PHPSESSID"){
@@ -26,7 +26,7 @@ function Form($Options = []){
   }else{
     echo " method=\"" . $form[0]["method"] . "\" action=\"" . $form[0]["action"] . "\"";
   }
-  echo ">\n";
+  echo ">";
   $fields = SQL("select *
     from forms_fields
     where form_id=?
@@ -34,12 +34,12 @@ function Form($Options = []){
     [1, $form[0]["form_id"], PDO::PARAM_INT]
   ]);
   foreach($fields as $field){
-    echo $field["field"] . ":<br>\n";
+    echo $field["field"] . ":<br>";
     echo "<input type=\"" . $field["type"] . "\" name=\"" . $field["db"] . "\"";
     if($field["js_event"] != null){
       echo " " . $field["js_event"] . "=\"" . $field["js_code"] . "\"";
     }
-    echo "><br>\n";
+    echo "><br>";
   }
   $fields = SQL("select *
     from forms_fields
@@ -52,6 +52,6 @@ function Form($Options = []){
     echo " onclick=\"Ajax('" . $Options["Page"] . "','" . $Options["Place"] . "','" . $Options["Form"] . "');" .
       $fields[0]["js_code"] . "\"";
   }
-  echo "></p>\n";
+  echo "></p>";
   echo "</form>";
 }
