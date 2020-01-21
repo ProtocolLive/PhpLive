@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-01-21-01
+// Version 2020-01-21-02
 
 function Form($Options = []){
   if(session_name() == "PHPSESSID"){
@@ -35,11 +35,24 @@ function Form($Options = []){
   ]);
   foreach($fields as $field){
     echo $field["field"] . ":<br>";
-    echo "<input type=\"" . $field["type"] . "\" name=\"" . $field["db"] . "\"";
-    if($field["js_event"] != null){
-      echo " " . $field["js_event"] . "=\"" . $field["js_code"] . "\"";
+    if($field["type"] == "select"){
+
+    }else{
+      echo "<input type=\"" . $field["type"] . "\" name=\"" . $field["db"] . "\"";
+      if(isset($Options["Data"])){
+        echo " value=\"" . $Options["Data"][$field["db"]] . "\"";
+      }
+      if($field["style"] != null){
+        echo " style=\"" . $field["style"] . "\"";
+      }
+      if($field["class"] != null){
+        echo " class=\"" . $field["class"] . "\"";
+      }
+      if($field["js_event"] != null){
+        echo " " . $field["js_event"] . "=\"" . $field["js_code"] . "\"";
+      }
+      echo "><br>";
     }
-    echo "><br>";
   }
   $fields = SQL("select *
     from forms_fields

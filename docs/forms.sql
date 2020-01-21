@@ -14,6 +14,8 @@ CREATE TABLE `forms_fields` (
   `size` tinyint UNSIGNED,
   `db` varchar(10),
   `io` tinyint UNSIGNED NOT NULL DEFAULT 0,
+  `style` varchar(1024),
+  `class` varchar(10),
   `js_event` varchar(10),
   `js_code` varchar(100),
   FOREIGN KEY (`form_id`) REFERENCES `forms_forms`(`form_id`)
