@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-01-21-05
+// Version 2020-01-21-06
 
 function Form($Options = []){
   if(session_name() == "PHPSESSID"){
@@ -56,6 +56,12 @@ function Form($Options = []){
         echo " checked";
       }
       echo "> " . $field["label"] . "<br>";
+    }elseif($field["type"] == "hidden"){
+      echo "<input type=\"" . $field["type"] . "\" name=\"" . $field["name"] . "\"";
+      if(isset($Options["Data"])){
+        echo " value=\"" . $Options["Data"][$field["name"]] . "\"";
+      }
+      echo "><br>";
     }else{
       echo $field["label"] . ":<br>";
       echo "<input type=\"" . $field["type"] . "\" name=\"" . $field["name"] . "\"";
