@@ -183,9 +183,9 @@ function SqlLog($Options = []){
       $Options["Conn"] = &$DbLastConn;
     }
   }
-  $temp = $Options["Conn"]->prepare("insert into " . $DbPrefix != null? "##" : null . "sys_logs" .
-    InsertHoles("timestamp,user_id,type,ip,ipreverse,agent,query,target"));
-  $temp->bindValue(1, time(), PDO::PARAM_INT);
+  $temp = $Options["Conn"]->prepare("insert into " . $DbPrefix != null? "##" : "" . "sys_logs" .
+    InsertHoles("time,user_id,type,ip,ipreverse,agent,query,target"));
+  $temp->bindValue(1, date("Y-m-d H:i:s"), PDO::PARAM_INT);
   $temp->bindValue(2, $Options["User"], PDO::PARAM_INT);
   $temp->bindValue(3, $Options["Type"], PDO::PARAM_INT);
   $temp->bindValue(4, $_SERVER["REMOTE_ADDR"], PDO::PARAM_STR);
