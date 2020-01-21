@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-01-21-04
+// Version 2020-01-21-05
 
 function Form($Options = []){
   if(session_name() == "PHPSESSID"){
@@ -30,24 +30,37 @@ function Form($Options = []){
     echo " autocomplete=\"off\"";
   }
   echo ">";
-  if(isset($Options["Data"]) == false){
+  if(isset($Options["Edit"]) == false){
     $edit = " and onlyedit=0";
   }
   $fields = SQL("select *
     from forms_fields
     where form_id=?
-      and type<>'submit'" .
-      $edit, [
+      and type<>'submit'
+      $edit
+    order by `order`", [
     [1, $form[0]["form_id"], PDO::PARAM_INT]
   ]);
   foreach($fields as $field){
-    echo $field["field"] . ":<br>";
     if($field["type"] == "select"){
-
+      echo $field["label"] . ":<br>";
+      echo "<select name=\"" . $field["name"] . "\">";
+      echo "<option value=\"0\" selected disabled></option>";
+      foreach($Options["Datas"][$field["name"]] as $select){
+        echo "<option value=\"" . $select[0] . "\">" . $select[1] . "</option>";
+      }
+      echo "</select><br>";
+    }elseif($field["type"] == "checkbox"){
+      echo "<br><input type=\"checkbox\" name=\"" . $field["name"] . "\"";
+      if(isset($Options["Data"]) and $Options["Data"][$field["name"]] == 1){
+        echo " checked";
+      }
+      echo "> " . $field["label"] . "<br>";
     }else{
-      echo "<input type=\"" . $field["type"] . "\" name=\"" . $field["db"] . "\"";
+      echo $field["label"] . ":<br>";
+      echo "<input type=\"" . $field["type"] . "\" name=\"" . $field["name"] . "\"";
       if(isset($Options["Data"])){
-        echo " value=\"" . $Options["Data"][$field["db"]] . "\"";
+        echo " value=\"" . $Options["Data"][$field["name"]] . "\"";
       }
       if($field["style"] != null){
         echo " style=\"" . $field["style"] . "\"";
@@ -67,7 +80,7 @@ function Form($Options = []){
       and type='submit'", [
     [1, $form[0]["form_id"], PDO::PARAM_INT]
   ]);
-  echo "<p><input type=\"submit\" value=\"" . $fields[0]["field"] . "\"";
+  echo "<p><input type=\"submit\" value=\"" . $fields[0]["label"] . "\"";
   if($form[0]["method"] == "ajax"){
     echo " onclick=\"Ajax('" . $Options["Page"] . "','" . $Options["Place"] . "','" . $Options["Form"] . "');" .
       $fields[0]["js_code"] . "\"";

@@ -10,8 +10,8 @@ CREATE TABLE `forms_forms`(
 CREATE TABLE `forms_fields`(
   `field_id` int UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `form_id` int UNSIGNED NOT NULL,
-  `field` varchar(10) NOT NULL,
-  `db` varchar(10),
+  `label` varchar(10) NOT NULL,
+  `name` varchar(15),
   `onlyedit` tinyint UNSIGNED NOT NULL DEFAULT 0,
   `type` varchar(10) NOT NULL,
   `size` tinyint UNSIGNED,
@@ -19,5 +19,6 @@ CREATE TABLE `forms_fields`(
   `class` varchar(10),
   `js_event` varchar(10),
   `js_code` varchar(100),
+  `order` tinyint UNSIGNED NOT NULL DEFAULT 100,
   FOREIGN KEY (`form_id`) REFERENCES `forms_forms`(`form_id`)
 );
