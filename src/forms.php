@@ -41,6 +41,7 @@ function Form($Options = []){
     order by `order`", [
     [1, $form[0]["form_id"], PDO::PARAM_INT]
   ]);
+  echo "<p>";
   foreach($fields as $field){
     if($field["type"] == "select"){
       echo $field["label"] . ":<br>";
@@ -83,6 +84,7 @@ function Form($Options = []){
       echo "><br>";
     }
   }
+  echo "</p>";
   $fields = SQL("select *
     from forms_fields
     where form_id=?
