@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-01-17-00
+// Version 2020-01-24-00
 
 $DbLastConn = null;
 $DbPrefix = null;
@@ -41,28 +41,28 @@ function Erro($msg){
  * @param string $Db
  * @param string $Prefix (Optional) Change ## for the tables prefix Ex: select * from ##users (Prefix = "sys") -> select * from sys_users
  * @param string $Charset (Optional) UTF8 as default
- * @param object #Conn (Optional) Return an object of connection
+ * @param int $TimeOut (Optional) Connection timeout
+ * @return object Connection
  */
 function SqlConnect($Options = []){
   global $ErrPdo, $DbLastConn, $DbPrefix;
   if(isset($Options["Drive"]) == false) $Options["Drive"] = "mysql";
   if(isset($Options["Charset"]) == false) $Options["Charset"] = "utf8";
-
+  if(isset($Options["TimeOut"]) == false) $Options["TimeOut"] = 5;
   try{
-    if(isset($Options["Conn"]) == false){
-      $Options["Conn"] = &$DbLastConn;
-    }
     if(isset($Options["Prefix"])){
       $DbPrefix = $Options["Prefix"];
     }
-    $Options["Conn"] = new PDO(
+    $DbLastConn = new PDO(
       $Options["Drive"] . ":host=" . $Options["Ip"] . ";dbname=" . $Options["Db"] . ";charset=" . $Options["Charset"],
       $Options["User"],
       $Options["Pwd"]
     );
+    $DbLastConn->setAttribute(PDO::ATTR_TIMEOUT, $Options["TimeOut"]);
     if(ini_get("display_errors") == true){
-      $Options["Conn"]->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION || PDO::ERRMODE_WARNING);
+      $DbLastConn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION || PDO::ERRMODE_WARNING);
     }
+    return $DbLastConn;
   }catch(PDOException $e){
     if(ini_get("display_errors") == true or isset($ErrPdo[$e->getCode()]) == false){
       Erro($e->getMessage());
