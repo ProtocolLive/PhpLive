@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-01-24-00
+// Version 2020-01-30-00
 
 $DbLastConn = null;
 $DbPrefix = null;
@@ -87,9 +87,9 @@ function SQL($Query, $Params = null, $Options = []){
   try{
     if(isset($Options["Conn"]) == false){
       if($DbLastConn == null){
-	      Erro("Você não iniciou uma conexão a um banco de dados");
+        Erro("Você não iniciou uma conexão a um banco de dados");
       }else{
-	      $Options["Conn"] = &$DbLastConn;
+        $Options["Conn"] = &$DbLastConn;
       }
     }
     $Query = Clean($Query);
@@ -127,6 +127,7 @@ function SQL($Query, $Params = null, $Options = []){
     }
     if(isset($Options["Log"]) and $Options["Log"] != null and 
     isset($Options["User"]) and $Options["User"] != null){
+      if(isset($Options["Target"]) == false) $Options["Target"] = null;
       SqlLog($Options["User"], $result->debugDumpParams(), $Options["Log"], $Options["Target"], $Options["Conn"]);
     }
     if(isset($retorno)){
