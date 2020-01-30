@@ -1,0 +1,136 @@
+<html>
+  <head>
+    <title>PDO - Protocol PHP Live</title>
+    <style>
+      .type1{
+        color: #369;
+      }
+      .type2{
+        color: #363;
+      }
+      .type3{
+        color:#ff0000;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>PDO - Protocol PHP Live</h1>
+    <h2>SQL</h2>
+    <p>Execute a query in database</p>
+    <h3>Description</h3>
+    <p><span class="type1">SQL</span>(<span class="type2">string</span> <span class="type1">$Query</span> [,
+      <span class="type2">array</span> <span class="type1">$Params</span> [,
+      <span class="type2">array</span> <span class="type1">$Options</span>]]) : <span class="type2">mixed</span></p>
+    <h3>Parameters</h3>
+    <p>
+      <strong class="type1">Query</strong><br>
+      The query to be executed by database
+    </p>
+    <p>
+      <strong class="type1">Params</strong><br>
+      Parameters of the query (Order: name, value, type)
+    </p>
+    <p>
+      <strong class="type1">Conn</strong> (Optional)<br>
+      The PDO object create by SqlConnect command<br>
+      If null case, it will used the last connection created
+    </p>
+    <p>
+      <strong class="type1">Log</strong> (Optional)<br>
+      (Log feature) A integer representing the action
+    </p>
+    <p>
+      <strong class="type1">User</strong> (Optional)<br>
+      (Log feature) The user id who are executing the query
+    </p>
+    <p>
+      <strong class="type1">Target</strong> (Optional)<br>
+      (Log feature) User afected by the query (Optional)
+    </p>
+    <p>
+      <strong class="type1">Debug</strong> (Optional)<br>
+      Dump the query before and after the prepared
+    </p>
+    <h3>Returned value</h3>
+    <p>
+      Returns an array with the values returned;
+      Return an integer in case of new register;
+    </p>
+    <h3>Errors</h3>
+    <p>
+      If ini configuration "display_errors" are set to false, will be displayed a friendly error description in Brazil portuguese.
+    </p>
+    <h3>Explanations</h3>
+    <p>
+      - The parameters are send in array mode, because it is easier. You can send the parameters in any order;<br>
+      - The parameters types: <span class="type1">PDO::PARAM_STR</span>, <span class="type1">PDO::PARAM_INT</span>,
+      <span class="type1">PDO::PARAM_NULL</span>, <span class="type1">PDO::PARAM_BOOL</span>;<br>
+      - There a function InsertHoles() it can be used in insert querys;
+    </p>
+    <h3>Examples</h3>
+    <p>
+      <strong>A simple query:</strong><br>
+      <span class="type1">$result</span> = <span class="type1">SQL</span>(<span class="type3">"select * from users"</span>);
+    </p>
+    <p>
+      <strong>A query with data ordened:</strong><br>
+      <span class="type1">$result</span> = <span class="type1">SQL</span>(<span class="type3">"select * from users where email=? and city=?"</span>, [<br>
+      &nbsp;&nbsp;&nbsp;[<span class="type1">1</span>, <span class="type1">$_POST[<span class="type3">"email"</span>]</span>, <span class="type1">PDO::PARAM_STR</span>],<br>
+      &nbsp;&nbsp;&nbsp;[<span class="type1">2</span>, <span class="type1">$_POST[<span class="type3">"city"</span>]</span>, <span class="type1">PDO::PARAM_INT</span>]<br>
+      ]);
+    </p>
+    <p>
+      <strong>A query with data named:</strong><br>
+      <span class="type1">$result</span> = <span class="type1">SQL</span>(<span class="type3">"select * from users where name like :name or city like :name"</span>, [<br>
+      &nbsp;&nbsp;&nbsp;[<span class="type3">":name"</span>, <span class="type3">"%"</span> . <span class="type1">$_POST[<span class="type3">"name"</span>]</span> . <span class="type3">"%"</span>, <span class="type1">PDO::PARAM_STR</span>],<br>
+      ]);
+    </p>
+    <p>
+      <strong>A query with InsertHoles() function:</strong><br>
+      <span class="type1">SQL</span>(<span class="type3">"insert into users"</span> . InsertHoles(<span class="type3">"email,password,name,level"</span>), [<br>
+      &nbsp;&nbsp;&nbsp;[<span class="type1">1</span>, <span class="type1">$_POST[<span class="type3">"email"</span>]</span>, <span class="type1">PDO::PARAM_STR</span>],<br>
+      &nbsp;&nbsp;&nbsp;[<span class="type1">2</span>, <span class="type1">$_POST[<span class="type3">"pwd"</span>]</span>, <span class="type1">PDO::PARAM_STR</span>],<br>
+      &nbsp;&nbsp;&nbsp;[<span class="type1">3</span>, <span class="type1">$_POST[<span class="type3">"name"</span>]</span>, <span class="type1">PDO::PARAM_STR</span>],<br>
+      &nbsp;&nbsp;&nbsp;[<span class="type1">4</span>, <span class="type1">$_POST[<span class="type3">"level"</span>]</span>, <span class="type1">PDO::PARAM_INT</span>]<br>
+      ]);
+    </p>
+    <p>
+      <strong>A simple query with table prefix:</strong><br>
+      <span class="type1">$result</span> = <span class="type1">SQL</span>(<span class="type3">"select * from ##users"</span>);
+    </p>
+    <p>
+      <strong>Getting the values returned:</strong><br>
+      <span class="type1">$result</span> = <span class="type1">SQL</span>(<span class="type3">"select * from ##users"</span>);<br>
+      <span class="type1">echo</span> <span class="type3">"Welcome "</span> . <span class="type1">$result[0][<span class="type3">"name"</span>]</span>;
+    </p>
+    <p>
+      <strong>Getting the values returned:</strong><br>
+      <span class="type1">$result</span> = <span class="type1">SQL</span>(<span class="type3">"select * from ##users"</span>);<br>
+      <span class="type1">foreach($result as $line){</span><br>
+      &nbsp;&nbsp;&nbsp;<span class="type1">echo $line[<span class="type3">"name"</span>]</span> . <span class="type3">"&lt;br>"</span>;<br>
+      }
+    </p>
+    <p>
+      <strong>Loggin a query</strong><br>
+      <span class="type1">define(<span class="type3">"Log_NewUser"</span>, 1)</span>;<br>
+      <span class="type1">SQL</span>(<span class="type3">"insert into users"</span> . InsertHoles(<span class="type3">"email,password,name,level"</span>), [<br>
+      &nbsp;&nbsp;&nbsp;[<span class="type1">1</span>, <span class="type1">$_POST[<span class="type3">"email"</span>]</span>, <span class="type1">PDO::PARAM_STR</span>],<br>
+      &nbsp;&nbsp;&nbsp;[<span class="type1">2</span>, <span class="type1">$_POST[<span class="type3">"pwd"</span>]</span>, <span class="type1">PDO::PARAM_STR</span>],<br>
+      &nbsp;&nbsp;&nbsp;[<span class="type1">3</span>, <span class="type1">$_POST[<span class="type3">"name"</span>]</span>, <span class="type1">PDO::PARAM_STR</span>],<br>
+      &nbsp;&nbsp;&nbsp;[<span class="type1">4</span>, <span class="type1">$_POST[<span class="type3">"level"</span>]</span>, <span class="type1">PDO::PARAM_INT</span>]<br>
+      ], [<br>
+      &nbsp;&nbsp;&nbsp;<span class="type3">"Log"</span> => <span class="type1">Log_NewUser</span>,<br>
+      &nbsp;&nbsp;&nbsp;<span class="type3">"User"</span> => <span class="type1">$_SESSION[<span class="type3">"user"</span>]</span>,<br>
+      ]);
+    </p>
+    <p>
+      <strong>Debbuging a query:</strong><br>
+      <span class="type1">$result</span> = <span class="type1">SQL</span>(<span class="type3">"select * from users where email=? and city=?"</span>, [<br>
+      &nbsp;&nbsp;&nbsp;[<span class="type1">1</span>, <span class="type1">$_POST[<span class="type3">"email"</span>]</span>, <span class="type1">PDO::PARAM_STR</span>],<br>
+      &nbsp;&nbsp;&nbsp;[<span class="type1">2</span>, <span class="type1">$_POST[<span class="type3">"city"</span>]</span>, <span class="type1">PDO::PARAM_INT</span>]<br>
+      ], [<br>
+      &nbsp;&nbsp;&nbsp;<span class="type3">"Debug"</span> => <span class="type1">true</span><br>
+      ]);
+    </p>
+  </body>
+</html>
