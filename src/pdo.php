@@ -1,39 +1,20 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-01-30-02
+// Version 2020-01-31-00
 
 $DbLastConn = null;
 $DbPrefix = null;
-$ErrPdo = [
-  "01000" => "Foram utilizados dados incorretos em um campo do banco de dados",
-  "1040" => "Foi atingido o limite de conexões ao banco de dados",
-  "1045" => "Acesso negado ao banco de dados",
-  "2002" => "Não foi possível se conectar ao banco de dados. Atualize a página ou tente de novo em alguns minutos",
-  "23000" => "Não foi possível atualizar o banco de dados devido a uma restrição de registro. Isso pode ocorrer quando você tentou cadastrar um dado duplicado ou apagar um dado que depende de outro",
-  "42000" => "Erro de sintaxe no comando do banco de dados",
-  "42S02" => "Tabela inexistente no banco de dados",
-  "42S22" => "Campo inexistente na tabela do banco de dados",
-  "HY000" => "Tipo de valor incompatível com o campo do banco de dados",
-  "HY093" => "Quantidade incorreta de parâmetros especificado"
-];
 
 function Erro($Number, $Msg){
   // Backtrace = 1
   $Debug = 1;
   
-  $debug = debug_backtrace();
-  $debug = $debug[count($debug) - 2];
-  echo "<br>";
-  if(ini_get("display_errors") == true or isset($ErrPdo[$Number]) == false){
-    echo $Msg;
-  }else{
-    echo $ErrPdo[$Number];
-  }
-  echo " <b>em</b> " . $debug["file"] . " <b>na linha</b> " . $debug["line"];
+  $trace = debug_backtrace();
+  $debug = array_pop($trace);
+  echo  "<br>" . $Msg . " <b>in</b> " . $debug["file"] . " <b>line</b> " . $debug["line"];
   if(($Debug & 1) == 1){
-    echo "<pre>";
-    var_dump(debug_backtrace());
+    echo "<pre>" . json_encode(debug_backtrace(), JSON_PRETTY_PRINT);
   }
   die();
 }
@@ -50,7 +31,7 @@ function Erro($Number, $Msg){
  * @return object Connection
  */
 function SqlConnect($Options = []){
-  global $ErrPdo, $DbLastConn, $DbPrefix;
+  global $DbLastConn, $DbPrefix;
   set_error_handler("Erro");
   if(isset($Options["Drive"]) == false) $Options["Drive"] = "mysql";
   if(isset($Options["Charset"]) == false) $Options["Charset"] = "utf8";
@@ -81,7 +62,7 @@ function SqlConnect($Options = []){
  * @return mixed
  */
 function SQL($Query, $Params = null, $Options = []){
-  global $ErrPdo, $DbLastConn, $DbPrefix;
+  global $DbLastConn, $DbPrefix;
   set_error_handler("Erro");
   if(isset($Options["Conn"]) == false){
     if($DbLastConn == null){
