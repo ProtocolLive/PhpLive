@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-01-31-00
+// Version 2020-01-31-01
 
 $DbLastConn = null;
 $DbPrefix = null;
@@ -12,7 +12,9 @@ function Erro($Number, $Msg){
   
   $trace = debug_backtrace();
   $debug = array_pop($trace);
-  echo  "<br>" . $Msg . " <b>in</b> " . $debug["file"] . " <b>line</b> " . $debug["line"];
+  echo  "<br>" . $Msg . "<br>";
+  echo "File: " . $debug["file"] . "<br>";
+  echo "Line: " . $debug["line"];
   if(($Debug & 1) == 1){
     echo "<pre>" . json_encode(debug_backtrace(), JSON_PRETTY_PRINT);
   }
