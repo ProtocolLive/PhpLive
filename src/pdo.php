@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-01-30-01
+// Version 2020-01-30-02
 
 $DbLastConn = null;
 $DbPrefix = null;
@@ -23,7 +23,7 @@ function Erro($Number, $Msg){
   $Debug = 1;
   
   $debug = debug_backtrace();
-  $debug = end($debug);
+  $debug = $debug[count($debug) - 2];
   echo "<br>";
   if(ini_get("display_errors") == true or isset($ErrPdo[$Number]) == false){
     echo $Msg;
