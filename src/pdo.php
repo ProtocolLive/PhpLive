@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-02-01-00
+// Version 2020-02-01-01
 
 $DbLastConn = null;
 $DbPrefix = null;
@@ -109,7 +109,13 @@ function SQL($Query, $Params = null, $Options = []){
   if(isset($Options["Log"]) and $Options["Log"] != null and 
   isset($Options["User"]) and $Options["User"] != null){
     if(isset($Options["Target"]) == false) $Options["Target"] = null;
-    SqlLog($Options["User"], $result->debugDumpParams(), $Options["Log"], $Options["Target"], $Options["Conn"]);
+    SqlLog([
+      "User" => $Options["User"],
+      "Dump" => $result->debugDumpParams(),
+      "Log" => $Options["Log"],
+      "Target" => $Options["Target"],
+      "Conn" => $Options["Conn"]
+    ]);
   }
   if(isset($retorno)){
     return $retorno;
@@ -159,10 +165,10 @@ function SqlLog($Options = []){
     }
   }
   $temp = $Options["Conn"]->prepare("insert into " . $DbPrefix != null? "##" : "" . "sys_logs" .
-    InsertHoles("time,user_id,type,ip,ipreverse,agent,query,target"));
+    InsertHoles("time,user_id,log,ip,ipreverse,agent,query,target"));
   $temp->bindValue(1, date("Y-m-d H:i:s"), PDO::PARAM_INT);
   $temp->bindValue(2, $Options["User"], PDO::PARAM_INT);
-  $temp->bindValue(3, $Options["Type"], PDO::PARAM_INT);
+  $temp->bindValue(3, $Options["Log"], PDO::PARAM_INT);
   $temp->bindValue(4, $_SERVER["REMOTE_ADDR"], PDO::PARAM_STR);
   $temp->bindValue(5, gethostbyaddr($_SERVER["REMOTE_ADDR"]), PDO::PARAM_STR);
   $temp->bindValue(6, $_SERVER["HTTP_USER_AGENT"], PDO::PARAM_STR);
