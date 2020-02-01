@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-01-31-01
+// Version 2020-02-01-00
 
 $DbLastConn = null;
 $DbPrefix = null;
@@ -150,7 +150,7 @@ function InsertHoles($Fields){
  * @param int $Target User afected by query
  */
 function SqlLog($Options = []){
-  global $DbPrefix;
+  global $DbPrefix, $DbLastConn;
   if(isset($Options["Conn"]) == false){
     if($DbLastConn == null){
       Erro("Você não iniciou uma conexão a um banco de dados");
