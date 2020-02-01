@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-02-01-01
+// Version 2020-02-01-02
 
 $DbLastConn = null;
 $DbPrefix = null;
@@ -66,6 +66,8 @@ function SqlConnect($Options = []){
 function SQL($Query, $Params = null, $Options = []){
   global $DbLastConn, $DbPrefix;
   set_error_handler("Erro");
+  if(isset($Options["Target"]) == false) $Options["Target"] = null;
+  
   if(isset($Options["Conn"]) == false){
     if($DbLastConn == null){
       Erro("Você não iniciou uma conexão a um banco de dados");
@@ -102,24 +104,28 @@ function SQL($Query, $Params = null, $Options = []){
     <pre style="text-align:left"><?php $result->debugDumpParams();?></pre><?php
   }
   if($comando == "select" or $comando == "show" or $comando == "call"){
-    $retorno = $result->fetchAll();
+    $return = $result->fetchAll();
   }elseif($comando == "insert"){
-    $retorno = $Options["Conn"]->lastInsertId();
+    $return = $Options["Conn"]->lastInsertId();
+  }else{
+    $return = true;
   }
   if(isset($Options["Log"]) and $Options["Log"] != null and 
   isset($Options["User"]) and $Options["User"] != null){
-    if(isset($Options["Target"]) == false) $Options["Target"] = null;
+    ob_start();
+    $result->debugDumpParams();
+    $dump = ob_get_contents();
+    ob_end_clean();
     SqlLog([
       "User" => $Options["User"],
-      "Dump" => $result->debugDumpParams(),
+      "Dump" => $dump,
       "Log" => $Options["Log"],
       "Target" => $Options["Target"],
       "Conn" => $Options["Conn"]
     ]);
+    
   }
-  if(isset($retorno)){
-    return $retorno;
-  }
+  return $return;
 }
 
 /**
@@ -156,7 +162,8 @@ function InsertHoles($Fields){
  * @param int $Target User afected by query
  */
 function SqlLog($Options = []){
-  global $DbPrefix, $DbLastConn;
+  global $DbLastConn, $DbPrefix;
+  set_error_handler("Erro");
   if(isset($Options["Conn"]) == false){
     if($DbLastConn == null){
       Erro("Você não iniciou uma conexão a um banco de dados");
@@ -164,15 +171,15 @@ function SqlLog($Options = []){
       $Options["Conn"] = &$DbLastConn;
     }
   }
-  $temp = $Options["Conn"]->prepare("insert into " . $DbPrefix != null? "##" : "" . "sys_logs" .
-    InsertHoles("time,user_id,log,ip,ipreverse,agent,query,target"));
-  $temp->bindValue(1, date("Y-m-d H:i:s"), PDO::PARAM_INT);
-  $temp->bindValue(2, $Options["User"], PDO::PARAM_INT);
-  $temp->bindValue(3, $Options["Log"], PDO::PARAM_INT);
-  $temp->bindValue(4, $_SERVER["REMOTE_ADDR"], PDO::PARAM_STR);
-  $temp->bindValue(5, gethostbyaddr($_SERVER["REMOTE_ADDR"]), PDO::PARAM_STR);
-  $temp->bindValue(6, $_SERVER["HTTP_USER_AGENT"], PDO::PARAM_STR);
-  $temp->bindValue(7, $Options["Dump"], PDO::PARAM_STR);
-  $temp->bindValue(8, $Options["Target"], $Options["Target"] == null? PDO::PARAM_NULL : PDO::PARAM_INT);
-  $temp->execute();
+  SQL("insert into sys_logs" .
+    InsertHoles("time,user_id,log,ip,ipreverse,agent,query,target"), [
+    [1, date("Y-m-d H:i:s"), PDO::PARAM_STR],
+    [2, $Options["User"], PDO::PARAM_INT],
+    [3, $Options["Log"], PDO::PARAM_INT],
+    [4, $_SERVER["REMOTE_ADDR"], PDO::PARAM_STR],
+    [5, gethostbyaddr($_SERVER["REMOTE_ADDR"]), PDO::PARAM_STR],
+    [6, $_SERVER["HTTP_USER_AGENT"], PDO::PARAM_STR],
+    [7, $Options["Dump"], PDO::PARAM_STR],
+    [8, $Options["Target"], $Options["Target"] == null? PDO::PARAM_NULL : PDO::PARAM_INT]
+  ]);
 }
