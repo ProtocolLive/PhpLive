@@ -1,31 +1,18 @@
 <?php
 //Protocol Corporation Ltda.
 //https://github.com/ProtocolLive/PhpLive
-//Version 2020-01-21-00
+//Version 2020-01-31-00
 
-function PhpUpdate($Linux = false){
+function PhpUpdate(){
   if(extension_loaded("openssl") == false){
     return false;
   }
-  if($Linux == false){
-    $pagina = @fopen("https://windows.php.net/download/", "r");
-    if($pagina !== null and $pagina !== false){
-      do{
-        $linha = fgets($pagina);
-      }while(strpos($linha, "id=\"php-7.4\"") === false);
-      $linha = substr($linha, strpos($linha, "(") + 1);
-      $linha = substr($linha, 0, strpos($linha, ")"));
-    }
-  }else{
-    $pagina = fopen("https://secure.php.net/downloads.php", "r");
-    if($pagina !== null and $pagina !== false){
-      do{
-        $linha = fgets($pagina);
-      }while(strpos($linha, "release-state") === false);
-      $linha = fgets($pagina);
-      $linha = substr($linha, strpos($linha, "PHP") + 4);
-      $linha = substr($linha, 0, strpos($linha, "("));
-    }
-  }
-  return trim($linha);
+  $ini = ini_get("default_socket_timeout");
+  ini_set("default_socket_timeout", 1);
+  $text = @file_get_contents("https://www.php.net/downloads");
+  ini_set("default_socket_timeout", $ini);
+  $text = substr($text, strpos($text, "Current Stable"));
+  $text = substr($text, strpos($text, "PHP") + 4);
+  $text = substr($text, 0, strpos($text, " "));
+  return $text;
 }
