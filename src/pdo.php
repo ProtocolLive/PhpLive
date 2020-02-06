@@ -1,25 +1,10 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-02-01-02
+// Version 2020-02-06-00
 
 $DbLastConn = null;
 $DbPrefix = null;
-
-function Erro($Number, $Msg){
-  // Backtrace = 1
-  $Debug = 1;
-  
-  $trace = debug_backtrace();
-  $debug = array_pop($trace);
-  echo  "<br>" . $Msg . "<br>";
-  echo "File: " . $debug["file"] . "<br>";
-  echo "Line: " . $debug["line"];
-  if(($Debug & 1) == 1){
-    echo "<pre>" . json_encode(debug_backtrace(), JSON_PRETTY_PRINT);
-  }
-  die();
-}
 
 /**
  * @param string $Drive (Optional) MySql as default
@@ -34,7 +19,6 @@ function Erro($Number, $Msg){
  */
 function SqlConnect($Options = []){
   global $DbLastConn, $DbPrefix;
-  set_error_handler("Erro");
   if(isset($Options["Drive"]) == false) $Options["Drive"] = "mysql";
   if(isset($Options["Charset"]) == false) $Options["Charset"] = "utf8";
   if(isset($Options["TimeOut"]) == false) $Options["TimeOut"] = 5;
@@ -65,7 +49,6 @@ function SqlConnect($Options = []){
  */
 function SQL($Query, $Params = null, $Options = []){
   global $DbLastConn, $DbPrefix;
-  set_error_handler("Erro");
   if(isset($Options["Target"]) == false) $Options["Target"] = null;
   
   if(isset($Options["Conn"]) == false){
@@ -163,7 +146,6 @@ function InsertHoles($Fields){
  */
 function SqlLog($Options = []){
   global $DbLastConn, $DbPrefix;
-  set_error_handler("Erro");
   if(isset($Options["Conn"]) == false){
     if($DbLastConn == null){
       Erro("Você não iniciou uma conexão a um banco de dados");
