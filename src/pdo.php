@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-02-06-00
+// Version 2020-02-06-01
 
 $DbLastConn = null;
 $DbPrefix = null;
@@ -53,7 +53,7 @@ function SQL($Query, $Params = null, $Options = []){
   
   if(isset($Options["Conn"]) == false){
     if($DbLastConn == null){
-      Erro("Você não iniciou uma conexão a um banco de dados");
+      throw new Exception("Você não iniciou uma conexão a um banco de dados");
     }else{
       $Options["Conn"] = &$DbLastConn;
     }
@@ -68,7 +68,7 @@ function SQL($Query, $Params = null, $Options = []){
   if($Params != null){
     foreach($Params as &$Param){
       if(count($Param) != 3){
-        Erro("Quantidade incorreta de parâmetros ao especificar um placehole");
+        throw new Exception("Quantidade incorreta de parâmetros ao especificar um placehole");
       }else{
         if($Param[2] == PDO::PARAM_INT){
           $Param[1] = str_replace(",", ".", $Param[1]);
@@ -148,7 +148,7 @@ function SqlLog($Options = []){
   global $DbLastConn, $DbPrefix;
   if(isset($Options["Conn"]) == false){
     if($DbLastConn == null){
-      Erro("Você não iniciou uma conexão a um banco de dados");
+      throw new Exception("Você não iniciou uma conexão a um banco de dados");
     }else{
       $Options["Conn"] = &$DbLastConn;
     }
