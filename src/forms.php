@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-01-21-08
+// Version 2020-02-06-00
 
 function Form($Options = []){
   if(session_name() == "PHPSESSID"){
@@ -30,6 +30,7 @@ function Form($Options = []){
     echo " autocomplete=\"off\"";
   }
   echo ">";
+  $edit = "";
   if(isset($Options["Data"]) == false){
     $edit = " and onlyedit=0";
   }
