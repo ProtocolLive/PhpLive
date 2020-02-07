@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-02-06-02
+// Version 2020-02-06-03
 
 $DbLastConn = null;
 $DbPrefix = null;
@@ -62,7 +62,7 @@ function SQL($Query, $Params = null, $Options = []){
   if($DbPrefix != null){
     $Query = str_replace("##", $DbPrefix . "_", $Query);
   }else{
-    $Query = str_replace("##", "");
+    $Query = str_replace("##", "", $Query);
   }
   $comando = explode(" ", $Query);
   $comando = strtolower($comando[0]);
