@@ -49,7 +49,11 @@ function Form($Options = []){
       echo "<select name=\"" . $field["name"] . "\">";
       echo "<option value=\"0\" selected disabled></option>";
       foreach($Options["Selects"][$field["name"]] as $select){
-        echo "<option value=\"" . $select[0] . "\">" . $select[1] . "</option>";
+        echo "<option value=\"" . $select[0] . "\"";
+        if($select[0] == $Options["Data"][$field["name"]]){
+          echo " selected";
+        }
+        echo ">" . $select[1] . "</option>";
       }
       echo "</select><br>";
     }elseif($field["type"] == "checkbox"){
