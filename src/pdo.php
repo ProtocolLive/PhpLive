@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-02-06-03
+// Version 2020-02-12-00
 
 $DbLastConn = null;
 $DbPrefix = null;
@@ -101,6 +101,10 @@ function SQL($Query, $Params = null, $Options = []){
     $result->debugDumpParams();
     $dump = ob_get_contents();
     ob_end_clean();
+    $dump = substr($dump, strpos($dump, "Sent SQL: ["));
+    $dump = substr($dump, strpos($dump, "] ") + 2);
+    $dump = substr($dump, 0, strpos($dump, "Params: "));
+    $dump = trim($dump);
     SqlLog([
       "User" => $Options["User"],
       "Dump" => $dump,
