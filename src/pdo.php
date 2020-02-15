@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-02-14-01
+// Version 2020-02-14-02
 
 $DbLastConn = null;
 $DbPrefix = null;
@@ -92,10 +92,8 @@ function SQL($Query, $Params = null, $Options = []){
     $return = $result->fetchAll();
   }elseif($comando == "insert"){
     $return = $Options["Conn"]->lastInsertId();
-  }elseif($comando == "update"){
-    $return = $Options["Conn"]->rowCount();
-  }else{
-    $return = true;
+  }elseif($comando == "update" or $comando == "delete"){
+    $return = $result->rowCount();
   }
   if(isset($Options["Log"]) and $Options["Log"] != null and 
   isset($Options["User"]) and $Options["User"] != null){
