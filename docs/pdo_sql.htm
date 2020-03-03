@@ -61,7 +61,8 @@
       - The parameters are send in array mode, because it is easier. You can send the parameters in any order;<br>
       - The parameters types: <span class="type1">PDO::PARAM_STR</span>, <span class="type1">PDO::PARAM_INT</span>,
       <span class="type1">PDO::PARAM_NULL</span>, <span class="type1">PDO::PARAM_BOOL</span>;<br>
-      - There a function InsertHoles() it can be used in insert querys;
+      - There a functions <span class="type1">SqlInsert()</span> and <span class="type1">SqlUpdate()</span> to avoid differences when specifying holes;<br>
+      - For now, the function SqlUpdate only works with one where clause;
     </p>
     <h3>Examples</h3>
     <p>
@@ -69,25 +70,40 @@
       <span class="type1">$result</span> = <span class="type1">SQL</span>(<span class="type3">"select * from users"</span>);
     </p>
     <p>
-      <strong>A query with data ordened:</strong><br>
+      <strong>A query with ordened holes:</strong><br>
       <span class="type1">$result</span> = <span class="type1">SQL</span>(<span class="type3">"select * from users where email=? and city=?"</span>, [<br>
       &nbsp;&nbsp;&nbsp;[<span class="type1">1</span>, <span class="type1">$_POST[<span class="type3">"email"</span>]</span>, <span class="type1">PDO::PARAM_STR</span>],<br>
       &nbsp;&nbsp;&nbsp;[<span class="type1">2</span>, <span class="type1">$_POST[<span class="type3">"city"</span>]</span>, <span class="type1">PDO::PARAM_INT</span>]<br>
       ]);
     </p>
     <p>
-      <strong>A query with data named:</strong><br>
+      <strong>A query with named holes:</strong><br>
       <span class="type1">$result</span> = <span class="type1">SQL</span>(<span class="type3">"select * from users where name like :name or city like :name"</span>, [<br>
       &nbsp;&nbsp;&nbsp;[<span class="type3">":name"</span>, <span class="type3">"%"</span> . <span class="type1">$_POST[<span class="type3">"name"</span>]</span> . <span class="type3">"%"</span>, <span class="type1">PDO::PARAM_STR</span>],<br>
       ]);
     </p>
     <p>
-      <strong>A query with InsertHoles() function:</strong><br>
-      <span class="type1">SQL</span>(<span class="type3">"insert into users"</span> . InsertHoles(<span class="type3">"email,password,name,level"</span>), [<br>
-      &nbsp;&nbsp;&nbsp;[<span class="type1">1</span>, <span class="type1">$_POST[<span class="type3">"email"</span>]</span>, <span class="type1">PDO::PARAM_STR</span>],<br>
-      &nbsp;&nbsp;&nbsp;[<span class="type1">2</span>, <span class="type1">$_POST[<span class="type3">"pwd"</span>]</span>, <span class="type1">PDO::PARAM_STR</span>],<br>
-      &nbsp;&nbsp;&nbsp;[<span class="type1">3</span>, <span class="type1">$_POST[<span class="type3">"name"</span>]</span>, <span class="type1">PDO::PARAM_STR</span>],<br>
-      &nbsp;&nbsp;&nbsp;[<span class="type1">4</span>, <span class="type1">$_POST[<span class="type3">"level"</span>]</span>, <span class="type1">PDO::PARAM_INT</span>]<br>
+      <strong>A query with SqlInsert() function:</strong><br>
+      <span class="type1">SqlInsert</span>([<br>
+      &nbsp;&nbsp;&nbsp;<span class="type3">"Table"</span> => <span class="type3">"users"</span>,<br>
+      &nbsp;&nbsp;&nbsp;<span class="type3">"Fields"</span> => [<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="type3">"email"</span>, <span class="type1">$_POST</span>[<span class="type3">"email"</span>], <span class="type1">PDO::PARAM_STR</span>],<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="type3">"pwd"</span>, <span class="type1">$_POST</span>[<span class="type3">"pwd"</span>], <span class="type1">PDO::PARAM_STR</span>],<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="type3">"name"</span>, <span class="type1">$_POST</span>[<span class="type3">"name"</span>], <span class="type1">PDO::PARAM_STR</span>],<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="type3">"level"</span>, <span class="type1">$_POST</span>[<span class="type3">"level"</span>], <span class="type1">PDO::PARAM_INT</span>]<br>
+      &nbsp;&nbsp;&nbsp;]<br>
+      ]);
+    </p>
+    <p>
+      <strong>A query with SqlUpdate() function:</strong><br>
+      <span class="type1">SqlUpdate</span>([<br>
+      &nbsp;&nbsp;&nbsp;<span class="type3">"Table"</span> => <span class="type3">"users"</span>,<br>
+      &nbsp;&nbsp;&nbsp;<span class="type3">"Fields"</span> => [<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="type3">"pwd"</span>, <span class="type1">$_POST</span>[<span class="type3">"pwd"</span>], <span class="type1">PDO::PARAM_STR</span>],<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="type3">"name"</span>, <span class="type1">$_POST</span>[<span class="type3">"name"</span>], <span class="type1">PDO::PARAM_STR</span>],<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="type3">"level"</span>, <span class="type1">$_POST</span>[<span class="type3">"level"</span>], <span class="type1">PDO::PARAM_INT</span>]<br>
+      &nbsp;&nbsp;&nbsp;],<br>
+      &nbsp;&nbsp;&nbsp;<span class="type3">"Where"</span> => [<span class="type3">"email"</span>, <span class="type1">$_POST</span>[<span class="type3">"email"</span>], <span class="type1">PDO::PARAM_STR</span>]<br>
       ]);
     </p>
     <p>
@@ -109,11 +125,11 @@
     <p>
       <strong>Loggin a query</strong><br>
       <span class="type1">define(<span class="type3">"Log_NewUser"</span>, 1)</span>;<br>
-      <span class="type1">SQL</span>(<span class="type3">"insert into users"</span> . InsertHoles(<span class="type3">"email,password,name,level"</span>), [<br>
-      &nbsp;&nbsp;&nbsp;[<span class="type1">1</span>, <span class="type1">$_POST[<span class="type3">"email"</span>]</span>, <span class="type1">PDO::PARAM_STR</span>],<br>
-      &nbsp;&nbsp;&nbsp;[<span class="type1">2</span>, <span class="type1">$_POST[<span class="type3">"pwd"</span>]</span>, <span class="type1">PDO::PARAM_STR</span>],<br>
-      &nbsp;&nbsp;&nbsp;[<span class="type1">3</span>, <span class="type1">$_POST[<span class="type3">"name"</span>]</span>, <span class="type1">PDO::PARAM_STR</span>],<br>
-      &nbsp;&nbsp;&nbsp;[<span class="type1">4</span>, <span class="type1">$_POST[<span class="type3">"level"</span>]</span>, <span class="type1">PDO::PARAM_INT</span>]<br>
+      <span class="type1">SqlInsert</span>([<br>
+      &nbsp;&nbsp;&nbsp;[<span class="type3">"email"</span>, <span class="type1">$_POST[<span class="type3">"email"</span>]</span>, <span class="type1">PDO::PARAM_STR</span>],<br>
+      &nbsp;&nbsp;&nbsp;[<span class="type3">"pwd"</span>, <span class="type1">$_POST[<span class="type3">"pwd"</span>]</span>, <span class="type1">PDO::PARAM_STR</span>],<br>
+      &nbsp;&nbsp;&nbsp;[<span class="type3">"name"</span>, <span class="type1">$_POST[<span class="type3">"name"</span>]</span>, <span class="type1">PDO::PARAM_STR</span>],<br>
+      &nbsp;&nbsp;&nbsp;[<span class="type3">"level"</span>, <span class="type1">$_POST[<span class="type3">"level"</span>]</span>, <span class="type1">PDO::PARAM_INT</span>]<br>
       ], [<br>
       &nbsp;&nbsp;&nbsp;<span class="type3">"Log"</span> => <span class="type1">Log_NewUser</span>,<br>
       &nbsp;&nbsp;&nbsp;<span class="type3">"User"</span> => <span class="type1">$_SESSION[<span class="type3">"user"</span>]</span>,<br>
