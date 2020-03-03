@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-02-14-02
+// Version 2020-03-03-00
 
 $DbLastConn = null;
 $DbPrefix = null;
@@ -130,20 +130,6 @@ function Clean($Query){
 }
 
 /**
- * @param string $Fields
- * @return string
- */
-function InsertHoles($Fields){
-  $count = substr_count($Fields, ",");
-  $return = "";
-  for($i = 0; $i <= $count; $i++){
-    $return .= "?,";
-  }
-  $return = substr($return, 0, -1);
-  return "(" . $Fields . ") values(" . $return . ")";
-}
-
-/**
  * @param object $Conn (Optional)
  * @param int $User User executing the query
  * @param string $Dump The dump created by SQL function
@@ -169,5 +155,76 @@ function SqlLog($Options = []){
     [6, $_SERVER["HTTP_USER_AGENT"], PDO::PARAM_STR],
     [7, $Options["Dump"], PDO::PARAM_STR],
     [8, $Options["Target"], $Options["Target"] == null? PDO::PARAM_NULL : PDO::PARAM_INT]
+  ]);
+}
+
+/**
+ * @param string $Table
+ * @param array $Fields
+ * @return int
+ */
+function SqlInsert($Options = []){
+  if(isset($Options["Log"]) == false)  $Options["Log"] = null;
+  if(isset($Options["User"]) == false)  $Options["User"] = null;
+  if(isset($Options["Target"]) == false)  $Options["Target"] = null;
+
+  $return = "insert into " . $Options["Table"] . "(";
+  $holes = [];
+  $i = 1;
+  foreach($Options["Fields"] as $field){
+    if($field[0] == "order" or $field[0] == "default"){
+      $return .= "`" . $field[0] . "`";
+    }else{
+      $return .= $field[0];
+    }
+    $return .= ",";
+    $holes[] = [$i, $field[1], $field[2]];
+    $i++;
+  }
+  $return = substr($return, 0, -1);
+  $return .= ") values(";
+  for($j = 1; $j < $i; $j++){
+    $return .= "?,";
+  }
+  $return = substr($return, 0, -1);
+  $return .= ");";
+  return SQL($return, $holes, [
+    "Log" => $Options["Log"],
+    "User" => $Options["User"],
+    "Target" => $Options["Target"]
+  ]);
+}
+
+/**
+ * @param string $Table
+ * @param array $Fields
+ * @param array $Where
+ * @return int
+ */
+function SqlUpdate($Options = []){
+  if(isset($Options["Log"]) == false)  $Options["Log"] = null;
+  if(isset($Options["User"]) == false)  $Options["User"] = null;
+  if(isset($Options["Target"]) == false)  $Options["Target"] = null;
+
+  $return = "update " . $Options["Table"] . " set ";
+  $holes = [];
+  $i = 1;
+  foreach($Options["Fields"] as $field){
+    if($field[0] == "order" or $field[0] == "default"){
+      $return .= "`" . $field[0] . "`";
+    }else{
+      $return .= $field[0];
+    }
+    $return .= "=?,";
+    $holes[] = [$i, $field[1], $field[2]];
+    $i++;
+  }
+  $return = substr($return, 0, -1);
+  $return .= " where " . $Options["Where"][0] . "=?";
+  $holes[] = [$i, $Options["Where"][1], $Options["Where"][2]];
+  return SQL($return, $holes, [
+    "Log" => $Options["Log"],
+    "User" => $Options["User"],
+    "Target" => $Options["Target"]
   ]);
 }
