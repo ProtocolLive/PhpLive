@@ -23,6 +23,7 @@ SqlConnect([
   "Db" => "protocol"
 ]);
 
+echo "<div id=\"AjaxPage\">";
 if(isset($_GET["a"])){
   if($_GET["a"] == "formsform"){
     $selects = [
@@ -43,7 +44,7 @@ if(isset($_GET["a"])){
       Form([
         "Form" => "form",
         "Page" => "ajax.php?a=formsok?id=" . $_GET["id"],
-        "Place" => "AjaxWindow1Page",
+        "Place" => "AjaxPage",
         "Selects" => $selects,
         "Data" => $form[0]
       ]);
@@ -51,7 +52,7 @@ if(isset($_GET["a"])){
       Form([
         "Form" => "form",
         "Page" => "ajax.php?a=formsok",
-        "Place" => "AjaxWindow1Page",
+        "Place" => "AjaxPage",
         "Selects" => $selects
       ]);
     }
@@ -76,7 +77,7 @@ if(isset($_GET["a"])){
       ]);?>
       <p>Form saved</p><?php
     }?>
-    <p><a href="#" onclick="Ajax('ajax.php?a=forms','AjaxPage');WindowClose();">Continue</a><?php
+    <p><a href="#" onclick="Ajax('ajax.php?a=forms','AjaxPage');">Continue</a><?php
   }elseif($_GET["a"] == "formsdel"){
     SQL("delete from forms_forms where form_id=?", [
       [1, $_GET["id"], PDO::PARAM_INT]
@@ -88,7 +89,7 @@ if(isset($_GET["a"])){
     ]);?>
     <table class="center">
       <tr>
-        <th><a href="#" onclick="Ajax('ajax.php?a=fieldsform&form=<?php echo $_GET["form"];?>','AjaxWindow1Page');WindowOpen('Campo');"><img src="/common/images/add1.gif"></a></th>
+        <th><a href="#" onclick="Ajax('ajax.php?a=fieldsform&form=<?php echo $_GET["form"];?>','AjaxPage');"><img src="/common/images/add1.gif"></a></th>
         <th>Label</th>
         <th>Name</th>
         <th>Type</th>
@@ -104,7 +105,7 @@ if(isset($_GET["a"])){
       foreach($fields as $field){?>
         <tr class="alternate mouse">
           <td>
-            <a href="#" onclick="Ajax('ajax.php?a=fieldsform&form=<?php echo $_GET["form"];?>&id=<?php echo $field["field_id"];?>','AjaxWindow1Page');WindowOpen('Field');"><img src="/common/images/edit.gif"></a>
+            <a href="#" onclick="Ajax('ajax.php?a=fieldsform&form=<?php echo $_GET["form"];?>&id=<?php echo $field["field_id"];?>','AjaxPage');"><img src="/common/images/edit.gif"></a>
             <a href="#" onclick="if(confirm('Do you realy want to delete this field?'))
               Ajax('ajax.php?a=fieldsdel&form=<?php echo $_GET["form"];?>&id=<?php echo $field["field_id"];?>','AjaxPage');"><img src="/common/images/del.gif"></a>
           </td>
@@ -155,7 +156,7 @@ if(isset($_GET["a"])){
       Form([
         "Form" => "fields",
         "Page" => "ajax.php?a=fieldsok&form=" . $_GET["form"] . "&id=" . $_GET["id"],
-        "Place" => "AjaxWindow1Page",
+        "Place" => "AjaxPage",
         "Data" => $form[0],
         "Selects" => $selects
       ]);
@@ -163,7 +164,7 @@ if(isset($_GET["a"])){
       Form([
         "Form" => "fields",
         "Page" => "ajax.php?a=fieldsok&form=" . $_GET["form"],
-        "Place" => "AjaxWindow1Page",
+        "Place" => "AjaxPage",
         "Selects" => $selects
       ]);
     }
@@ -205,7 +206,7 @@ if(isset($_GET["a"])){
       ]);?>
       <p>Field Saved</p><?php
     }?>
-    <p><a href="#" onclick="Ajax('ajax.php?a=fields&form=<?php echo $_GET["form"];?>','AjaxPage');WindowClose();">Continue</a><?php
+    <p><a href="#" onclick="Ajax('ajax.php?a=fields&form=<?php echo $_GET["form"];?>','AjaxPage');">Continue</a><?php
   }elseif($_GET["a"] == "fieldsdel"){
     SQL("delete from forms_fields where field_id=?", [
       [1, $_GET["id"], PDO::PARAM_INT]
@@ -216,7 +217,7 @@ if(isset($_GET["a"])){
   $forms = SQL("select * from forms_forms order by site,form");?>
   <table class="center">
     <tr>
-      <th><a href="#" onclick="Ajax('ajax.php?a=formsform','AjaxWindow1Page');WindowOpen('Form');"><img src="/common/images/add1.gif"></a></th>
+      <th><a href="#" onclick="Ajax('ajax.php?a=formsform','AjaxPage');"><img src="/common/images/add1.gif"></a></th>
       <th>Site</th>
       <th>Form</th>
       <th>Method</th>
@@ -226,7 +227,7 @@ if(isset($_GET["a"])){
     foreach($forms as $form){?>
       <tr class="alternate mouse">
         <td>
-          <a href="#" onclick="Ajax('ajax.php?a=formsform&id=<?php echo $form["form_id"];?>','AjaxWindow1Page');WindowOpen('Form');"><img src="/common/images/edit.gif"></a>
+          <a href="#" onclick="Ajax('ajax.php?a=formsform&id=<?php echo $form["form_id"];?>','AjaxPage');"><img src="/common/images/edit.gif"></a>
           <a href="#" onclick="if(confirm('Do you realy want to delete this form?'))
             Ajax('ajax.php?a=formsdel&id=<?php echo $form["form_id"];?>','AjaxPage');"><img src="/common/images/del.gif"></a>
         </td>
@@ -239,3 +240,4 @@ if(isset($_GET["a"])){
     }?>
   </table><?php
 }
+echo "</div>";
