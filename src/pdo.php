@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-03-00
+// Version 2020-03-03-01
 
 $DbLastConn = null;
 $DbPrefix = null;
@@ -145,16 +145,18 @@ function SqlLog($Options = []){
       $Options["Conn"] = &$DbLastConn;
     }
   }
-  SQL("insert into sys_logs" .
-    InsertHoles("time,user_id,log,ip,ipreverse,agent,query,target"), [
-    [1, date("Y-m-d H:i:s"), PDO::PARAM_STR],
-    [2, $Options["User"], PDO::PARAM_INT],
-    [3, $Options["Log"], PDO::PARAM_INT],
-    [4, $_SERVER["REMOTE_ADDR"], PDO::PARAM_STR],
-    [5, gethostbyaddr($_SERVER["REMOTE_ADDR"]), PDO::PARAM_STR],
-    [6, $_SERVER["HTTP_USER_AGENT"], PDO::PARAM_STR],
-    [7, $Options["Dump"], PDO::PARAM_STR],
-    [8, $Options["Target"], $Options["Target"] == null? PDO::PARAM_NULL : PDO::PARAM_INT]
+  SqlInsert([
+    "Table" => "sys_logs",
+    "Fields" => [
+      ["time", date("Y-m-d H:i:s"), PDO::PARAM_STR],
+      ["user_id", $Options["User"], PDO::PARAM_INT],
+      ["log", $Options["Log"], PDO::PARAM_INT],
+      ["ip", $_SERVER["REMOTE_ADDR"], PDO::PARAM_STR],
+      ["ipreverse", gethostbyaddr($_SERVER["REMOTE_ADDR"]), PDO::PARAM_STR],
+      ["agent", $_SERVER["HTTP_USER_AGENT"], PDO::PARAM_STR],
+      ["query", $Options["Dump"], PDO::PARAM_STR],
+      ["target", $Options["Target"], $Options["Target"] == null? PDO::PARAM_NULL : PDO::PARAM_INT]
+    ]
   ]);
 }
 
