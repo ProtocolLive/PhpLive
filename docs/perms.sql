@@ -17,8 +17,8 @@ CREATE TABLE `sys_perms` (
   `r` tinyint unsigned NOT NULL DEFAULT 0,
   `w` tinyint unsigned NOT NULL DEFAULT 0,
   `o` tinyint unsigned NOT NULL DEFAULT 0,
-  FOREIGN KEY (`resource_id`) REFERENCES `sys_resources` (`resource_id`),
-  FOREIGN KEY (`group_id`) REFERENCES `sys_groups` (`group_id`)
+  FOREIGN KEY (`resource_id`) REFERENCES `sys_resources` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`group_id`) REFERENCES `sys_groups` (`group_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE `sys_usergroup` (

@@ -12,13 +12,14 @@ CREATE TABLE `forms_fields`(
   `form_id` int UNSIGNED NOT NULL,
   `label` varchar(16),
   `name` varchar(15),
-  `onlyedit` tinyint UNSIGNED NOT NULL DEFAULT 0,
+  `default` varchar(20),
   `type` varchar(10) NOT NULL,
+  `onlyedit` tinyint UNSIGNED NOT NULL DEFAULT 0,
   `size` tinyint UNSIGNED,
   `style` varchar(1024),
   `class` varchar(10),
   `js_event` varchar(10),
   `js_code` varchar(512),
   `order` tinyint UNSIGNED NOT NULL DEFAULT 100,
-  FOREIGN KEY (`form_id`) REFERENCES `forms_forms`(`form_id`)
+  FOREIGN KEY (`form_id`) REFERENCES `forms_forms`(`form_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
