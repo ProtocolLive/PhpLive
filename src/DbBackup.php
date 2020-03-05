@@ -1,5 +1,7 @@
 <?php
-// Version 2020-01-17-00
+// Protocol Corporation Ltda.
+// https://github.com/ProtocolLive/PhpLive/
+// Version 2020-03-05-00
 
 function DbBackup($Options = []){
   if(isset($Options["Folder"]) == false) $Options["Folder"] = "/sql/";
@@ -29,6 +31,7 @@ function DbBackup($Options = []){
         if($result[$i][$j] == ""){
           fwrite($file, "null");
         }elseif(is_numeric($result[$i][$j]) == false){
+          $result[$i][$j] = str_replace("'", "''", $result[$i][$j]);
           fwrite($file, "'" . $result[$i][$j] . "'");
         }else{
           fwrite($file, $result[$i][$j]);
