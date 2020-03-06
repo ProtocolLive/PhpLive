@@ -1,10 +1,15 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-03-01
+// Version 2020-03-06-00
 
 $DbLastConn = null;
 $DbPrefix = null;
+define("PdoStr", PDO::PARAM_STR);
+define("PdoInt", PDO::PARAM_INT);
+define("PdoNull", PDO::PARAM_NULL);
+define("PdoBool", PDO::PARAM_BOOL);
+define("PdoSql", 6);
 
 /**
  * @param string $Drive (Optional) MySql as default
@@ -72,18 +77,36 @@ function SQL($Query, $Params = null, $Options = []){
       if(count($Param) != 3){
         throw new Exception("Quantidade incorreta de parâmetros ao especificar um placehole");
       }else{
-        if($Param[2] == PDO::PARAM_INT){
+        if($Param[2] == PdoSql){
+          if(is_numeric($Param[0])){
+            $in = 0;
+            for($i = 1; $i <= $Param[0]; $i++){
+              $in = strpos($Query, "?", $in);
+              $out = $in + 1;
+            }
+          }else{
+            $in = strpos($Query, $Param[0]);
+            $out = strpos($Query, ",", $in);
+            if($out === false){
+              $out = strpos($Query, ")", $in);
+            }
+          }
+          $temp = substr($Query, 0, $in);
+          $temp .= $Param[1];
+          $Query = $temp . substr($Query, $out);
+        }elseif($Param[2] == PdoInt){
           $Param[1] = str_replace(",", ".", $Param[1]);
           if(strpos($Param[1], ".") !== false){
-            $Param[2] = PDO::PARAM_STR;
+            $Param[2] = PdoStr;
           }
-        }elseif($Param[2] == PDO::PARAM_BOOL){
+        }elseif($Param[2] == PdoBool){
           $Param[1] = $Param[1] == "true"? true: false;
         }
         $result->bindValue($Param[0], $Param[1], $Param[2]);
       }
     }
   }
+  var_dump($Query);die();
   $result->execute();
   if(isset($Options["Debug"]) and $Options["Debug"] == true){?>
     <pre style="text-align:left"><?php $result->debugDumpParams();?></pre><?php
@@ -148,14 +171,14 @@ function SqlLog($Options = []){
   SqlInsert([
     "Table" => "sys_logs",
     "Fields" => [
-      ["time", date("Y-m-d H:i:s"), PDO::PARAM_STR],
-      ["user_id", $Options["User"], PDO::PARAM_INT],
-      ["log", $Options["Log"], PDO::PARAM_INT],
-      ["ip", $_SERVER["REMOTE_ADDR"], PDO::PARAM_STR],
-      ["ipreverse", gethostbyaddr($_SERVER["REMOTE_ADDR"]), PDO::PARAM_STR],
-      ["agent", $_SERVER["HTTP_USER_AGENT"], PDO::PARAM_STR],
-      ["query", $Options["Dump"], PDO::PARAM_STR],
-      ["target", $Options["Target"], $Options["Target"] == null? PDO::PARAM_NULL : PDO::PARAM_INT]
+      ["time", date("Y-m-d H:i:s"), PdoStr],
+      ["user_id", $Options["User"], PdoInt],
+      ["log", $Options["Log"], PdoInt],
+      ["ip", $_SERVER["REMOTE_ADDR"], PdoStr],
+      ["ipreverse", gethostbyaddr($_SERVER["REMOTE_ADDR"]), PdoStr],
+      ["agent", $_SERVER["HTTP_USER_AGENT"], PdoStr],
+      ["query", $Options["Dump"], PdoStr],
+      ["target", $Options["Target"], $Options["Target"] == null? PdoNull : PdoInt]
     ]
   ]);
 }
