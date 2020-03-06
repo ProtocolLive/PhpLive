@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-06-04
+// Version 2020-03-06-05
 
 $DbLastConn = null;
 $DbPrefix = null;
@@ -76,9 +76,9 @@ function SQL($Query, $Params = null, $Options = []){
     foreach($Params as $id => $Param){
       if($Param[2] == PdoSql){
         if(is_numeric($Param[0])){
-          $in = 0;
+          $out = 0;
           for($i = 1; $i <= $Param[0]; $i++){
-            $in = strpos($Query, "?", $in);
+            $in = strpos($Query, "?", $out);
             $out = $in + 1;
           }
         }else{
