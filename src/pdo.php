@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-06-02
+// Version 2020-03-06-03
 
 $DbLastConn = null;
 $DbPrefix = null;
@@ -58,7 +58,7 @@ function SQL($Query, $Params = null, $Options = []){
   
   if(isset($Options["Conn"]) == false){
     if($DbLastConn == null){
-      throw new Exception("Você não iniciou uma conexão a um banco de dados");
+      throw new Exception("You have not connected to a database");
     }else{
       $Options["Conn"] = &$DbLastConn;
     }
@@ -71,30 +71,37 @@ function SQL($Query, $Params = null, $Options = []){
   }
   $comando = explode(" ", $Query);
   $comando = strtolower($comando[0]);
+  //Search from PdoSql and parse
+  foreach($Params as $id => $Param){
+    if($Param[2] == PdoSql){
+      if(is_numeric($Param[0])){
+        $in = 0;
+        for($i = 1; $i <= $Param[0]; $i++){
+          $in = strpos($Query, "?", $in);
+          $out = $in + 1;
+        }
+      }else{
+        $in = strpos($Query, $Param[0]);
+        $out = strpos($Query, ",", $in);
+        if($out === false){
+          $out = strpos($Query, ")", $in);
+        }
+      }
+      $temp = substr($Query, 0, $in);
+      $temp .= $Param[1];
+      $Query = $temp . substr($Query, $out);
+      unset($Params[$id]);
+    }
+  }
+  //Prepare
   $result = $Options["Conn"]->prepare($Query);
+  //Bind tokens
   if($Params != null){
     foreach($Params as &$Param){
       if(count($Param) != 3){
-        throw new Exception("Quantidade incorreta de parâmetros ao especificar um placehole");
+        throw new Exception("Incorrect number of parameters when specifying a token");
       }else{
-        if($Param[2] == PdoSql){
-          if(is_numeric($Param[0])){
-            $in = 0;
-            for($i = 1; $i <= $Param[0]; $i++){
-              $in = strpos($Query, "?", $in);
-              $out = $in + 1;
-            }
-          }else{
-            $in = strpos($Query, $Param[0]);
-            $out = strpos($Query, ",", $in);
-            if($out === false){
-              $out = strpos($Query, ")", $in);
-            }
-          }
-          $temp = substr($Query, 0, $in);
-          $temp .= $Param[1];
-          $Query = $temp . substr($Query, $out);
-        }elseif($Param[2] == PdoInt){
+        if($Param[2] == PdoInt){
           $Param[1] = str_replace(",", ".", $Param[1]);
           if(strpos($Param[1], ".") !== false){
             $Param[2] = PdoStr;
@@ -106,10 +113,13 @@ function SQL($Query, $Params = null, $Options = []){
       }
     }
   }
+  //Execute
+  $result->execute();
+  //Debug
   if(isset($Options["Debug"]) and $Options["Debug"] == true){?>
     <pre style="text-align:left"><?php $result->debugDumpParams();?></pre><?php
   }
-  $result->execute();
+  //Return
   if($comando == "select" or $comando == "show" or $comando == "call"){
     $return = $result->fetchAll();
   }elseif($comando == "insert"){
@@ -117,6 +127,7 @@ function SQL($Query, $Params = null, $Options = []){
   }elseif($comando == "update" or $comando == "delete"){
     $return = $result->rowCount();
   }
+  //Log
   if(isset($Options["Log"]) and $Options["Log"] != null and 
   isset($Options["User"]) and $Options["User"] != null){
     ob_start();
@@ -228,7 +239,9 @@ function SqlUpdate($Options = [], $Options2 = []){
     }
     $return .= "=?,";
     $holes[] = [$i, $field[1], $field[2]];
-    $i++;
+    if($field[2] != PdoSql){
+      $i++;
+    }
   }
   $return = substr($return, 0, -1);
   $return .= " where " . $Options["Where"][0] . "=?";
