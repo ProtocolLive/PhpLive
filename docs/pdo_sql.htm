@@ -62,8 +62,8 @@
       - The parameters types: <span class="type1">PdoStr</span>, <span class="type1">PdoInt</span>,
       <span class="type1">PdoNull</span>, <span class="type1">PdoBool</span> and <span class="type1">PdoSql</span>;<br>
       - Others parameters, see <a href="https://www.php.net/manual/pt_BR/pdo.constants.php" target="_blank">https://www.php.net/manual/pt_BR/pdo.constants.php</a>;<br>
-      - There a functions <span class="type1">SqlInsert()</span> and <span class="type1">SqlUpdate()</span> to avoid differences when specifying holes;<br>
-      - For now, the function SqlUpdate only works with one where clause and only with numeric holes;
+      - There a functions <span class="type1">SqlInsert()</span> and <span class="type1">SqlUpdate()</span> to avoid differences when specifying token;<br>
+      - For now, the function SqlUpdate only works with one where clause and only with numeric tokens;
     </p>
     <h3>Examples</h3>
     <p>
@@ -71,14 +71,14 @@
       <span class="type1">$result</span> = <span class="type1">SQL</span>(<span class="type3">"select * from users"</span>);
     </p>
     <p>
-      <strong>A query with ordened holes:</strong><br>
+      <strong>A query with ordened tokens:</strong><br>
       <span class="type1">$result</span> = <span class="type1">SQL</span>(<span class="type3">"select * from users where email=? and city=?"</span>, [<br>
       &nbsp;&nbsp;&nbsp;[<span class="type1">1</span>, <span class="type1">$_POST[<span class="type3">"email"</span>]</span>, <span class="type1">PdoStr</span>],<br>
       &nbsp;&nbsp;&nbsp;[<span class="type1">2</span>, <span class="type1">$_POST[<span class="type3">"city"</span>]</span>, <span class="type1">PdoInt</span>]<br>
       ]);
     </p>
     <p>
-      <strong>A query with named holes:</strong><br>
+      <strong>A query with named tokens:</strong><br>
       <span class="type1">$result</span> = <span class="type1">SQL</span>(<span class="type3">"select * from users where name like :name or city like :name"</span>, [<br>
       &nbsp;&nbsp;&nbsp;[<span class="type3">":name"</span>, <span class="type3">"%"</span> . <span class="type1">$_POST[<span class="type3">"name"</span>]</span> . <span class="type3">"%"</span>, <span class="type1">PdoStr</span>],<br>
       ]);
