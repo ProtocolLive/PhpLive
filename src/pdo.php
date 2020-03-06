@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-06-03
+// Version 2020-03-06-04
 
 $DbLastConn = null;
 $DbPrefix = null;
@@ -72,25 +72,27 @@ function SQL($Query, $Params = null, $Options = []){
   $comando = explode(" ", $Query);
   $comando = strtolower($comando[0]);
   //Search from PdoSql and parse
-  foreach($Params as $id => $Param){
-    if($Param[2] == PdoSql){
-      if(is_numeric($Param[0])){
-        $in = 0;
-        for($i = 1; $i <= $Param[0]; $i++){
-          $in = strpos($Query, "?", $in);
-          $out = $in + 1;
+  if($Params != null){
+    foreach($Params as $id => $Param){
+      if($Param[2] == PdoSql){
+        if(is_numeric($Param[0])){
+          $in = 0;
+          for($i = 1; $i <= $Param[0]; $i++){
+            $in = strpos($Query, "?", $in);
+            $out = $in + 1;
+          }
+        }else{
+          $in = strpos($Query, $Param[0]);
+          $out = strpos($Query, ",", $in);
+          if($out === false){
+            $out = strpos($Query, ")", $in);
+          }
         }
-      }else{
-        $in = strpos($Query, $Param[0]);
-        $out = strpos($Query, ",", $in);
-        if($out === false){
-          $out = strpos($Query, ")", $in);
-        }
+        $temp = substr($Query, 0, $in);
+        $temp .= $Param[1];
+        $Query = $temp . substr($Query, $out);
+        unset($Params[$id]);
       }
-      $temp = substr($Query, 0, $in);
-      $temp .= $Param[1];
-      $Query = $temp . substr($Query, $out);
-      unset($Params[$id]);
     }
   }
   //Prepare
