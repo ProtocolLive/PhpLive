@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-06-01
+// Version 2020-03-06-02
 
 $DbLastConn = null;
 $DbPrefix = null;
@@ -106,10 +106,10 @@ function SQL($Query, $Params = null, $Options = []){
       }
     }
   }
-  $result->execute();
   if(isset($Options["Debug"]) and $Options["Debug"] == true){?>
     <pre style="text-align:left"><?php $result->debugDumpParams();?></pre><?php
   }
+  $result->execute();
   if($comando == "select" or $comando == "show" or $comando == "call"){
     $return = $result->fetchAll();
   }elseif($comando == "insert"){
@@ -134,7 +134,6 @@ function SQL($Query, $Params = null, $Options = []){
       "Target" => $Options["Target"],
       "Conn" => $Options["Conn"]
     ]);
-    
   }
   return $return;
 }
@@ -187,11 +186,7 @@ function SqlLog($Options = []){
  * @param array $Fields
  * @return int
  */
-function SqlInsert($Options = []){
-  if(isset($Options["Log"]) == false)  $Options["Log"] = null;
-  if(isset($Options["User"]) == false)  $Options["User"] = null;
-  if(isset($Options["Target"]) == false)  $Options["Target"] = null;
-
+function SqlInsert($Options = [], $Options2 = []){
   $return = "insert into " . $Options["Table"] . "(";
   $holes = [];
   $i = 1;
@@ -212,11 +207,7 @@ function SqlInsert($Options = []){
   }
   $return = substr($return, 0, -1);
   $return .= ");";
-  return SQL($return, $holes, [
-    "Log" => $Options["Log"],
-    "User" => $Options["User"],
-    "Target" => $Options["Target"]
-  ]);
+  return SQL($return, $holes, $Options2);
 }
 
 /**
@@ -225,11 +216,7 @@ function SqlInsert($Options = []){
  * @param array $Where
  * @return int
  */
-function SqlUpdate($Options = []){
-  if(isset($Options["Log"]) == false)  $Options["Log"] = null;
-  if(isset($Options["User"]) == false)  $Options["User"] = null;
-  if(isset($Options["Target"]) == false)  $Options["Target"] = null;
-
+function SqlUpdate($Options = [], $Options2 = []){
   $return = "update " . $Options["Table"] . " set ";
   $holes = [];
   $i = 1;
@@ -246,9 +233,5 @@ function SqlUpdate($Options = []){
   $return = substr($return, 0, -1);
   $return .= " where " . $Options["Where"][0] . "=?";
   $holes[] = [$i, $Options["Where"][1], $Options["Where"][2]];
-  return SQL($return, $holes, [
-    "Log" => $Options["Log"],
-    "User" => $Options["User"],
-    "Target" => $Options["Target"]
-  ]);
+  return SQL($return, $holes, $Options2);
 }
