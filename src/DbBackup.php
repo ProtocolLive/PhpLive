@@ -75,7 +75,7 @@ function DbBackup($Options = []){
         }
         $line .= ",\n";
       }
-      fwrite($file, substr($line, 0, -2) . ");\n\n");
+      fwrite($file, substr($line, 0, -2) . "\n);\n\n");
     }
     foreach($tables as $table){
       $cols = SQL("select CONSTRAINT_NAME,
