@@ -1,15 +1,15 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-07-00
+// Version 2020-03-07-01
 
 function DbBackup($Options = []){
-  if(isset($Options["Folder"]) == false) $Options["Folder"] = "\\sql\\";
+  if(isset($Options["Folder"]) == false) $Options["Folder"] = "/sql/";
   if(isset($Options["Tables"]) == false) $Options["Tables"] = false;
 
   $date = date("YmdHis");
   // Prevent the GithubImport folder
-  $folder = substr(__DIR__, 0, strrpos(__DIR__, "\\"));
+  $folder = substr(__DIR__, 0, strrpos(__DIR__, "/"));
   $folder .=  $Options["Folder"];
   $delete = [];
 
