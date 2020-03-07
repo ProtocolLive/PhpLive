@@ -1,14 +1,13 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-07-01
+// Version 2020-03-07-02
 
 function DbBackup($Options = []){
   if(isset($Options["Folder"]) == false) $Options["Folder"] = "/sql/";
-  if(isset($Options["Tables"]) == false) $Options["Tables"] = false;
 
   $date = date("YmdHis");
-  // Prevent the GithubImport folder
+  // Skip the GithubImport folder
   $folder = substr(__DIR__, 0, strrpos(__DIR__, "/"));
   $folder .=  $Options["Folder"];
   $delete = [];
@@ -21,7 +20,7 @@ function DbBackup($Options = []){
   $zip = new ZipArchive();
   $zip->open($folder . $date . ".zip", ZipArchive::CREATE);
   //Tables
-  if($Options["Tables"] == true){
+  if($Options["Mode"] == "Tables"){
     $file = fopen($folder . "tables.sql", "w");
     foreach($tables as $table){
       $cols = SQL("select COLUMN_NAME,
@@ -110,34 +109,36 @@ function DbBackup($Options = []){
   }
 
   //Data
-  foreach($tables as $table){
-    $file = fopen($folder . $table[0] . ".sql", "w");
-    $delete[] = $folder . $table[0] . ".sql";
-    fwrite($file, "insert into " . $table[0] . " values\n");
-    $result = SQL("select * from " . $table[0]);
-    $lines = count($result);
-    for($i = 0; $i < $lines; $i++){
-      fwrite($file, "(");
-      $fields = count($result[$i]) / 2;
-      for($j = 0; $j < $fields; $j++){
-        if($result[$i][$j] == ""){
-          fwrite($file, "null");
-        }elseif(is_numeric($result[$i][$j]) == false){
-          fwrite($file, "'" . $result[$i][$j] . "'");
-        }else{
-          fwrite($file, $result[$i][$j]);
+  if($Options["Mode"] == "Tables"){
+    foreach($tables as $table){
+      $file = fopen($folder . $table[0] . ".sql", "w");
+      $delete[] = $folder . $table[0] . ".sql";
+      fwrite($file, "insert into " . $table[0] . " values\n");
+      $result = SQL("select * from " . $table[0]);
+      $lines = count($result);
+      for($i = 0; $i < $lines; $i++){
+        fwrite($file, "(");
+        $fields = count($result[$i]) / 2;
+        for($j = 0; $j < $fields; $j++){
+          if($result[$i][$j] == ""){
+            fwrite($file, "null");
+          }elseif(is_numeric($result[$i][$j]) == false){
+            fwrite($file, "'" . $result[$i][$j] . "'");
+          }else{
+            fwrite($file, $result[$i][$j]);
+          }
+          if($j < $fields - 1){
+            fwrite($file, ",");
+          }
         }
-        if($j < $fields - 1){
-          fwrite($file, ",");
+        fwrite($file, ")");
+        if($i < $lines - 1){
+          fwrite($file, ",\n");
         }
       }
-      fwrite($file, ")");
-      if($i < $lines - 1){
-        fwrite($file, ",\n");
-      }
+      fclose($file);
+      $zip->addFile($folder . $table[0] . ".sql", $table[0] . ".sql");
     }
-    fclose($file);
-    $zip->addFile($folder . $table[0] . ".sql", $table[0] . ".sql");
   }
 
   $zip->close();
