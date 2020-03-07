@@ -106,6 +106,7 @@ function DbBackup($Options = []){
     }
     fclose($file);
     $zip->addFile($folder . "tables.sql", "tables.sql");
+    $delete[] = $folder . "tables.sql";
   }
 
   //Data
@@ -143,6 +144,5 @@ function DbBackup($Options = []){
   foreach($delete as $file){
     unlink($file);
   }
-  unlink($folder . "tables.sql");
   return substr($_SERVER["REQUEST_URI"], 0, strrpos($_SERVER["REQUEST_URI"], "/")) . $Options["Folder"] . $date . ".zip";
 }
