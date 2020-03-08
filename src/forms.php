@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-03-02
+// Version 2020-03-08-00
 
 function Form($Options = []){
   if(session_name() == "PHPSESSID"){
@@ -47,7 +47,9 @@ function Form($Options = []){
     if($field["type"] == "select"){
       echo $field["label"] . ":<br>";
       echo "<select name=\"" . $field["name"] . "\">";
-      echo "<option value=\"0\" selected disabled></option>";
+      if(isset($Options["Selects"][$field["name"]][0]) == false){
+        echo "<option value=\"0\" selected disabled></option>";
+      }
       foreach($Options["Selects"][$field["name"]] as $select){
         echo "<option value=\"" . $select[0] . "\"";
         if(isset($Options["Data"]) and $select[0] == $Options["Data"][$field["name"]]){
