@@ -109,7 +109,7 @@ function DbBackup($Options = []){
   }
 
   //Data
-  if($Options["Mode"] == "Tables"){
+  if($Options["Mode"] == "Data"){
     foreach($tables as $table){
       $file = fopen($folder . $table[0] . ".sql", "w");
       $delete[] = $folder . $table[0] . ".sql";
