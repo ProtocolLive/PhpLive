@@ -64,6 +64,8 @@ function Form($Options = []){
       echo "<br><input type=\"checkbox\" name=\"" . $field["name"] . "\"";
       if(isset($Options["Data"]) and $Options["Data"][$field["name"]] == 1){
         echo " checked";
+      }elseif($field["default"] == 1){
+        echo " checked";
       }
       echo "> " . $field["label"] . "<br>";
     }elseif($field["type"] == "hidden"){
