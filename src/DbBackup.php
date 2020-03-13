@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-07-02
+// Version 2020-03-13-00
 
 function DbBackup($Options = []){
   if(isset($Options["Folder"]) == false) $Options["Folder"] = "/sql/";
@@ -45,18 +45,20 @@ function DbBackup($Options = []){
         }else{
           $line .= "  " . $col["COLUMN_NAME"] . " " . $col["DATA_TYPE"];
         }
+        //Field size for integers is deprecated
         if($col["DATA_TYPE"] == "varchar"){
           $line .= "(" . $col["CHARACTER_MAXIMUM_LENGTH"] . ")";
         }elseif($col["DATA_TYPE"] == "decimal"){
           $line .= "(" . $col["NUMERIC_PRECISION"] . "," . $col["NUMERIC_SCALE"] . ")";
         }
-        if(strpos($col["COLUMN_TYPE"], "unsigned") !== false){
+        //Unsigned for decimal is deprecated
+        if(strpos($col["COLUMN_TYPE"], "unsigned") !== false and $col["DATA_TYPE"] != "decimal"){
           $line .= " unsigned";
         }
         if($col["IS_NULLABLE"] == "NO"){
           $line .= " not null";
         }
-        if($col["COLUMN_DEFAULT"] != null){
+        if($col["COLUMN_DEFAULT"] != null and $col["COLUMN_DEFAULT"] != "NULL"){
           $line .= " default ";
           if($col["DATA_TYPE"] == "varchar"){
             $line .= "'" . $col["COLUMN_DEFAULT"] . "'";
