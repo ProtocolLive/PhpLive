@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-16-00
+// Version 2020-03-16-01
 
 function DbBackup($Options = []){
   if(isset($Options["Folder"]) == false) $Options["Folder"] = "/sql/";
@@ -115,33 +115,35 @@ function DbBackup($Options = []){
   //Data
   if($Options["Mode"] == "Data"){
     foreach($tables as $table){
-      $file = fopen($folder . $table[0] . ".sql", "w");
-      $delete[] = $folder . $table[0] . ".sql";
-      fwrite($file, "insert into " . $table[0] . " values\n");
       $result = SQL("select * from " . $table[0]);
       $lines = count($result);
-      for($i = 0; $i < $lines; $i++){
-        fwrite($file, "(");
-        $fields = count($result[$i]) / 2;
-        for($j = 0; $j < $fields; $j++){
-          if($result[$i][$j] == ""){
-            fwrite($file, "null");
-          }elseif(is_numeric($result[$i][$j]) == false){
-            fwrite($file, "'" . str_replace("'", "''", $result[$i][$j]) . "'");
-          }else{
-            fwrite($file, $result[$i][$j]);
+      if($lines > 0){
+        $file = fopen($folder . $table[0] . ".sql", "w");
+        $delete[] = $folder . $table[0] . ".sql";
+        fwrite($file, "insert into " . $table[0] . " values\n");
+        for($i = 0; $i < $lines; $i++){
+          fwrite($file, "(");
+          $fields = count($result[$i]) / 2;
+          for($j = 0; $j < $fields; $j++){
+            if($result[$i][$j] == ""){
+              fwrite($file, "null");
+            }elseif(is_numeric($result[$i][$j]) == false){
+              fwrite($file, "'" . str_replace("'", "''", $result[$i][$j]) . "'");
+            }else{
+              fwrite($file, $result[$i][$j]);
+            }
+            if($j < $fields - 1){
+              fwrite($file, ",");
+            }
           }
-          if($j < $fields - 1){
-            fwrite($file, ",");
+          fwrite($file, ")");
+          if($i < $lines - 1){
+            fwrite($file, ",\n");
           }
         }
-        fwrite($file, ")");
-        if($i < $lines - 1){
-          fwrite($file, ",\n");
-        }
+        fclose($file);
+        $zip->addFile($folder . $table[0] . ".sql", $table[0] . ".sql");
       }
-      fclose($file);
-      $zip->addFile($folder . $table[0] . ".sql", $table[0] . ".sql");
     }
   }
 
