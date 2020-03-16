@@ -19,7 +19,7 @@ if(isset($_GET["a"]) == false){
 SqlConnect([
   "Ip" => "localhost",
   "User" => "root",
-  "Pwd" => "teste",
+  "Pwd" => "test",
   "Db" => "protocol"
 ]);
 
@@ -147,6 +147,7 @@ if(isset($_GET["a"])){
         ["text", "Text"],
         ["number", "Number"],
         ["date", "Date"],
+        ["password", "Password"],
         ["select", "List"],
         ["submit", "Submit button"]
       ],
