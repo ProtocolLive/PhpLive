@@ -1,8 +1,8 @@
 create table sys_groups(
   group_id int unsigned not null auto_increment primary key,
-  group varchar(45) not null unique key
+  `group` varchar(45) not null unique key
 );
-insert into sys_groups(group) values('Everyone'),('Authenticated users'),('Administrators');
+insert into sys_groups(`group`) values('Everyone'),('Authenticated users'),('Administrators');
 
 create table sys_resources(
   resource_id int unsigned not null auto_increment primary key,
