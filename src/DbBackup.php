@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-15-00
+// Version 2020-03-16-00
 
 function DbBackup($Options = []){
   if(isset($Options["Folder"]) == false) $Options["Folder"] = "/sql/";
@@ -40,7 +40,9 @@ function DbBackup($Options = []){
       ]);
       $line = "create table " . $table[0] . "(\n";
       foreach($cols as $col){
-        if($col["COLUMN_NAME"] == "order" or $col["COLUMN_NAME"] == "default"){
+        if($col["COLUMN_NAME"] == "order" 
+        or $col["COLUMN_NAME"] == "default"
+        or $col["COLUMN_NAME"] == "group"){
           $line .= "  `" . $col["COLUMN_NAME"] . "` " . $col["DATA_TYPE"];
         }else{
           $line .= "  " . $col["COLUMN_NAME"] . " " . $col["DATA_TYPE"];
