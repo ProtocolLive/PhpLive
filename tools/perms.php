@@ -30,7 +30,7 @@ if(isset($_GET["a"])){
         left join sys_groups using(group_id)
         left join sys_users using(user_id)
       where resource_id=?", [
-      [1, $_POST["resource"], PDO::PARAM_INT]
+      [1, $_POST["resource"], PdoInt]
     ]);
     if(count($result) == 0){?>
       <option value="0" disabled>Empty</option><?php
@@ -46,7 +46,7 @@ if(isset($_GET["a"])){
       $result = SQL("select r,w,o
         from sys_perms
         where perm_id=?", [
-        [1, $_POST["entity"], PDO::PARAM_INT]
+        [1, $_POST["entity"], PdoInt]
       ]);?>
       <tr>
         <td></td>
@@ -76,13 +76,16 @@ if(isset($_GET["a"])){
       </tr><?php
     }
   }elseif($_GET["a"] == "save"){
-    SQL("update sys_perms set r=?,w=?,o=? where perm_id=?", [
-      [1, $_POST["r"], PDO::PARAM_INT],
-      [2, $_POST["w"], PDO::PARAM_INT],
-      [3, $_POST["o"], PDO::PARAM_INT],
-      [4, $_POST["entity"], PDO::PARAM_INT]
+    SqlUpdate([
+      "Table" => "sys_perms",
+      "Fields" => [
+        ["r", $_POST["r"], PdoBool],
+        ["w", $_POST["w"], PdoBool],
+        ["o", $_POST["o"], PdoBool]
+      ],
+      "Where" => ["perm_id", $_POST["entity"], PdoInt]
     ]);
-    echo "Salvo!";
+    echo "Saved!";
   }
 }else{?>
   <form name="perms">
