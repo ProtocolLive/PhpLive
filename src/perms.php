@@ -1,9 +1,11 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-16-00
+// Version 2020-03-16-01
 
-function Access($Resource, $User = null){
+function Access($Resource, $User){
+  $return = ["r" => null, "w" => null, "o" => null];
+  //Get resource id by name
   if(is_numeric($Resource) == false){
     if(session_name() == "PHPSESSID"){
       $result = SQL("select resource_id
@@ -23,45 +25,56 @@ function Access($Resource, $User = null){
     }
     $Resource = $result[0][0];
   }
-  if($User == null){
-    $result = SQL("select r,w,o
-      from sys_perms
-      where group_id=1
-        and resource_id=?", [
-      [1, $Resource, PdoInt]
-    ]);
-    if(count($result) > 0){
-      return $result;
-    }else{
-      return ["r" => 0, "w" => 0, "o" => 0];
-    }
-  }else{
-    $result = SQL("select r,w,o
-      from sys_perms
-      where group_id=3
-        and user_id=?", [
-      [1, $User, PdoInt]
-    ]);
-    if(count($result) > 0){
-      $return = ["r" => 1, "w" => 1, "o" => 1];
-    }else{
-      $result = SQL("select r,w,o
-        from sys_perms
-        where resource_id=:resource
-          and(
-            user_id=:user
-            or group_id=2
-            or group_id in (select group_id from sys_groups where user_id=:user)
-          )
-        order by r,w,o", [
-        [":resource", $Resource, PdoInt],
-        [":user", $User, PdoInt]
-      ]);
-      if(count($result) > 0){
-        return $result[0];
-      }else{
-        return ["r" => 0, "w" => 0, "o" => 0];
-      }
-    }
+  // Permissions for everyone
+  $result = SQL("select r,w,o
+    from sys_perms
+    where resource_id=?
+      and group_id=1", [
+    [1, $Resource, PdoInt]
+  ]);
+  if(count($result) > 0){
+    $return = SetPerms($return, $result[0]);
   }
+  // Unauthenticated?
+  if($User == null){
+    return $return;
+  }
+  // Admin?
+  $result = SQL("select *
+    from sys_usergroup
+    where group_id=3
+      and user_id=?", [
+    [1, $User, PdoInt]
+  ]);
+  if(count($result) == 1){
+    return ["r" => 1, "w" => 1, "o" => 1];
+  }
+  // Others
+  $result = SQL("select r,w,o
+    from sys_perms
+    where resource_id=:resource
+      and(
+        user_id=:user
+        or group_id=2
+        or group_id in (select group_id from sys_groups where user_id=:user)
+      )
+    order by r,w,o", [
+    [":resource", $Resource, PdoInt],
+    [":user", $User, PdoInt]
+  ]);
+  if(count($result) > 0){
+    $return = $result[0];
+  }
+
+  return $return;
+}
+
+function SetPerms($All, $Perms){
+  if($All["r"] !== 0)
+    $All["r"] = $Perms["r"];
+  if($All["w"] !== 0)
+    $All["w"] = $Perms["w"];
+  if($All["o"] !== 0)
+    $All["o"] = $Perms["o"];
+  return $All;
 }
