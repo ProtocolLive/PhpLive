@@ -39,7 +39,7 @@ if(isset($_GET["a"])){
       ];
     if(isset($_GET["id"])){
       $form = SQL("select * from forms_forms where form_id=?", [
-        [1, $_GET["id"], PDO::PARAM_INT]
+        [1, $_GET["id"], PdoInt]
       ]);
       Form([
         "Form" => "form",
@@ -58,34 +58,40 @@ if(isset($_GET["a"])){
     }
   }elseif($_GET["a"] == "formsok"){
     if(isset($_GET["id"])){
-      SQL("update forms_forms set site=?,form=?,method=?,action=?,autocomplete=? where form_id=?", [
-        [1, $_POST["site"], PDO::PARAM_STR],
-        [2, $_POST["form"], PDO::PARAM_STR],
-        [3, $_POST["method"], PDO::PARAM_STR],
-        [4, $_POST["action"], $_POST["action"] == ""? PDO::PARAM_NULL: PDO::PARAM_STR],
-        [5, $_POST["autocomplete"], PDO::PARAM_STR],
-        [6, $_GET["id"], PDO::PARAM_INT]
+      SqlUpdate([
+        "Table" => "forms_forms",
+        "Fields" => [
+          ["site", $_POST["site"], PdoStr],
+          ["form", $_POST["form"], PdoStr],
+          ["method", $_POST["method"], PdoStr],
+          ["action", $_POST["action"], $_POST["action"] == ""? PdoNull: PdoStr],
+          ["autocomplete", $_POST["autocomplete"], PdoStr]
+        ],
+        "Where" => ["form_id", $_GET["id"], PdoInt]
       ]);?>
       <p>Form saved</p><?php
     }else{
-      SQL("insert into forms_forms" . InsertHoles("site,form,method,action,autocomplete"), [
-        [1, $_POST["site"], PDO::PARAM_STR],
-        [2, $_POST["form"], PDO::PARAM_STR],
-        [3, $_POST["method"], PDO::PARAM_STR],
-        [4, $_POST["action"], $_POST["action"] == ""? PDO::PARAM_NULL: PDO::PARAM_STR],
-        [5, $_POST["autocomplete"], PDO::PARAM_STR]
+      SqlInsert([
+        "Table" => "forms_forms",
+        "Fields" => [
+          ["site", $_POST["site"], PdoStr],
+          ["form", $_POST["form"], PdoStr],
+          ["method", $_POST["method"], PdoStr],
+          ["action", $_POST["action"], $_POST["action"] == ""? PdoNull: PdoStr],
+          ["autocomplete", $_POST["autocomplete"], PdoStr]
+        ]
       ]);?>
       <p>Form saved</p><?php
     }?>
     <p><a href="#" onclick="Ajax('ajax.php?a=forms','AjaxPage');">Continue</a><?php
   }elseif($_GET["a"] == "formsdel"){
     SQL("delete from forms_forms where form_id=?", [
-      [1, $_GET["id"], PDO::PARAM_INT]
+      [1, $_GET["id"], PdoInt]
     ]);
     header("location:ajax.php?a=forms");
   }elseif($_GET["a"] == "fields"){
     $fields = SQL("select * from forms_fields where form_id=? order by `order`", [
-      [1, $_GET["form"], PDO::PARAM_INT]
+      [1, $_GET["form"], PdoInt]
     ]);?>
     <table class="center">
       <tr>
@@ -151,7 +157,7 @@ if(isset($_GET["a"])){
     ];
     if(isset($_GET["id"])){
       $form = SQL("select * from forms_fields where field_id=?", [
-        [1, $_GET["id"], PDO::PARAM_INT]
+        [1, $_GET["id"], PdoInt]
       ]);
       Form([
         "Form" => "fields",
@@ -173,35 +179,35 @@ if(isset($_GET["a"])){
       SqlUpdate([
         "Table" => "forms_fields",
         "Fields" => [
-          ["label", $_POST["label"], PDO::PARAM_STR],
-          ["name", $_POST["name"], $_POST["name"] == ""? PDO::PARAM_NULL: PDO::PARAM_STR],
-          ["type", $_POST["type"], PDO::PARAM_STR],
-          ["default", $_POST["default"], $_POST["default"] == ""? PDO::PARAM_NULL: PDO::PARAM_STR],
-          ["size", $_POST["size"], $_POST["size"] == ""? PDO::PARAM_NULL: PDO::PARAM_INT],
-          ["style", $_POST["style"], $_POST["style"] == ""? PDO::PARAM_NULL: PDO::PARAM_STR],
-          ["class", $_POST["class"], $_POST["class"] == ""? PDO::PARAM_NULL: PDO::PARAM_STR],
-          ["js_event", $_POST["js_event"], $_POST["js_event"] == ""? PDO::PARAM_NULL: PDO::PARAM_STR],
-          ["js_code", $_POST["js_code"], $_POST["js_code"] == ""? PDO::PARAM_NULL: PDO::PARAM_STR],
-          ["order", $_POST["order"], PDO::PARAM_INT]
+          ["label", $_POST["label"], PdoStr],
+          ["name", $_POST["name"], $_POST["name"] == ""? PdoNull: PdoStr],
+          ["type", $_POST["type"], PdoStr],
+          ["default", $_POST["default"], $_POST["default"] == ""? PdoNull: PdoStr],
+          ["size", $_POST["size"], $_POST["size"] == ""? PdoNull: PdoInt],
+          ["style", $_POST["style"], $_POST["style"] == ""? PdoNull: PdoStr],
+          ["class", $_POST["class"], $_POST["class"] == ""? PdoNull: PdoStr],
+          ["js_event", $_POST["js_event"], $_POST["js_event"] == ""? PdoNull: PdoStr],
+          ["js_code", $_POST["js_code"], $_POST["js_code"] == ""? PdoNull: PdoStr],
+          ["order", $_POST["order"], PdoInt]
         ],
-        "Where" => ["field_id", $_GET["id"], PDO::PARAM_INT]
+        "Where" => ["field_id", $_GET["id"], PdoInt]
       ]);?>
       <p>Field saved</p><?php
     }else{
       SqlInsert([
         "Table" => "forms_fields",
         "Fields" => [
-          ["form_id", $_GET["form"], PDO::PARAM_INT],
-          ["label", $_POST["label"], PDO::PARAM_STR],
-          ["name", $_POST["name"], $_POST["name"] == ""? PDO::PARAM_NULL: PDO::PARAM_STR],
-          ["type", $_POST["type"], PDO::PARAM_STR],
-          ["default", $_POST["default"], $_POST["default"] == ""? PDO::PARAM_NULL: PDO::PARAM_STR],
-          ["size", $_POST["size"], $_POST["size"] == ""? PDO::PARAM_NULL: PDO::PARAM_INT],
-          ["style", $_POST["style"], $_POST["style"] == ""? PDO::PARAM_NULL: PDO::PARAM_STR],
-          ["class", $_POST["class"], $_POST["class"] == ""? PDO::PARAM_NULL: PDO::PARAM_STR],
-          ["js_event", $_POST["js_event"], $_POST["js_event"] == ""? PDO::PARAM_NULL: PDO::PARAM_STR],
-          ["js_code", $_POST["js_code"], $_POST["js_code"] == ""? PDO::PARAM_NULL: PDO::PARAM_STR],
-          ["order", $_POST["order"], PDO::PARAM_INT]
+          ["form_id", $_GET["form"], PdoInt],
+          ["label", $_POST["label"], PdoStr],
+          ["name", $_POST["name"], $_POST["name"] == ""? PdoNull: PdoStr],
+          ["type", $_POST["type"], PdoStr],
+          ["default", $_POST["default"], $_POST["default"] == ""? PdoNull: PdoStr],
+          ["size", $_POST["size"], $_POST["size"] == ""? PdoNull: PdoInt],
+          ["style", $_POST["style"], $_POST["style"] == ""? PdoNull: PdoStr],
+          ["class", $_POST["class"], $_POST["class"] == ""? PdoNull: PdoStr],
+          ["js_event", $_POST["js_event"], $_POST["js_event"] == ""? PdoNull: PdoStr],
+          ["js_code", $_POST["js_code"], $_POST["js_code"] == ""? PdoNull: PdoStr],
+          ["order", $_POST["order"], PdoInt]
         ]
       ]);?>
       <p>Field Saved</p><?php
@@ -209,7 +215,7 @@ if(isset($_GET["a"])){
     <p><a href="#" onclick="Ajax('ajax.php?a=fields&form=<?php echo $_GET["form"];?>','AjaxPage');">Continue</a><?php
   }elseif($_GET["a"] == "fieldsdel"){
     SQL("delete from forms_fields where field_id=?", [
-      [1, $_GET["id"], PDO::PARAM_INT]
+      [1, $_GET["id"], PdoInt]
     ]);
     header("location:ajax.php?a=fields&form=" . $_GET["form"]);
   }
