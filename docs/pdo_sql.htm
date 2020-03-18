@@ -145,5 +145,17 @@
       &nbsp;&nbsp;&nbsp;<span class="type3">"Debug"</span> => <span class="type1">true</span><br>
       ]);
     </p>
+    <p>
+      <strong>Using a PdoSql param:</strong><br>
+      <span class="type1">SqlUpdate</span>([<br>
+      &nbsp;&nbsp;&nbsp;<span class="type3">"Table"</span> => <span class="type3">"user"</span>,<br>
+      &nbsp;&nbsp;&nbsp;<span class="type3">"Fields"</span> => [<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="type3">"lastlogin=lastlogin2"</span>, <span class="type1">null</span>, <span class="type1">PdoSql</span>],<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="type3">"lastlogin2"</span>, <span class="type1">now()</span>, <span class="type1">PdoInt</span>]<br>
+      &nbsp;&nbsp;&nbsp;]<br>
+      <span class="type3">"Where"</span> => [<span class="type3">"id"</span>, <span class="type1">$_SESSION</span>[<span class="type3">"user"</span>], <span class="type1">PdoInt</span>]<br>
+      ]);<br>
+      <strong>Will run the query:</strong> update users set lastlogin=lastlogin2,lastlogin2=1584557739 where id=1
+    </p>
   </body>
 </html>
