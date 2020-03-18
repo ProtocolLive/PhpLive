@@ -60,8 +60,7 @@
     <p>
       - The parameters are send in array mode, because it is easier. You can send the parameters in any order;<br>
       - The parameters types: <span class="type1">PdoStr</span>, <span class="type1">PdoInt</span>,
-      <span class="type1">PdoNull</span>, <span class="type1">PdoBool</span> and <span class="type1">PdoSql</span>;<br>
-      - Others parameters, see <a href="https://www.php.net/manual/pt_BR/pdo.constants.php" target="_blank">https://www.php.net/manual/pt_BR/pdo.constants.php</a>;<br>
+      <span class="type1">PdoNull</span>, <span class="type1">PdoBool</span> and <span class="type1">PdoSql</span>. <a href="https://www.php.net/manual/pt_BR/pdo.constants.php" target="_blank">(Others parameters)</a>;<br>
       - There a functions <span class="type1">SqlInsert()</span> and <span class="type1">SqlUpdate()</span> to avoid differences when specifying token;<br>
       - For now, the function SqlUpdate only works with one where clause and only with numeric tokens;
     </p>
@@ -93,7 +92,8 @@
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="type3">"name"</span>, <span class="type1">$_POST</span>[<span class="type3">"name"</span>], <span class="type1">PdoStr</span>],<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="type3">"level"</span>, <span class="type1">$_POST</span>[<span class="type3">"level"</span>], <span class="type1">PdoInt</span>]<br>
       &nbsp;&nbsp;&nbsp;]<br>
-      ]);
+      ]);<br>
+      <strong>Execute the query:</strong> insert into users(email,pwd,name,level) values('a@a.com','123','adm',1)<br>
     </p>
     <p>
       <strong>A query with SqlUpdate() function:</strong><br>
@@ -105,11 +105,13 @@
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="type3">"level"</span>, <span class="type1">$_POST</span>[<span class="type3">"level"</span>], <span class="type1">PdoInt</span>]<br>
       &nbsp;&nbsp;&nbsp;],<br>
       &nbsp;&nbsp;&nbsp;<span class="type3">"Where"</span> => [<span class="type3">"email"</span>, <span class="type1">$_POST</span>[<span class="type3">"email"</span>], <span class="type1">PdoStr</span>]<br>
-      ]);
+      ]);<br>
+      <strong>Execute the query:</strong> update users set pwd='123',name='adm',level=1 where email='a@a.com'<br>
     </p>
     <p>
       <strong>A simple query with table prefix:</strong><br>
-      <span class="type1">$result</span> = <span class="type1">SQL</span>(<span class="type3">"select * from ##users"</span>);
+      <span class="type1">$result</span> = <span class="type1">SQL</span>(<span class="type3">"select * from ##users"</span>);<br>
+      <strong>Execute the query:</strong> select * from sys_users<br>
     </p>
     <p>
       <strong>Getting the values returned:</strong><br>
