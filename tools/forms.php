@@ -57,31 +57,26 @@ if(isset($_GET["a"])){
       ]);
     }
   }elseif($_GET["a"] == "formsok"){
+    $fields = [
+      ["site", $_POST["site"], PdoStr],
+      ["form", $_POST["form"], PdoStr],
+      ["method", $_POST["method"], PdoStr],
+      ["action", $_POST["action"], $_POST["action"] == ""? PdoNull: PdoStr],
+      ["autocomplete", $_POST["autocomplete"], PdoStr]
+    ];
     if(isset($_GET["id"])){
       SqlUpdate([
         "Table" => "forms_forms",
-        "Fields" => [
-          ["site", $_POST["site"], PdoStr],
-          ["form", $_POST["form"], PdoStr],
-          ["method", $_POST["method"], PdoStr],
-          ["action", $_POST["action"], $_POST["action"] == ""? PdoNull: PdoStr],
-          ["autocomplete", $_POST["autocomplete"], PdoStr]
-        ],
+        "Fields" => $fields,
         "Where" => ["form_id", $_GET["id"], PdoInt]
       ]);?>
       <p>Form saved</p><?php
     }else{
       SqlInsert([
         "Table" => "forms_forms",
-        "Fields" => [
-          ["site", $_POST["site"], PdoStr],
-          ["form", $_POST["form"], PdoStr],
-          ["method", $_POST["method"], PdoStr],
-          ["action", $_POST["action"], $_POST["action"] == ""? PdoNull: PdoStr],
-          ["autocomplete", $_POST["autocomplete"], PdoStr]
-        ]
+        "Fields" => $fields
       ]);?>
-      <p>Form saved</p><?php
+      <p>Form created</p><?php
     }?>
     <p><a href="#" onclick="Ajax('ajax.php?a=forms','AjaxPage');">Continue</a><?php
   }elseif($_GET["a"] == "formsdel"){
@@ -176,40 +171,29 @@ if(isset($_GET["a"])){
       ]);
     }
   }elseif($_GET["a"] == "fieldsok"){
+    $fields = [
+      ["label", $_POST["label"], PdoStr],
+      ["name", $_POST["name"], $_POST["name"] == ""? PdoNull: PdoStr],
+      ["type", $_POST["type"], PdoStr],
+      ["default", $_POST["default"], $_POST["default"] == ""? PdoNull: PdoStr],
+      ["size", $_POST["size"], $_POST["size"] == ""? PdoNull: PdoInt],
+      ["style", $_POST["style"], $_POST["style"] == ""? PdoNull: PdoStr],
+      ["class", $_POST["class"], $_POST["class"] == ""? PdoNull: PdoStr],
+      ["js_event", $_POST["js_event"], $_POST["js_event"] == ""? PdoNull: PdoStr],
+      ["js_code", $_POST["js_code"], $_POST["js_code"] == ""? PdoNull: PdoStr],
+      ["order", $_POST["order"], PdoInt]
+    ];
     if(isset($_GET["id"])){
       SqlUpdate([
         "Table" => "forms_fields",
-        "Fields" => [
-          ["label", $_POST["label"], PdoStr],
-          ["name", $_POST["name"], $_POST["name"] == ""? PdoNull: PdoStr],
-          ["type", $_POST["type"], PdoStr],
-          ["default", $_POST["default"], $_POST["default"] == ""? PdoNull: PdoStr],
-          ["size", $_POST["size"], $_POST["size"] == ""? PdoNull: PdoInt],
-          ["style", $_POST["style"], $_POST["style"] == ""? PdoNull: PdoStr],
-          ["class", $_POST["class"], $_POST["class"] == ""? PdoNull: PdoStr],
-          ["js_event", $_POST["js_event"], $_POST["js_event"] == ""? PdoNull: PdoStr],
-          ["js_code", $_POST["js_code"], $_POST["js_code"] == ""? PdoNull: PdoStr],
-          ["order", $_POST["order"], PdoInt]
-        ],
+        "Fields" => $fields,
         "Where" => ["field_id", $_GET["id"], PdoInt]
       ]);?>
       <p>Field saved</p><?php
     }else{
       SqlInsert([
         "Table" => "forms_fields",
-        "Fields" => [
-          ["form_id", $_GET["form"], PdoInt],
-          ["label", $_POST["label"], PdoStr],
-          ["name", $_POST["name"], $_POST["name"] == ""? PdoNull: PdoStr],
-          ["type", $_POST["type"], PdoStr],
-          ["default", $_POST["default"], $_POST["default"] == ""? PdoNull: PdoStr],
-          ["size", $_POST["size"], $_POST["size"] == ""? PdoNull: PdoInt],
-          ["style", $_POST["style"], $_POST["style"] == ""? PdoNull: PdoStr],
-          ["class", $_POST["class"], $_POST["class"] == ""? PdoNull: PdoStr],
-          ["js_event", $_POST["js_event"], $_POST["js_event"] == ""? PdoNull: PdoStr],
-          ["js_code", $_POST["js_code"], $_POST["js_code"] == ""? PdoNull: PdoStr],
-          ["order", $_POST["order"], PdoInt]
-        ]
+        "Fields" => $fields
       ]);?>
       <p>Field Saved</p><?php
     }?>
