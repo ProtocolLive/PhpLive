@@ -1,17 +1,17 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-08-01
+// Version 2020-03-18-00
 
 function Form($Options = []){
   if(session_name() == "PHPSESSID"){
     $site[0] = "site is null";
-    $site[1] = [[":form", $Options["Form"], PDO::PARAM_STR]];
+    $site[1] = [[":form", $Options["Form"], PdoStr]];
   }else{
     $site[0] = "site=:site";
     $site[1] = [
-      [":site", session_name(), PDO::PARAM_STR],
-      [":form", $Options["Form"], PDO::PARAM_STR]
+      [":site", session_name(), PdoStr],
+      [":form", $Options["Form"], PdoStr]
     ];
   }
   $form = SQL("select *
@@ -40,7 +40,7 @@ function Form($Options = []){
       and type<>'submit'
       $edit
     order by `order`", [
-    [1, $form[0]["form_id"], PDO::PARAM_INT]
+    [1, $form[0]["form_id"], PdoInt]
   ]);
   echo "<p>";
   foreach($fields as $field){
@@ -102,7 +102,7 @@ function Form($Options = []){
     from forms_fields
     where form_id=?
       and type='submit'", [
-    [1, $form[0]["form_id"], PDO::PARAM_INT]
+    [1, $form[0]["form_id"], PdoInt]
   ]);
   echo "<p><input type=\"submit\" value=\"" . $fields[0]["label"] . "\"";
   if($form[0]["method"] == "ajax"){
