@@ -111,7 +111,7 @@ function Form($Options = []){
     [
       [1, $form[0]["form_id"], PdoInt]
     ],
-    ["Debug" => $Options["PdoDebug"]
+    ["Debug" => $Options["PdoDebug"]]
   );
   echo "<p><input type=\"submit\" value=\"" . $fields[0]["label"] . "\"";
   if($form[0]["method"] == "ajax"){
