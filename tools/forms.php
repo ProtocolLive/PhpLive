@@ -146,9 +146,10 @@ if(isset($_GET["a"])){
         ["select", "List"],
         ["submit", "Submit button"]
       ],
-      "onlyedit" => [
-        [0, "No"],
-        [1, "Yes"]
+      "mode" => [
+        [0, "Normal"],
+        [1, "Only in insert"],
+        [2, "Only in update"]
       ]
     ];
     if(isset($_GET["id"])){

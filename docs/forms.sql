@@ -1,25 +1,27 @@
-CREATE TABLE `forms_forms`(
-  `form_id` int UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `site` varchar(10),
-  `form` varchar(15) NOT NULL,
-  `method` varchar(10) NOT NULL,
-  `action` varchar(100),
-  `autocomplete` tinyint UNSIGNED NOT NULL DEFAULT 1
+create table forms_forms(
+  form_id int unsigned not null auto_increment primary key,
+  site varchar(15),
+  form varchar(15) not null,
+  method varchar(15) not null,
+  action varchar(100),
+  autocomplete tinyint unsigned not null default 1
 );
 
-CREATE TABLE `forms_fields`(
-  `field_id` int UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `form_id` int UNSIGNED NOT NULL,
-  `label` varchar(16),
-  `name` varchar(15),
+create table forms_fields(
+  field_id int unsigned not null auto_increment primary key,
+  form_id int unsigned not null,
+  label varchar(16),
+  name varchar(15),
+  type varchar(10) not null,
   `default` varchar(20),
-  `type` varchar(10) NOT NULL,
-  `onlyedit` tinyint UNSIGNED NOT NULL DEFAULT 0,
-  `size` tinyint UNSIGNED,
-  `style` varchar(1024),
-  `class` varchar(10),
-  `js_event` varchar(10),
-  `js_code` varchar(512),
-  `order` tinyint UNSIGNED NOT NULL DEFAULT 100,
-  FOREIGN KEY (`form_id`) REFERENCES `forms_forms`(`form_id`) ON DELETE CASCADE ON UPDATE CASCADE
+  mode tinyint unsigned not null default 0,
+  size tinyint unsigned,
+  style varchar(1024),
+  class varchar(10),
+  js_event varchar(10),
+  js_code varchar(512),
+  `order` tinyint unsigned not null default 100
 );
+
+alter table forms_fields
+  add constraint forms_fields_ibfk_1 foreign key(form_id) references forms_forms(form_id) on delete CASCADE on update CASCADE;
