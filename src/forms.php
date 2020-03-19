@@ -1,9 +1,10 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-18-02
+// Version 2020-03-19-00
 
-function Form($Options = []){
+function Form($Options = [], $PhpLivePdo = "PDO"){
+  global $$PhpLivePdo;
   if(isset($Options["PdoDebug"]) == false) $Options["PdoDebug"] = false;
 
   if(session_name() == "PHPSESSID"){
@@ -16,7 +17,7 @@ function Form($Options = []){
       [":form", $Options["Form"], PdoStr]
     ];
   }
-  $form = SQL("select *
+  $form = $$PhpLivePdo->SQL("select *
     from forms_forms
     where " . $site[0] . "
       and form=:form",
@@ -33,7 +34,7 @@ function Form($Options = []){
     echo " autocomplete=\"off\"";
   }
   echo ">";
-  $fields = SQL("select *
+  $fields = $$PhpLivePdo->SQL("select *
     from forms_fields
     where form_id=?
       and type<>'submit'
@@ -104,7 +105,7 @@ function Form($Options = []){
     }
   }
   echo "</p>";
-  $fields = SQL("select *
+  $fields = $$PhpLivePdo->SQL("select *
     from forms_fields
     where form_id=?
       and type='submit'",
