@@ -55,6 +55,7 @@ function SqlConnect($Options = []){
 function SQL($Query, $Params = null, $Options = []){
   global $DbLastConn, $DbPrefix;
   if(isset($Options["Target"]) == false) $Options["Target"] = null;
+  if(isset($Options["Safe"]) == false) $Options["Target"] = true;
   
   if(isset($Options["Conn"]) == false){
     if($DbLastConn == null){
@@ -113,6 +114,12 @@ function SQL($Query, $Params = null, $Options = []){
         }
         $result->bindValue($Param[0], $Param[1], $Param[2]);
       }
+    }
+  }
+  //Safe execution
+  if($Options["Safe"] == true){
+    if($command == "truncate" or (($command == "update" or $command == "delete") and strpos($query, "where") === false)){
+      return false;
     }
   }
   //Execute
