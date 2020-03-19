@@ -94,10 +94,9 @@ function Form($Options = []){
       if($field["js_event"] != null){
         echo " " . $field["js_event"] . "=\"" . $field["js_code"] . "\"";
       }
-      if($field["mode"] != 1 and isset($Options["Data"])){
+      if($field["mode"] == 1 and isset($Options["Data"])){
         echo " disabled";
-      }
-      if($field["mode"] != 2 and isset($Options["Data"]) == false){
+      }elseif($field["mode"] == 2 and isset($Options["Data"]) == false){
         echo " disabled";
       }
       echo "><br>";
