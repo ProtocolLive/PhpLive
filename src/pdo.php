@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-19-03
+// Version 2020-03-19-04
 
 define("PdoStr", PDO::PARAM_STR);
 define("PdoInt", PDO::PARAM_INT);
@@ -111,7 +111,7 @@ class PhpLivePdo{
     }
     //Safe execution
     if($Options["Safe"] == true){
-      if($command == "truncate" or (($command == "update" or $command == "delete") and strpos($query, "where") === false)){
+      if($command == "truncate" or (($command == "update" or $command == "delete") and strpos($Query, "where") === false)){
         $Error = [3, "Query not allowed in safe mode"];
         return false;
       }
