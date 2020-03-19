@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-18-01
+// Version 2020-03-18-02
 
 function Form($Options = []){
   if(isset($Options["PdoDebug"]) == false) $Options["PdoDebug"] = false;
@@ -109,7 +109,7 @@ function Form($Options = []){
     where form_id=?
       and type='submit'",
     [
-      [1, $form[0]["form_id"], PdoInt],
+      [1, $form[0]["form_id"], PdoInt]
     ],
     ["Debug" => $Options["PdoDebug"]
   );
