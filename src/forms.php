@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-18-00
+// Version 2020-03-18-01
 
 function Form($Options = []){
   if(isset($Options["PdoDebug"]) == false) $Options["PdoDebug"] = false;
@@ -37,10 +37,12 @@ function Form($Options = []){
     from forms_fields
     where form_id=?
       and type<>'submit'
-    order by `order`", [
-    [1, $form[0]["form_id"], PdoInt],
+    order by `order`",
+    [
+      [1, $form[0]["form_id"], PdoInt]
+    ],
     ["Debug" => $Options["PdoDebug"]]
-  ]);
+  );
   echo "<p>";
   foreach($fields as $field){
     if($field["type"] == "select"){
@@ -105,10 +107,12 @@ function Form($Options = []){
   $fields = SQL("select *
     from forms_fields
     where form_id=?
-      and type='submit'", [
-    [1, $form[0]["form_id"], PdoInt],
-    ["Debug" => $Options["PdoDebug"]]
-  ]);
+      and type='submit'",
+    [
+      [1, $form[0]["form_id"], PdoInt],
+    ],
+    ["Debug" => $Options["PdoDebug"]
+  );
   echo "<p><input type=\"submit\" value=\"" . $fields[0]["label"] . "\"";
   if($form[0]["method"] == "ajax"){
     echo " onclick=\"Ajax('" . $Options["Page"] . "','" . $Options["Place"] . "','" . $Options["Form"] . "');" .
