@@ -4,6 +4,8 @@
 // Version 2020-03-18-00
 
 function Form($Options = []){
+  if(isset($Options["PdoDebug"]) == false) $Options["PdoDebug"] = false;
+
   if(session_name() == "PHPSESSID"){
     $site[0] = "site is null";
     $site[1] = [[":form", $Options["Form"], PdoStr]];
@@ -18,7 +20,8 @@ function Form($Options = []){
     from forms_forms
     where " . $site[0] . "
       and form=:form",
-    $site[1]
+    $site[1],
+    ["Debug" => $Options["PdoDebug"]]
   );
   echo "<form name=\"" . $form[0]["form"] . "\"";
   if($form[0]["method"] == "ajax"){
@@ -30,17 +33,13 @@ function Form($Options = []){
     echo " autocomplete=\"off\"";
   }
   echo ">";
-  $edit = "";
-  if(isset($Options["Data"]) == false){
-    $edit = " and onlyedit=0";
-  }
   $fields = SQL("select *
     from forms_fields
     where form_id=?
       and type<>'submit'
-      $edit
     order by `order`", [
-    [1, $form[0]["form_id"], PdoInt]
+    [1, $form[0]["form_id"], PdoInt],
+    ["Debug" => $Options["PdoDebug"]]
   ]);
   echo "<p>";
   foreach($fields as $field){
@@ -107,7 +106,8 @@ function Form($Options = []){
     from forms_fields
     where form_id=?
       and type='submit'", [
-    [1, $form[0]["form_id"], PdoInt]
+    [1, $form[0]["form_id"], PdoInt],
+    ["Debug" => $Options["PdoDebug"]]
   ]);
   echo "<p><input type=\"submit\" value=\"" . $fields[0]["label"] . "\"";
   if($form[0]["method"] == "ajax"){
