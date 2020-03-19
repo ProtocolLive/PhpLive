@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-19-01
+// Version 2020-03-19-02
 
 $DbLastConn = null;
 $DbPrefix = null;
@@ -55,7 +55,7 @@ function SqlConnect($Options = []){
 function SQL($Query, $Params = null, $Options = []){
   global $DbLastConn, $DbPrefix;
   if(isset($Options["Target"]) == false) $Options["Target"] = null;
-  if(isset($Options["Safe"]) == false) $Options["Target"] = true;
+  if(isset($Options["Safe"]) == false) $Options["Safe"] = true;
   
   if(isset($Options["Conn"]) == false){
     if($DbLastConn == null){
