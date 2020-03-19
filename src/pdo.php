@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-06-05
+// Version 2020-03-19-00
 
 $DbLastConn = null;
 $DbPrefix = null;
@@ -119,7 +119,10 @@ function SQL($Query, $Params = null, $Options = []){
   $result->execute();
   //Debug
   if(isset($Options["Debug"]) and $Options["Debug"] == true){?>
-    <pre style="text-align:left"><?php $result->debugDumpParams();?></pre><?php
+    <pre style="text-align:left">
+      <?php $result->debugDumpParams();?><br>
+      <?php debug_print_backtrace();?>
+    </pre><?php
   }
   //Return
   if($comando == "select" or $comando == "show" or $comando == "call"){
