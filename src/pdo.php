@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-19-00
+// Version 2020-03-19-01
 
 $DbLastConn = null;
 $DbPrefix = null;
@@ -69,8 +69,8 @@ function SQL($Query, $Params = null, $Options = []){
   }else{
     $Query = str_replace("##", "", $Query);
   }
-  $comando = explode(" ", $Query);
-  $comando = strtolower($comando[0]);
+  $command = explode(" ", $Query);
+  $command = strtolower($command[0]);
   //Search from PdoSql and parse
   if($Params != null){
     foreach($Params as $id => $Param){
@@ -125,11 +125,11 @@ function SQL($Query, $Params = null, $Options = []){
     </pre><?php
   }
   //Return
-  if($comando == "select" or $comando == "show" or $comando == "call"){
+  if($command == "select" or $command == "show" or $command == "call"){
     $return = $result->fetchAll();
-  }elseif($comando == "insert"){
+  }elseif($command == "insert"){
     $return = $Options["Conn"]->lastInsertId();
-  }elseif($comando == "update" or $comando == "delete"){
+  }elseif($command == "update" or $command == "delete"){
     $return = $result->rowCount();
   }
   //Log
