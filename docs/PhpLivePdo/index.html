@@ -1,0 +1,102 @@
+<html>
+  <head>
+    <title>PhpLivePdo</title>
+    <link rel="stylesheet" href="files/global.css">
+    <style>
+      .menu{
+        border-bottom: dotted 1px #ccc;
+      }
+      .menulink{
+        color: #ccc;
+      }
+      .color1{
+        color: #793862;
+      }
+      .color2{
+        color: #369;
+      }
+      .color3{
+        color: #693;
+      }
+      .color4{
+        color: #d00;
+      }
+    </style>
+  </head>
+  <body style="background-color: #333; font-family: 'Fira Sans', 'Source Sans Pro', Helvetica, Arial, sans-serif;">
+    <table style="width:88%;margin-left: auto;margin-right: auto;">
+      <tr>
+        <td style="background-color: #F2F2F2; padding: 20px;">
+          <div style="font-size: 22px; border-bottom: dotted 1px;" class="color1">
+            <strong>PhpLivePdo::__construct</strong>
+          </div>
+          <p>Creates a PDO instance representing a connection to a database</p>
+          <p>&nbsp;</p>
+
+          <div style="font-size: 18px; border-bottom: dotted 1px;" class="color1">
+            <strong>Sintaxe</strong>
+          </div>
+          <br>
+          <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
+            <strong>
+              <span class="color1">public</span> <span class="color2">PhpLivePdo::__construct</span> ( 
+              <span class="color3">array</span> <span class="color2">$Options</span>);
+            </strong>
+          </div>
+          <p>&nbsp;</p>
+
+          <div style="font-size: 18px; border-bottom: dotted 1px;" class="color1">
+            <strong>Parameters</strong>
+          </div>
+          <p><strong>List of <span class="color2">$Options</span>:</strong></p>
+          <p>&nbsp;&nbsp;Drive (Optional - Default: mysql) - The database used;</p>
+          <p>&nbsp;&nbsp;Ip - Database address, ip or dns;</p>
+          <p>&nbsp;&nbsp;Db - Default database schema;</p>
+          <p>&nbsp;&nbsp;Charset (Optional - Default: utf8) - The character set;</p>
+          <p>&nbsp;&nbsp;User - User to authenticate;</p>
+          <p>&nbsp;&nbsp;Pwd - Password to authenticate;</p>
+          <p>&nbsp;&nbsp;TimeOut (Optional- Default: 5) - Maximun seconds to run a query;</p>
+          <p>&nbsp;&nbsp;Prefix (Optional) - Text to be concated with "_" and table name;</p>
+          <p>&nbsp;</p>
+
+          <div style="font-size: 18px; border-bottom: dotted 1px;" class="color1">
+            <strong>Return Values</strong>
+          </div>
+          <p>Returns a PDO object on success.</p>
+          <p>&nbsp;</p>
+
+          <div style="font-size: 18px; border-bottom: dotted 1px;" class="color1">
+            <strong>Errors/Exceptions</strong>
+          </div>
+          <p>Throws a <a href="https://www.php.net/manual/en/class.pdoexception.php" target="_blank">PDOException</a> if the attempt to connect to the requested database fails.</p>
+          <p>&nbsp;</p>
+
+          <div style="font-size: 18px; border-bottom: dotted 1px;" class="color1">
+            <strong>Examples</strong>
+          </div>
+          <br>
+          <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
+            <strong>
+              <span class="color2">$conn</span> = <span class="color3">new</span> <span class="color2">PhpLivePdo</span>([<br>
+                &nbsp;&nbsp;&nbsp;<span class="color4">"Ip"</span> => <span class="color4">"localhost"</span>,<br>
+                &nbsp;&nbsp;&nbsp;<span class="color4">"User"</span> => <span class="color4">"root"</span>,<br>
+                &nbsp;&nbsp;&nbsp;<span class="color4">"Pwd"</span> => <span class="color4">"password"</span>,<br>
+                &nbsp;&nbsp;&nbsp;<span class="color4">"Db"</span> => <span class="color4">"mysite"</span><br>
+              ]);
+            </strong>
+          </div>
+          <p>&nbsp;</p>
+
+        </td>
+        <td style="width:300px; color: #ccc; font-size: 18px; vertical-align: top;">
+          PhpLivePdo
+          <table style="width:100%">
+            <tr>
+              <td class="menu"><a href="index.html" class="menulink">__construct</a></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
