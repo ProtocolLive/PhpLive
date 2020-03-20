@@ -25,7 +25,7 @@ SqlConnect([
 
 if(isset($_GET["a"])){
   if($_GET["a"] == "entitys"){
-    $result = SQL("select perm_id,`group`,name
+    $result = $PDO->SQL("select perm_id,`group`,name
       from sys_perms
         left join sys_groups using(group_id)
         left join sys_users using(user_id)
@@ -43,7 +43,7 @@ if(isset($_GET["a"])){
     if($_POST["entity"] == ""){
       FormDisabled();
     }else{
-      $result = SQL("select r,w,o
+      $result = $PDO->SQL("select r,w,o
         from sys_perms
         where perm_id=?", [
         [1, $_POST["entity"], PdoInt]
@@ -76,7 +76,7 @@ if(isset($_GET["a"])){
       </tr><?php
     }
   }elseif($_GET["a"] == "save"){
-    SqlUpdate([
+    $PDO->SqlUpdate([
       "Table" => "sys_perms",
       "Fields" => [
         ["r", $_POST["r"], PdoBool],
@@ -93,7 +93,7 @@ if(isset($_GET["a"])){
       <tr>
         <td>
           <select name="resource" size="10" onclick="Ajax('perms.php?a=entitys','AjaxEntitys','perms');document.perms.entity.click()"><?php
-            $result = SQL("select * from sys_resources order by resource");
+            $result = $PDO->SQL("select * from sys_resources order by resource");
             foreach($result as $line){?>
               <option value="<?php echo $line["resource_id"];?>"><?php echo $line["resource"];?></option><?php
             }?>
