@@ -1,22 +1,16 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-20-02
+// Version 2020-03-20-03
 
 function DbBackup($Options = [], $PhpLivePdo = "PDO"){
   global $$PhpLivePdo;
   if(isset($Options["Folder"]) == false) $Options["Folder"] = "/sql/";
 
   $date = date("YmdHis");
-  // Skip the GithubImport folder
-  $folder = substr(__DIR__, 0, strrpos(__DIR__, "/"));
-  $folder .=  $Options["Folder"];
-  $delete = [];
-
   if(file_exists($folder) == false){
     mkdir($folder);
   }
-
   $tables = $$PhpLivePdo->SQL("show tables like '##%'");
   $zip = new ZipArchive();
   $zip->open($folder . $date . ".zip", ZipArchive::CREATE);
