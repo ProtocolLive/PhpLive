@@ -76,18 +76,21 @@ function DbBackup($Options = [], $PhpLivePdo = "PDO"){
       fwrite($file, substr($line, 0, -2) . "\n);\n\n");
     }
     foreach($tables as $table){
-      $cols = $$PhpLivePdo->SQL("select CONSTRAINT_NAME,
+      $cols = $$PhpLivePdo->SQL("
+        select CONSTRAINT_NAME,
           COLUMN_NAME,
-          REFERENCED_TABLE_NAME,
+          cu.REFERENCED_TABLE_NAME,
           REFERENCED_COLUMN_NAME,
           DELETE_RULE,
           UPDATE_RULE
-        from information_schema.KEY_COLUMN_USAGE
+        from information_schema.KEY_COLUMN_USAGE cu
           left join information_schema.REFERENTIAL_CONSTRAINTS using(CONSTRAINT_NAME)
-        where TABLE_NAME=?
-          and REFERENCED_TABLE_NAME is not null", [
-        [1, $table[0], PdoStr]
-      ]);
+        where cu.TABLE_NAME=?
+          and REFERENCED_COLUMN_NAME is not null",
+        [
+          [1, $table[0], PdoStr]
+        ]
+      );
       if(count($cols) > 0){
         $line = "alter table " . $table[0] . "\n";
         foreach($cols as $col){
