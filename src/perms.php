@@ -1,81 +1,92 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-19-00
+// Version 2020-03-20-00
 
-function Access($Resource, $User, $PhpLivePdo = "PDO"){
-  global $$PhpLivePdo;
-  $return = ["r" => null, "w" => null, "o" => null];
-  //Get resource id by name
-  if(is_numeric($Resource) == false){
-    if(session_name() == "PHPSESSID"){
-      $result = $$PhpLivePdo->SQL("select resource_id
-        from sys_resources
-        where resource=?
-          and site is null", [
-        [1, $Resource, PdoStr]
-      ]);
+class PhpLivePerms{
+  private $PhpLivePdo = null;
+
+  public function __construct($Options){
+    if(isset($Options["PhpLivePdo"])){
+      $this->PhpLivePdo = $Options["PhpLivePdo"];
     }else{
-      $result = $$PhpLivePdo->SQL("select resource_id
-        from sys_resources
-        where resource=?
-          and site=?", [
-        [1, $Resource, PdoStr],
-        [2, session_name(), PdoStr]
-      ]);
+      return false;
     }
-    $Resource = $result[0][0];
   }
-  // Permissions for everyone
-  $result = $$PhpLivePdo->SQL("select r,w,o
-    from sys_perms
-    where resource_id=?
-      and group_id=1", [
-    [1, $Resource, PdoInt]
-  ]);
-  if(count($result) > 0){
-    $return = SetPerms($return, $result[0]);
-  }
-  // Unauthenticated?
-  if($User == null){
+
+  public function Access($Resource, $User){
+    $return = ["r" => null, "w" => null, "o" => null];
+    //Get resource id by name
+    if(is_numeric($Resource) == false){
+      if(session_name() == "PHPSESSID"){
+        $result = $this->PhpLivePdo->SQL("select resource_id
+          from sys_resources
+          where resource=?
+            and site is null", [
+          [1, $Resource, PdoStr]
+        ]);
+      }else{
+        $result = $this->PhpLivePdo->SQL("select resource_id
+          from sys_resources
+          where resource=?
+            and site=?", [
+          [1, $Resource, PdoStr],
+          [2, session_name(), PdoStr]
+        ]);
+      }
+      $Resource = $result[0][0];
+    }
+    // Permissions for everyone
+    $result = $this->PhpLivePdo->SQL("select r,w,o
+      from sys_perms
+      where resource_id=?
+        and group_id=1", [
+      [1, $Resource, PdoInt]
+    ]);
+    if(count($result) > 0){
+      $return = $this->SetPerms($return, $result[0]);
+    }
+    // Unauthenticated?
+    if($User == null){
+      return $return;
+    }
+    // Admin?
+    $result = $this->PhpLivePdo->SQL("select *
+      from sys_usergroup
+      where group_id=3
+        and user_id=?", [
+      [1, $User, PdoInt]
+    ]);
+    if(count($result) == 1){
+      return ["r" => 1, "w" => 1, "o" => 1];
+    }
+    // Others
+    $result = $this->PhpLivePdo->SQL("select r,w,o
+      from sys_perms
+      where resource_id=:resource
+        and(
+          user_id=:user
+          or group_id=2
+          or group_id in (select group_id from sys_groups where user_id=:user)
+        )
+      order by r,w,o", [
+      [":resource", $Resource, PdoInt],
+      [":user", $User, PdoInt]
+    ]);
+    if(count($result) > 0){
+      $return = $result[0];
+    }
+
     return $return;
   }
-  // Admin?
-  $result = $$PhpLivePdo->SQL("select *
-    from sys_usergroup
-    where group_id=3
-      and user_id=?", [
-    [1, $User, PdoInt]
-  ]);
-  if(count($result) == 1){
-    return ["r" => 1, "w" => 1, "o" => 1];
-  }
-  // Others
-  $result = $$PhpLivePdo->SQL("select r,w,o
-    from sys_perms
-    where resource_id=:resource
-      and(
-        user_id=:user
-        or group_id=2
-        or group_id in (select group_id from sys_groups where user_id=:user)
-      )
-    order by r,w,o", [
-    [":resource", $Resource, PdoInt],
-    [":user", $User, PdoInt]
-  ]);
-  if(count($result) > 0){
-    $return = $result[0];
-  }
 
-  return $return;
-}
-
-function SetPerms($All, $Perms){
-  if($All["r"] !== 0)
-    $All["r"] = $Perms["r"];
-  if($All["w"] !== 0)
-    $All["w"] = $Perms["w"];
-  if($All["o"] !== 0)
-    $All["o"] = $Perms["o"];
-  return $All;
+  private function SetPerms($All, $Perms){
+    if($All["r"] !== 0)
+      $All["r"] = $Perms["r"];
+    if($All["w"] !== 0)
+      $All["w"] = $Perms["w"];
+    if($All["o"] !== 0)
+      $All["o"] = $Perms["o"];
+    return $All;
+  }
 }
