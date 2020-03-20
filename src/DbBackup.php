@@ -1,22 +1,22 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-20-03
+// Version 2020-03-20-04
 
 function DbBackup($Options = [], $PhpLivePdo = "PDO"){
   global $$PhpLivePdo;
   if(isset($Options["Folder"]) == false) $Options["Folder"] = "/sql/";
 
   $date = date("YmdHis");
-  if(file_exists($folder) == false){
-    mkdir($folder);
+  if(file_exists($Options["Folder"]) == false){
+    mkdir($Options["Folder"]);
   }
   $tables = $$PhpLivePdo->SQL("show tables like '##%'");
   $zip = new ZipArchive();
-  $zip->open($folder . $date . ".zip", ZipArchive::CREATE);
+  $zip->open($Options["Folder"] . $date . ".zip", ZipArchive::CREATE);
   //Tables
   if($Options["Mode"] == "Tables"){
-    $file = fopen($folder . "tables.sql", "w");
+    $file = fopen($Options["Folder"] . "tables.sql", "w");
     foreach($tables as $table){
       $cols = $$PhpLivePdo->SQL("select COLUMN_NAME,
           DATA_TYPE,
@@ -100,8 +100,8 @@ function DbBackup($Options = [], $PhpLivePdo = "PDO"){
       }
     }
     fclose($file);
-    $zip->addFile($folder . "tables.sql", "tables.sql");
-    $delete[] = $folder . "tables.sql";
+    $zip->addFile($Options["Folder"] . "tables.sql", "tables.sql");
+    $delete[] = $Options["Folder"] . "tables.sql";
   }
 
   //Data
@@ -110,8 +110,8 @@ function DbBackup($Options = [], $PhpLivePdo = "PDO"){
       $result = $$PhpLivePdo->SQL("select * from " . $table[0]);
       $lines = count($result);
       if($lines > 0){
-        $file = fopen($folder . $table[0] . ".sql", "w");
-        $delete[] = $folder . $table[0] . ".sql";
+        $file = fopen($Options["Folder"] . $table[0] . ".sql", "w");
+        $delete[] = $Options["Folder"] . $table[0] . ".sql";
         fwrite($file, "insert into " . $table[0] . " values\n");
         for($i = 0; $i < $lines; $i++){
           fwrite($file, "(");
@@ -134,7 +134,7 @@ function DbBackup($Options = [], $PhpLivePdo = "PDO"){
           }
         }
         fclose($file);
-        $zip->addFile($folder . $table[0] . ".sql", $table[0] . ".sql");
+        $zip->addFile($Options["Folder"] . $table[0] . ".sql", $table[0] . ".sql");
       }
     }
   }
