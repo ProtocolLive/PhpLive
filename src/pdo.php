@@ -24,7 +24,7 @@ class PhpLivePdo{
    * @param string $Charset (Optional) UTF8 as default
    * @param int $TimeOut (Optional) Connection timeout
    * @return object Connection
-  */
+   */
   public function __construct($Options = []){
     if(isset($Options["Drive"]) == false) $Options["Drive"] = "mysql";
     if(isset($Options["Charset"]) == false) $Options["Charset"] = "utf8";
@@ -94,7 +94,7 @@ class PhpLivePdo{
     if($Params != null){
       foreach($Params as &$Param){
         if(count($Param) != 3){
-          $Error = [2, "Incorrect number of parameters when specifying a token"];
+          $Error = [1, "Incorrect number of parameters when specifying a token"];
           return false;
         }else{
           if($Param[2] == PdoInt){
@@ -112,7 +112,7 @@ class PhpLivePdo{
     //Safe execution
     if($Options["Safe"] == true){
       if($command == "truncate" or (($command == "update" or $command == "delete") and strpos($Query, "where") === false)){
-        $Error = [3, "Query not allowed in safe mode"];
+        $Error = [2, "Query not allowed in safe mode"];
         return false;
       }
     }
@@ -139,7 +139,7 @@ class PhpLivePdo{
       $result->debugDumpParams();
       $dump = ob_get_contents();
       ob_end_clean();
-      $dump = substr($dump, strpos($dump, "Sent $PDO->SQL: ["));
+      $dump = substr($dump, strpos($dump, "Sent SQL: ["));
       $dump = substr($dump, strpos($dump, "] ") + 2);
       $dump = substr($dump, 0, strpos($dump, "Params: "));
       $dump = trim($dump);
@@ -151,41 +151,6 @@ class PhpLivePdo{
       ]);
     }
     return $return;
-  }
-
-  /**
-   * @param string $Query
-   * @return string
-   */
-  private function Clean($Query){
-    $Query = str_replace("\n", "", $Query);
-    $Query = str_replace("\t", "", $Query);
-    $Query = str_replace("\r", " ", $Query);
-    $Query = trim($Query);
-    return $Query;
-  }
-
-  /**
-   * @param object $Conn (Optional)
-   * @param int $User User executing the query
-   * @param string $Dump The dump created by $PDO->SQL function
-   * @param int $Type Action identification
-   * @param int $Target User afected by query
-   */
-  private function SqlLog($Options = []){
-    $this-> $PDO->SqlInsert([
-      "Table" => "sys_logs",
-      "Fields" => [
-        ["time", date("Y-m-d H:i:s"), PdoStr],
-        ["user_id", $Options["User"], PdoInt],
-        ["log", $Options["Log"], PdoInt],
-        ["ip", $_SERVER["REMOTE_ADDR"], PdoStr],
-        ["ipreverse", gethostbyaddr($_SERVER["REMOTE_ADDR"]), PdoStr],
-        ["agent", $_SERVER["HTTP_USER_AGENT"], PdoStr],
-        ["query", $Options["Dump"], PdoStr],
-        ["target", $Options["Target"], $Options["Target"] == null? PdoNull : PdoInt]
-      ]
-    ]);
   }
 
   /**
@@ -243,5 +208,47 @@ class PhpLivePdo{
     $return .= " where " . $Options["Where"][0] . "=?";
     $holes[] = [$i, $Options["Where"][1], $Options["Where"][2]];
     return $this->SQL($return, $holes, $Options2);
+  }
+
+  /**
+   * @return array
+   */
+  public function GetError(){
+    return $this->Error;
+  }
+
+  /**
+   * @param string $Query
+   * @return string
+   */
+  private function Clean($Query){
+    $Query = str_replace("\n", "", $Query);
+    $Query = str_replace("\t", "", $Query);
+    $Query = str_replace("\r", " ", $Query);
+    $Query = trim($Query);
+    return $Query;
+  }
+
+  /**
+   * @param object $Conn (Optional)
+   * @param int $User User executing the query
+   * @param string $Dump The dump created by $PDO->SQL function
+   * @param int $Type Action identification
+   * @param int $Target User afected by query
+   */
+  private function SqlLog($Options = []){
+    $this-> $PDO->SqlInsert([
+      "Table" => "sys_logs",
+      "Fields" => [
+        ["time", date("Y-m-d H:i:s"), PdoStr],
+        ["user_id", $Options["User"], PdoInt],
+        ["log", $Options["Log"], PdoInt],
+        ["ip", $_SERVER["REMOTE_ADDR"], PdoStr],
+        ["ipreverse", gethostbyaddr($_SERVER["REMOTE_ADDR"]), PdoStr],
+        ["agent", $_SERVER["HTTP_USER_AGENT"], PdoStr],
+        ["query", $Options["Dump"], PdoStr],
+        ["target", $Options["Target"], $Options["Target"] == null? PdoNull : PdoInt]
+      ]
+    ]);
   }
 }
