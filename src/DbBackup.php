@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-20-00
+// Version 2020-03-20-01
 
 function DbBackup($Options = [], $PhpLivePdo = "PDO"){
   if(isset($Options["Folder"]) == false) $Options["Folder"] = "/sql/";
@@ -84,8 +84,11 @@ function DbBackup($Options = [], $PhpLivePdo = "PDO"){
       $cols = $$PhpLivePdo->SQL("select CONSTRAINT_NAME,
           COLUMN_NAME,
           REFERENCED_TABLE_NAME,
-          REFERENCED_COLUMN_NAME
+          REFERENCED_COLUMN_NAME,
+          DELETE_RULE,
+          UPDATE_RULE
         from information_schema.KEY_COLUMN_USAGE
+          left join information_schema.REFERENTIAL_CONSTRAINTS using(CONSTRAINT_NAME)
         where TABLE_NAME=?
           and REFERENCED_TABLE_NAME is not null", [
         [1, $table[0], PdoStr]
@@ -96,13 +99,7 @@ function DbBackup($Options = [], $PhpLivePdo = "PDO"){
           $line .= "  add constraint " . $col["CONSTRAINT_NAME"];
           $line .= " foreign key(" . $col["COLUMN_NAME"] . ") references ";
           $line .= $col["REFERENCED_TABLE_NAME"] . "(" . $col["REFERENCED_COLUMN_NAME"] . ") ";
-          $fk = $$PhpLivePdo->SQL("select DELETE_RULE,
-              UPDATE_RULE
-            from information_schema.REFERENTIAL_CONSTRAINTS
-            where CONSTRAINT_NAME=?", [
-            [1, $col["CONSTRAINT_NAME"], PdoStr]
-          ]);
-          $line .= "on delete " . $fk[0]["DELETE_RULE"] . " on update " . $fk[0]["UPDATE_RULE"] . ",\n";
+          $line .= "on delete " . $col["DELETE_RULE"] . " on update " . $col["UPDATE_RULE"] . ",\n";
         }
         fwrite($file, substr($line, 0, -2) . ";\n\n");
       }
