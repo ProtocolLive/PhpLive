@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-19-04
+// Version 2020-03-19-05
 
 define("PdoStr", PDO::PARAM_STR);
 define("PdoInt", PDO::PARAM_INT);
@@ -232,12 +232,12 @@ class PhpLivePdo{
   /**
    * @param object $Conn (Optional)
    * @param int $User User executing the query
-   * @param string $Dump The dump created by $PDO->SQL function
+   * @param string $Dump The dump created by SQL function
    * @param int $Type Action identification
    * @param int $Target User afected by query
    */
   private function SqlLog($Options = []){
-    $this-> $PDO->SqlInsert([
+    $this->SqlInsert([
       "Table" => "sys_logs",
       "Fields" => [
         ["time", date("Y-m-d H:i:s"), PdoStr],
