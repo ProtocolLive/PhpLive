@@ -1,9 +1,9 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-16-01
+// Version 2020-03-20-00
 
-function DbBackup($Options = []){
+function DbBackup($Options = [], $PhpLivePdo = "PDO"){
   if(isset($Options["Folder"]) == false) $Options["Folder"] = "/sql/";
 
   $date = date("YmdHis");
@@ -16,14 +16,14 @@ function DbBackup($Options = []){
     mkdir($folder);
   }
 
-  $tables = SQL("show tables like '##%'");
+  $tables = $$PhpLivePdo->SQL("show tables like '##%'");
   $zip = new ZipArchive();
   $zip->open($folder . $date . ".zip", ZipArchive::CREATE);
   //Tables
   if($Options["Mode"] == "Tables"){
     $file = fopen($folder . "tables.sql", "w");
     foreach($tables as $table){
-      $cols = SQL("select COLUMN_NAME,
+      $cols = $$PhpLivePdo->SQL("select COLUMN_NAME,
           DATA_TYPE,
           CHARACTER_MAXIMUM_LENGTH,
           NUMERIC_PRECISION,
@@ -81,7 +81,7 @@ function DbBackup($Options = []){
       fwrite($file, substr($line, 0, -2) . "\n);\n\n");
     }
     foreach($tables as $table){
-      $cols = SQL("select CONSTRAINT_NAME,
+      $cols = $$PhpLivePdo->SQL("select CONSTRAINT_NAME,
           COLUMN_NAME,
           REFERENCED_TABLE_NAME,
           REFERENCED_COLUMN_NAME
@@ -96,7 +96,7 @@ function DbBackup($Options = []){
           $line .= "  add constraint " . $col["CONSTRAINT_NAME"];
           $line .= " foreign key(" . $col["COLUMN_NAME"] . ") references ";
           $line .= $col["REFERENCED_TABLE_NAME"] . "(" . $col["REFERENCED_COLUMN_NAME"] . ") ";
-          $fk = SQL("select DELETE_RULE,
+          $fk = $$PhpLivePdo->SQL("select DELETE_RULE,
               UPDATE_RULE
             from information_schema.REFERENTIAL_CONSTRAINTS
             where CONSTRAINT_NAME=?", [
@@ -115,7 +115,7 @@ function DbBackup($Options = []){
   //Data
   if($Options["Mode"] == "Data"){
     foreach($tables as $table){
-      $result = SQL("select * from " . $table[0]);
+      $result = $$PhpLivePdo->SQL("select * from " . $table[0]);
       $lines = count($result);
       if($lines > 0){
         $file = fopen($folder . $table[0] . ".sql", "w");
