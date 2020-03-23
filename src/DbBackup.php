@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-20-04
+// Version 2020-03-23-00
 
 function DbBackup($Options = [], $PhpLivePdo = "PDO"){
   global $$PhpLivePdo;
@@ -123,7 +123,7 @@ function DbBackup($Options = [], $PhpLivePdo = "PDO"){
             if($result[$i][$j] == ""){
               fwrite($file, "null");
             }elseif(is_numeric($result[$i][$j]) == false){
-              fwrite($file, "'" . str_replace("'", "''", $result[$i][$j]) . "'");
+              fwrite($file, "'" . addslashes($result[$i][$j]));
             }else{
               fwrite($file, $result[$i][$j]);
             }
