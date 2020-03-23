@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>PhpLivePdo - __construct</title>
+    <title>PhpLivePdo - SqlInsert</title>
     <link rel="stylesheet" href="files/global.css">
     <style>
       .menu{
@@ -31,9 +31,9 @@
       <tr>
         <td style="background-color: #F2F2F2; padding: 20px;">
           <div style="font-size: 22px; border-bottom: dotted 1px;" class="color1">
-            <strong>PhpLivePdo::__construct</strong>
+            <strong>PhpLivePdo::SqlInsert</strong>
           </div>
-          <p>Creates a PDO instance representing a connection to a database</p>
+          <p>Execute a insert query. This function its good to avoid differences when specifying tokens.</p>
           <p>&nbsp;</p>
 
           <div style="font-size: 18px; border-bottom: dotted 1px;" class="color1">
@@ -42,8 +42,9 @@
           <br>
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
             <strong>
-              <span class="color1">public</span> <span class="color2">PhpLivePdo::__construct</span> ( 
-              <span class="color3">array</span> <span class="color2">$Options</span>);
+              <span class="color1">public</span> <span class="color2">PhpLivePdo::SqlInsert</span> ( 
+              <span class="color3">array</span> <span class="color2">$Options</span> [,
+              <span class="color3">array</span> <span class="color2">$Options2</span>]);
             </strong>
           </div>
           <p>&nbsp;</p>
@@ -52,26 +53,15 @@
             <strong>Parameters</strong>
           </div>
           <p><strong>List of <span class="color2">$Options</span>:</strong></p>
-          <p>&nbsp;&nbsp;Drive (Optional - Default: mysql) - The database used;</p>
-          <p>&nbsp;&nbsp;Ip - Database address, ip or dns;</p>
-          <p>&nbsp;&nbsp;Db - Default database schema;</p>
-          <p>&nbsp;&nbsp;Charset (Optional - Default: utf8) - The character set;</p>
-          <p>&nbsp;&nbsp;User - User to authenticate;</p>
-          <p>&nbsp;&nbsp;Pwd - Password to authenticate;</p>
-          <p>&nbsp;&nbsp;TimeOut (Optional- Default: 5) - Maximun seconds to run a query;</p>
-          <p>&nbsp;&nbsp;Prefix (Optional) - Text to be concated with "_" and table name;</p>
+          <p>&nbsp;&nbsp;Table - The table afected;</p>
+          <p>&nbsp;&nbsp;Fields - The fields to be added;</p>
+          <p><strong><span class="color2">$Options2</span> are the <span class="color2">$Options</span> in the <span class="color2">SQL</span> function</strong></p>
           <p>&nbsp;</p>
 
           <div style="font-size: 18px; border-bottom: dotted 1px;" class="color1">
             <strong>Return Values</strong>
           </div>
-          <p>Returns a PDO object on success.</p>
-          <p>&nbsp;</p>
-
-          <div style="font-size: 18px; border-bottom: dotted 1px;" class="color1">
-            <strong>Errors/Exceptions</strong>
-          </div>
-          <p>Throws a <a href="https://www.php.net/manual/en/class.pdoexception.php" target="_blank">PDOException</a> if the attempt to connect to the requested database fails.</p>
+          <p>Returns the last auto_increment value.</p>
           <p>&nbsp;</p>
 
           <div style="font-size: 18px; border-bottom: dotted 1px;" class="color1">
@@ -80,12 +70,16 @@
           <br>
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
             <strong>
-              <span class="color2">$conn</span> = <span class="color3">new</span> <span class="color2">PhpLivePdo</span>([<br>
-                &nbsp;&nbsp;&nbsp;<span class="color4">"Ip"</span> => <span class="color4">"localhost"</span>,<br>
-                &nbsp;&nbsp;&nbsp;<span class="color4">"User"</span> => <span class="color4">"root"</span>,<br>
-                &nbsp;&nbsp;&nbsp;<span class="color4">"Pwd"</span> => <span class="color4">"password"</span>,<br>
-                &nbsp;&nbsp;&nbsp;<span class="color4">"Db"</span> => <span class="color4">"mysite"</span><br>
-              ]);
+              <span class="color2">$PDO->SqlInsert</span>([<br>
+                &nbsp;&nbsp;&nbsp;<span class="color4">"Table"</span> => <span class="color4">"users"</span>,<br>
+                &nbsp;&nbsp;&nbsp;<span class="color4">"Fields"</span> => [<br>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="color4">"email"</span>, <span class="color2">$_POST</span>[<span class="color4">"email"</span>], <span class="color2">PdoStr</span>],<br>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="color4">"pwd"</span>, <span class="color2">$_POST</span>[<span class="color4">"pwd"</span>], <span class="color2">PdoStr</span>],<br>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="color4">"name"</span>, <span class="color2">$_POST</span>[<span class="color4">"name"</span>], <span class="color2">PdoStr</span>],<br>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="color4">"level"</span>, <span class="color2">$_POST</span>[<span class="color4">"level"</span>], <span class="color2">PdoInt</span>]<br>
+                &nbsp;&nbsp;&nbsp;]<br>
+              ]);<br>
+              <span class="color5">// insert into users(email,pwd,name,level) values('a@a.com','123','adm',1)</span>
             </strong>
           </div>
           <p>&nbsp;</p>
