@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-23-04
+// Version 2020-03-23-05
 
 class PhpLiveDbBackup{
   private $PhpLivePdo;
@@ -133,7 +133,7 @@ class PhpLiveDbBackup{
               if($result[$i][$j] == ""){
                 fwrite($file, "null");
               }elseif(is_numeric($result[$i][$j]) == false){
-                fwrite($file, "'" . addslashes($result[$i][$j]) . "'");
+                fwrite($file, "'" . str_replace("'", "''", $result[$i][$j]) . "'");
               }else{
                 fwrite($file, $result[$i][$j]);
               }
