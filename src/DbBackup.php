@@ -1,13 +1,17 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-23-02
+// Version 2020-03-23-03
 
 class PhpLiveDbBackup{
   private $PhpLivePdo;
 
-  public function __construct(&$PhpLivePdo){
-    $this->PhpLivePdo = $PhpLivePdo;
+  public function __construct($Options){
+    if(isset($Options["PhpLivePdo"])){
+      $this->PhpLivePdo = $Options["PhpLivePdo"];
+    }else{
+      return false;
+    }
   }
 
   public function DbBackup($Options = []){
