@@ -1,34 +1,26 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-23-05
+// Version 2020-03-24-00
 
 class PhpLiveDbBackup{
-  private $PhpLivePdo;
-
-  public function __construct($Options){
-    if(isset($Options["PhpLivePdo"])){
-      $this->PhpLivePdo = $Options["PhpLivePdo"];
-    }else{
-      return false;
-    }
-  }
 
   public function DbBackup($Options = []){
+    if(isset($Options["PhpLivePdo"]) == false) return false;
     if(isset($Options["Folder"]) == false) $Options["Folder"] = "/sql/";
 
     $date = date("YmdHis");
     if(file_exists($Options["Folder"]) == false){
       mkdir($Options["Folder"]);
     }
-    $tables = $this->PhpLivePdo->SQL("show tables like '##%'");
+    $tables = $Options["PhpLivePdo"]->SQL("show tables like '##%'");
     $zip = new ZipArchive();
     $zip->open($Options["Folder"] . $date . ".zip", ZipArchive::CREATE);
     //Tables
     if($Options["Mode"] == "Tables"){
       $file = fopen($Options["Folder"] . "tables.sql", "w");
       foreach($tables as $table){
-        $cols = $this->PhpLivePdo->SQL("select COLUMN_NAME,
+        $cols = $Options["PhpLivePdo"]->SQL("select COLUMN_NAME,
             DATA_TYPE,
             CHARACTER_MAXIMUM_LENGTH,
             NUMERIC_PRECISION,
@@ -86,7 +78,7 @@ class PhpLiveDbBackup{
         fwrite($file, substr($line, 0, -2) . "\n);\n\n");
       }
       foreach($tables as $table){
-        $cols = $this->PhpLivePdo->SQL("
+        $cols = $Options["PhpLivePdo"]->SQL("
           select CONSTRAINT_NAME,
             COLUMN_NAME,
             cu.REFERENCED_TABLE_NAME,
@@ -120,7 +112,7 @@ class PhpLiveDbBackup{
     //Data
     if($Options["Mode"] == "Data"){
       foreach($tables as $table){
-        $result = $this->PhpLivePdo->SQL("select * from " . $table[0]);
+        $result = $Options["PhpLivePdo"]->SQL("select * from " . $table[0]);
         $lines = count($result);
         if($lines > 0){
           $file = fopen($Options["Folder"] . $table[0] . ".sql", "w");
