@@ -1,20 +1,25 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-20-00
+// Version 2020-03-24-00
 
 class PhpLiveForms{
   private $PhpLivePdo = null;
 
-  public function __construct($Options){
-    if(isset($Options["PhpLivePdo"])){
-      $this->PhpLivePdo = $Options["PhpLivePdo"];
-    }else{
-      return false;
-    }
+  public function __construct(&$PhpLivePdo = null){
+    $this->PhpLivePdo = $PhpLivePdo;
   }
 
   public function Form($Options){
+    if($this->PhpLivePdo === null){
+      if(isset($Options["PhpLivePdo"]) == false){
+        return false;
+      }else{
+        $PhpLivePdo = &$Options["PhpLivePdo"];
+      }
+    }else{
+      $PhpLivePdo = $this->PhpLivePdo;
+    }
     if(isset($Options["PdoDebug"]) == false) $Options["PdoDebug"] = false;
 
     if(session_name() == "PHPSESSID"){
@@ -27,7 +32,7 @@ class PhpLiveForms{
         [":form", $Options["Form"], PdoStr]
       ];
     }
-    $form = $this->PhpLivePdo->SQL("
+    $form = $PhpLivePdo->SQL("
       select *
       from forms_forms
       where " . $site[0] . "
@@ -45,7 +50,7 @@ class PhpLiveForms{
       echo " autocomplete=\"off\"";
     }
     echo ">";
-    $fields = $this->PhpLivePdo->SQL("
+    $fields = $PhpLivePdo->SQL("
       select *
       from forms_fields
       where form_id=?
@@ -117,7 +122,7 @@ class PhpLiveForms{
       }
     }
     echo "</p>";
-    $fields = $this->PhpLivePdo->SQL("
+    $fields = $PhpLivePdo->SQL("
       select *
       from forms_fields
       where form_id=?
