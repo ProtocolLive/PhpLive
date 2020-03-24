@@ -1,32 +1,38 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-20-00
+// Version 2020-03-24-00
 
 class PhpLivePerms{
   private $PhpLivePdo = null;
 
-  public function __construct($Options){
-    if(isset($Options["PhpLivePdo"])){
-      $this->PhpLivePdo = $Options["PhpLivePdo"];
-    }else{
-      return false;
-    }
+  public function __construct(&$PhpLivePdo = null){
+    $this->PhpLivePdo = $PhpLivePdo;
   }
 
   public function Access($Resource, $User){
+    if($this->PhpLivePdo === null){
+      if(isset($Options["PhpLivePdo"]) == false){
+        return false;
+      }else{
+        $PhpLivePdo = &$Options["PhpLivePdo"];
+      }
+    }else{
+      $PhpLivePdo = $this->PhpLivePdo;
+    }
+
     $return = ["r" => null, "w" => null, "o" => null];
     //Get resource id by name
     if(is_numeric($Resource) == false){
       if(session_name() == "PHPSESSID"){
-        $result = $this->PhpLivePdo->SQL("select resource_id
+        $result = $PhpLivePdo->SQL("select resource_id
           from sys_resources
           where resource=?
             and site is null", [
           [1, $Resource, PdoStr]
         ]);
       }else{
-        $result = $this->PhpLivePdo->SQL("select resource_id
+        $result = $PhpLivePdo->SQL("select resource_id
           from sys_resources
           where resource=?
             and site=?", [
@@ -37,21 +43,21 @@ class PhpLivePerms{
       $Resource = $result[0][0];
     }
     // Permissions for everyone
-    $result = $this->PhpLivePdo->SQL("select r,w,o
+    $result = $PhpLivePdo->SQL("select r,w,o
       from sys_perms
       where resource_id=?
         and group_id=1", [
       [1, $Resource, PdoInt]
     ]);
     if(count($result) > 0){
-      $return = $this->SetPerms($return, $result[0]);
+      $return = $SetPerms($return, $result[0]);
     }
     // Unauthenticated?
     if($User == null){
       return $return;
     }
     // Admin?
-    $result = $this->PhpLivePdo->SQL("select *
+    $result = $PhpLivePdo->SQL("select *
       from sys_usergroup
       where group_id=3
         and user_id=?", [
@@ -61,7 +67,7 @@ class PhpLivePerms{
       return ["r" => 1, "w" => 1, "o" => 1];
     }
     // Others
-    $result = $this->PhpLivePdo->SQL("select r,w,o
+    $result = $PhpLivePdo->SQL("select r,w,o
       from sys_perms
       where resource_id=:resource
         and(
