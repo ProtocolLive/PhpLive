@@ -1,26 +1,39 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-24-00
+// Version 2020-03-24-01
 
 class PhpLiveDbBackup{
+  private $PhpLivePdo = null;
+
+  public function __construct(&$PhpLivePdo){
+    $this->PhpLivePdo = $PhpLivePdo;
+  }
 
   public function DbBackup($Options = []){
-    if(isset($Options["PhpLivePdo"]) == false) return false;
+    if($this->PhpLivePdo === null){
+      if(isset($Options["PhpLivePdo"]) == false){
+        return false;
+      }else{
+        $PhpLivePdo = &$Options["PhpLivePdo"];
+      }
+    }else{
+      $PhpLivePdo = $this->PhpLivePdo;
+    }
     if(isset($Options["Folder"]) == false) $Options["Folder"] = "/sql/";
 
     $date = date("YmdHis");
     if(file_exists($Options["Folder"]) == false){
       mkdir($Options["Folder"]);
     }
-    $tables = $Options["PhpLivePdo"]->SQL("show tables like '##%'");
+    $tables = $PhpLivePdo->SQL("show tables like '##%'");
     $zip = new ZipArchive();
     $zip->open($Options["Folder"] . $date . ".zip", ZipArchive::CREATE);
     //Tables
     if($Options["Mode"] == "Tables"){
       $file = fopen($Options["Folder"] . "tables.sql", "w");
       foreach($tables as $table){
-        $cols = $Options["PhpLivePdo"]->SQL("select COLUMN_NAME,
+        $cols = $PhpLivePdo->SQL("select COLUMN_NAME,
             DATA_TYPE,
             CHARACTER_MAXIMUM_LENGTH,
             NUMERIC_PRECISION,
@@ -78,7 +91,7 @@ class PhpLiveDbBackup{
         fwrite($file, substr($line, 0, -2) . "\n);\n\n");
       }
       foreach($tables as $table){
-        $cols = $Options["PhpLivePdo"]->SQL("
+        $cols = $PhpLivePdo->SQL("
           select CONSTRAINT_NAME,
             COLUMN_NAME,
             cu.REFERENCED_TABLE_NAME,
@@ -112,7 +125,7 @@ class PhpLiveDbBackup{
     //Data
     if($Options["Mode"] == "Data"){
       foreach($tables as $table){
-        $result = $Options["PhpLivePdo"]->SQL("select * from " . $table[0]);
+        $result = $PhpLivePdo->SQL("select * from " . $table[0]);
         $lines = count($result);
         if($lines > 0){
           $file = fopen($Options["Folder"] . $table[0] . ".sql", "w");
