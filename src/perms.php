@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-24-00
+// Version 2020-03-27-00
 
 class PhpLivePerms{
   private $PhpLivePdo = null;
@@ -10,7 +10,7 @@ class PhpLivePerms{
     $this->PhpLivePdo = $PhpLivePdo;
   }
 
-  public function Access($Resource, $User){
+  public function Access($Options){
     if($this->PhpLivePdo === null){
       if(isset($Options["PhpLivePdo"]) == false){
         return false;
@@ -53,7 +53,7 @@ class PhpLivePerms{
       $return = $SetPerms($return, $result[0]);
     }
     // Unauthenticated?
-    if($User == null){
+    if(isset($Options["User"]) == false or isnull($Options["User"])){
       return $return;
     }
     // Admin?
@@ -61,7 +61,7 @@ class PhpLivePerms{
       from sys_usergroup
       where group_id=3
         and user_id=?", [
-      [1, $User, PdoInt]
+      [1, $Options["User"], PdoInt]
     ]);
     if(count($result) == 1){
       return ["r" => 1, "w" => 1, "o" => 1];
@@ -77,7 +77,7 @@ class PhpLivePerms{
         )
       order by r,w,o", [
       [":resource", $Resource, PdoInt],
-      [":user", $User, PdoInt]
+      [":user", $Options["User"], PdoInt]
     ]);
     if(count($result) > 0){
       $return = $result[0];
