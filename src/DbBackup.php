@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-27-00
+// Version 2020-03-27-01
 
 class PhpLiveDbBackup{
   private $PhpLivePdo = null;
@@ -30,7 +30,7 @@ class PhpLiveDbBackup{
     $zip = new ZipArchive();
     $zip->open($Options["Folder"] . $date . ".zip", ZipArchive::CREATE);
     //Tables
-    if($Options["Mode"] == "Tables"){
+    if(isset($Options["Mode"]) and $Options["Mode"] == "Tables"){
       $file = fopen($Options["Folder"] . "tables.sql", "w");
       foreach($tables as $table){
         $cols = $PhpLivePdo->SQL("select COLUMN_NAME,
