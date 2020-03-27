@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-24-00
+// Version 2020-03-27-00
 
 class PhpLiveForms{
   private $PhpLivePdo = null;
@@ -35,7 +35,7 @@ class PhpLiveForms{
     $form = $PhpLivePdo->SQL("
       select *
       from forms_forms
-      where " . $site[0] . "
+      where $site[0]
         and form=:form",
       $site[1],
       ["Debug" => $Options["PdoDebug"]]
@@ -80,13 +80,13 @@ class PhpLiveForms{
         }
         echo "</select><br>";
       }elseif($field["type"] == "checkbox"){
-        echo "<br><input type=\"checkbox\" name=\"" . $field["name"] . "\"";
+        echo "<p><input type=\"checkbox\" name=\"" . $field["name"] . "\"";
         if(isset($Options["Data"]) and $Options["Data"][$field["name"]] == 1){
           echo " checked";
         }elseif($field["default"] == 1){
           echo " checked";
         }
-        echo "> " . $field["label"] . "<br>";
+        echo "> " . $field["label"] . "</p>";
       }elseif($field["type"] == "hidden"){
         echo "<input type=\"" . $field["type"] . "\" name=\"" . $field["name"] . "\"";
         if(isset($Options["Hiddens"])){
