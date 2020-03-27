@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-27-01
+// Version 2020-03-27-02
 
 class PhpLivePerms{
   private $PhpLivePdo = null;
@@ -53,7 +53,7 @@ class PhpLivePerms{
       $return = $SetPerms($return, $result[0]);
     }
     // Unauthenticated?
-    if(isset($Options["User"]) == false or isnull($Options["User"])){
+    if(isset($Options["User"]) == false or is_null($Options["User"])){
       return $return;
     }
     // Admin?
