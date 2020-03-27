@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-19-06
+// Version 2020-03-27-00
 
 define("PdoStr", PDO::PARAM_STR);
 define("PdoInt", PDO::PARAM_INT);
@@ -25,7 +25,7 @@ class PhpLivePdo{
    * @param int $TimeOut (Optional) Connection timeout
    * @return object Connection
    */
-  public function __construct($Options = []){
+  public function __construct($Options){
     if(isset($Options["Drive"]) == false) $Options["Drive"] = "mysql";
     if(isset($Options["Charset"]) == false) $Options["Charset"] = "utf8";
     if(isset($Options["TimeOut"]) == false) $Options["TimeOut"] = 5;
@@ -157,7 +157,7 @@ class PhpLivePdo{
    * @param array $Fields
    * @return int
    */
-  public function  SqlInsert($Options = [], $Options2 = []){
+  public function  SqlInsert($Options, $Options2 = []){
     $return = "insert into " . $Options["Table"] . "(";
     $holes = [];
     $i = 1;
@@ -187,7 +187,7 @@ class PhpLivePdo{
    * @param array $Where
    * @return int
    */
-  public function  SqlUpdate($Options = [], $Options2 = []){
+  public function  SqlUpdate($Options, $Options2 = []){
     $return = "update " . $Options["Table"] . " set ";
     $holes = [];
     $i = 1;
@@ -235,7 +235,7 @@ class PhpLivePdo{
    * @param int $Type Action identification
    * @param int $Target User afected by query
    */
-  private function SqlLog($Options = []){
+  private function SqlLog($Options){
     $this->SqlInsert([
       "Table" => "sys_logs",
       "Fields" => [
