@@ -10,7 +10,7 @@ create table forms_forms(
 create table forms_fields(
   field_id int unsigned not null auto_increment primary key,
   form_id int unsigned not null,
-  label varchar(16),
+  label varchar(50),
   name varchar(15),
   type varchar(10) not null,
   `default` varchar(20),
