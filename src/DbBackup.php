@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-24-02
+// Version 2020-03-27-00
 
 class PhpLiveDbBackup{
   private $PhpLivePdo = null;
@@ -123,7 +123,7 @@ class PhpLiveDbBackup{
     }
 
     //Data
-    if($Options["Mode"] == "Data"){
+    if(isset($Options["Mode"]) == false or $Options["Mode"] == "Data"){
       foreach($tables as $table){
         $result = $PhpLivePdo->SQL("select * from " . $table[0]);
         $lines = count($result);
