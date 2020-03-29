@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-27-00
+// Version 2020-03-29-00
 
 define("PdoStr", PDO::PARAM_STR);
 define("PdoInt", PDO::PARAM_INT);
@@ -52,9 +52,10 @@ class PhpLivePdo{
    * @return mixed
    */
   public function SQL($Query, $Params = null, $Options = []){
+    set_error_handler([$this, "SetError"]);
     if(isset($Options["Target"]) == false) $Options["Target"] = null;
     if(isset($Options["Safe"]) == false) $Options["Safe"] = true;
-    
+
     $Query = $this->Clean($Query);
     if($this->Prefix !== null){
       $Query = str_replace("##", $this->Prefix . "_", $Query);
@@ -93,8 +94,7 @@ class PhpLivePdo{
     if($Params != null){
       foreach($Params as &$Param){
         if(count($Param) != 3){
-          $Error = [1, "Incorrect number of parameters when specifying a token"];
-          return false;
+          trigger_error("Incorrect number of parameters when specifying a token", E_WARNING);
         }else{
           if($Param[2] == PdoInt){
             $Param[1] = str_replace(",", ".", $Param[1]);
@@ -111,8 +111,7 @@ class PhpLivePdo{
     //Safe execution
     if($Options["Safe"] == true){
       if($command == "truncate" or (($command == "update" or $command == "delete") and strpos($Query, "where") === false)){
-        $Error = [2, "Query not allowed in safe mode"];
-        return false;
+        trigger_error("Query not allowed in safe mode", E_WARNING);
       }
     }
     //Execute
@@ -214,6 +213,13 @@ class PhpLivePdo{
    */
   public function GetError(){
     return $this->Error;
+  }
+
+  /**
+   * For use of PHP system
+   */
+  public function SetError($Code, $Msg, $File, $Line){
+    $this->Error = [$Code, $Msg, $File, $Line];
   }
 
   /**
