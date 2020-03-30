@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-29-00
+// Version 2020-03-30-00
 
 define("PdoStr", PDO::PARAM_STR);
 define("PdoInt", PDO::PARAM_INT);
@@ -130,6 +130,8 @@ class PhpLivePdo{
       $return = $this->Conn->lastInsertId();
     }elseif($command == "update" or $command == "delete"){
       $return = $result->rowCount();
+    }else{
+      $return = true;
     }
     //Log
     if(isset($Options["Log"]) and $Options["Log"] != null and isset($Options["User"]) and $Options["User"] != null){
