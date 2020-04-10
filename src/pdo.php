@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-30-00
+// Version 2020.04.10.00
 
 define("PdoStr", PDO::PARAM_STR);
 define("PdoInt", PDO::PARAM_INT);
@@ -163,12 +163,7 @@ class PhpLivePdo{
     $holes = [];
     $i = 1;
     foreach($Options["Fields"] as $field){
-      if($field[0] == "order" or $field[0] == "default"){
-        $return .= "`" . $field[0] . "`";
-      }else{
-        $return .= $field[0];
-      }
-      $return .= ",";
+      $return .= $this->Reserved($field[0]) . ",";
       $holes[] = [$i, $field[1], $field[2]];
       $i++;
     }
@@ -193,12 +188,7 @@ class PhpLivePdo{
     $holes = [];
     $i = 1;
     foreach($Options["Fields"] as $field){
-      if($field[0] == "order" or $field[0] == "default"){
-        $return .= "`" . $field[0] . "`";
-      }else{
-        $return .= $field[0];
-      }
-      $return .= "=?,";
+      $return .= $this->Reserved($field[0]) . "=?,";
       $holes[] = [$i, $field[1], $field[2]];
       if($field[2] != PdoSql){
         $i++;
@@ -257,5 +247,16 @@ class PhpLivePdo{
         ["target", $Options["Target"], $Options["Target"] == null? PdoNull : PdoInt]
       ]
     ]);
+  }
+
+  /**
+   * @param string $Field
+   * @return string
+   */
+  private function Reserved($Field){
+    if($Field == "order" or $Field == "default"){
+      $Field = "`" . $Field . "`";
+    }
+    return $Field;
   }
 }
