@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020-03-27-00
+// Version 2020.03.27.00
 
 class PhpLiveForms{
   private $PhpLivePdo = null;

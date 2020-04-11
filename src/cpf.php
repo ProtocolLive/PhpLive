@@ -1,7 +1,7 @@
 <?php
 //Protocol Corporation Ltda.
 //https://github.com/protocollive
-//Version 2018061001
+//Version 2018.06.10.01
 
 function Cpf($Cpf){
   $Cpf = str_replace(".", "", $Cpf);

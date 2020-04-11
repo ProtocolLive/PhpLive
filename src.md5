@@ -1,6 +1,28 @@
-655ef34d55f222a4fdca4809d823c654  /cpf.php
-00fa86281ad695b53723a6a5c67c211f  /DbBackup.php
-e85f0db504df2091e6e2dee37c0a37c5  /forms.php
-22ba43f2a6522b0bc1664bbcd59ad04f  /pdo.php
-f799a8d879d855a615e93fb6746fa5ca  /perms.php
-d2b00d8d8ff19379b9b0564f3ee567bc  /PhpUpdate.php
+{
+    "APIs": {
+        "cpf.php": {
+            "Version": "2018.06.10.01",
+            "md5": "57f75326d89a648e8d01d25e19e6dfe7"
+        },
+        "DbBackup.php": {
+            "Version": "2020.03.27.01",
+            "md5": "30280b48ed12c8346c4667150ac98aef"
+        },
+        "forms.php": {
+            "Version": "2020.03.27.00",
+            "md5": "0c69287dcb5ae37776579ac3067b8514"
+        },
+        "pdo.php": {
+            "Version": "2020.04.10.00",
+            "md5": "22ba43f2a6522b0bc1664bbcd59ad04f"
+        },
+        "perms.php": {
+            "Version": "2020.03.27.02",
+            "md5": "0d1260ac9df6bc7c56c82c6c40dc0d66"
+        },
+        "PhpUpdate.php": {
+            "Version": "2020.01.31.00",
+            "md5": "ad0f1a981b1ce0a5b3c7bba6c14a2a9b"
+        }
+    }
+}
