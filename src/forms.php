@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.03.27.00
+// Version 2020.04.13.00
 
 class PhpLiveForms{
   private $PhpLivePdo = null;
@@ -22,15 +22,21 @@ class PhpLiveForms{
     }
     if(isset($Options["PdoDebug"]) == false) $Options["PdoDebug"] = false;
 
-    if(session_name() == "PHPSESSID"){
-      $site[0] = "site is null";
-      $site[1] = [[":form", $Options["Form"], PdoStr]];
-    }else{
+    if(isset($Options["Site"])){
+      $site[0] = "site=:site";
+      $site[1] = [
+        [":site", $Options["Site"], PdoStr],
+        [":form", $Options["Form"], PdoStr]
+      ];
+    }elseif(session_name() != "PHPSESSID"){
       $site[0] = "site=:site";
       $site[1] = [
         [":site", session_name(), PdoStr],
         [":form", $Options["Form"], PdoStr]
       ];
+    }else{
+      $site[0] = "site is null";
+      $site[1] = [[":form", $Options["Form"], PdoStr]];
     }
     $form = $PhpLivePdo->SQL("
       select *
