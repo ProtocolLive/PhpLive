@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.04.13.00
+// Version 2020.04.14.00
 
 class PhpLiveForms{
   private $PhpLivePdo = null;
@@ -87,8 +87,10 @@ class PhpLiveForms{
         echo "</select><br>";
       }elseif($field["type"] == "checkbox"){
         echo "<p><input type=\"checkbox\" name=\"" . $field["name"] . "\"";
-        if(isset($Options["Data"]) and $Options["Data"][$field["name"]] == 1){
-          echo " checked";
+        if(isset($Options["Data"])){
+          if($Options["Data"][$field["name"]] == 1){
+            echo " checked";
+          }
         }elseif($field["default"] == 1){
           echo " checked";
         }
