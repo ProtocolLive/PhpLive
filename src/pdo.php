@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.04.14.02
+// Version 2020.04.14.03
 
 define("PdoStr", PDO::PARAM_STR);
 define("PdoInt", PDO::PARAM_INT);
@@ -213,8 +213,9 @@ class PhpLivePdo{
   public function SetError($Code, $Msg, $File, $Line){
     $this->Error = [$Code, $Msg, $File, $Line];
     if(ini_get("display_errors") == true){
-      echo "<pre>";
+      echo "<pre style=\"text-align:left\">";
       var_dump(debug_backtrace());
+      die();
     }
   }
 
