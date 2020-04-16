@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.04.14.03
+// Version 2020.04.16.00
 
 define("PdoStr", PDO::PARAM_STR);
 define("PdoInt", PDO::PARAM_INT);
@@ -37,9 +37,6 @@ class PhpLivePdo{
       $Options["Pwd"]
     );
     $this->Conn->setAttribute(PDO::ATTR_TIMEOUT, $Options["TimeOut"]);
-    if(ini_get("display_errors") == true){
-      $this->Conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION || PDO::ERRMODE_WARNING);
-    }
   }
 
   /**
@@ -94,7 +91,7 @@ class PhpLivePdo{
     if($Params != null){
       foreach($Params as &$Param){
         if(count($Param) != 3){
-          trigger_error("Incorrect number of parameters when specifying a token", E_WARNING);
+          trigger_error("Incorrect number of parameters when specifying a token");
         }else{
           if($Param[2] == PdoInt){
             $Param[1] = str_replace(",", ".", $Param[1]);
@@ -111,7 +108,7 @@ class PhpLivePdo{
     //Safe execution
     if($Options["Safe"] == true){
       if($command == "truncate" or (($command == "update" or $command == "delete") and strpos($Query, "where") === false)){
-        trigger_error("Query not allowed in safe mode", E_WARNING);
+        trigger_error("Query not allowed in safe mode");
       }
     }
     //Execute
@@ -212,6 +209,7 @@ class PhpLivePdo{
    */
   public function SetError($Code, $Msg, $File, $Line){
     $this->Error = [$Code, $Msg, $File, $Line];
+    file_put_contents(__DIR__ . "/errors/" . date("Y-m-d H:i:s") . ".txt", debug_backtrace());
     if(ini_get("display_errors") == true){
       echo "<pre style=\"text-align:left\">";
       var_dump(debug_backtrace());
@@ -226,7 +224,8 @@ class PhpLivePdo{
   private function Clean($Query){
     $Query = str_replace("\n", "", $Query);
     $Query = str_replace("\t", "", $Query);
-    $Query = str_replace("\r", " ", $Query);
+    $Query = str_replace("\r", "", $Query);
+    $Query = str_replace("\n", " ", $Query);
     $Query = trim($Query);
     return $Query;
   }
