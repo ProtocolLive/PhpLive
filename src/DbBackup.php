@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.04.16.00
+// Version 2020.04.16.01
 
 class PhpLiveDbBackup{
   private $PhpLivePdo = null;
@@ -136,6 +136,7 @@ class PhpLiveDbBackup{
     $this->ZipOpen($Options["Folder"]);
     $tables = $PhpLivePdo->SQL("show tables like '##%'");
     foreach($tables as $table){
+      $PhpLivePdo->SQL("lock table $table[0] read,$table[0] write");
       $result = $PhpLivePdo->SQL("select * from " . $table[0]);
       $lines = count($result);
       if($lines > 0){
@@ -162,6 +163,7 @@ class PhpLiveDbBackup{
             fwrite($file, ",\n");
           }
         }
+        $PhpLivePdo->SQL("unlock tables");
         fclose($file);
         $this->Zip->addFile($Options["Folder"] . $table[0] . ".sql", $table[0] . ".sql");
       }
