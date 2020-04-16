@@ -6,15 +6,15 @@
         },
         "DbBackup.php": {
             "Version": "2020.04.16.00",
-            "md5": "67f80cf99f32b86b8790888f72075ed5"
+            "md5": "21841b490d7e697b921b43e9d1850abc"
         },
         "forms.php": {
             "Version": "2020.04.14.00",
-            "md5": "2c16196ad3f151a35d29de5d48ee26cf"
+            "md5": "364098dafc7223d356085c6d075cf792"
         },
         "pdo.php": {
             "Version": "2020.04.14.03",
-            "md5": "6649c21e2271b6f3cf9144332f7b8362"
+            "md5": "acd9309e7819852d2fb8fb424033c06b"
         },
         "perms.php": {
             "Version": "2020.03.27.02",
