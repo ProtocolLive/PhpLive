@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.04.17.00
+// Version 2020.04.17.01
 
 define("PdoStr", PDO::PARAM_STR);
 define("PdoInt", PDO::PARAM_INT);
@@ -49,7 +49,6 @@ class PhpLivePdo{
    * @return mixed
    */
   public function SQL($Query, $Params = null, $Options = []){
-    set_error_handler([$this, "SetError"]);
     if(isset($Options["Target"]) == false) $Options["Target"] = null;
     if(isset($Options["Safe"]) == false) $Options["Safe"] = true;
 
