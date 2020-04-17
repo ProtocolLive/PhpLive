@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.04.16.02
+// Version 2020.04.17.00
 
 define("PdoStr", PDO::PARAM_STR);
 define("PdoInt", PDO::PARAM_INT);
@@ -113,6 +113,11 @@ class PhpLivePdo{
     }
     //Execute
     $result->execute();
+    //Error
+    $error = $result->errorInfo();
+    if($error[0] != "00000"){
+      $this->SetError($error);
+    }
     //Debug
     if(isset($Options["Debug"]) and $Options["Debug"] == true){?>
       <pre style="text-align:left">
@@ -204,11 +209,8 @@ class PhpLivePdo{
     return $this->Error;
   }
 
-  /**
-   * For use of PHP system
-   */
-  public function SetError($Code, $Msg, $File, $Line){
-    $this->Error = [$Code, $Msg, $File, $Line];
+  private function SetError($Error){
+    $this->Error = [$Error[0], $Error[2], debug_backtrace()];
     $folder = __DIR__ . "/errors-pdo/";
     if(is_dir($folder) == false){
       mkdir($folder);
