@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.04.23.00
+// Version 2020.04.23.01
 
 class PhpLiveForms{
   private $PhpLivePdo = null;
@@ -20,7 +20,7 @@ class PhpLiveForms{
     }else{
       $PhpLivePdo = $this->PhpLivePdo;
     }
-    if(isset($Options["PdoDebug"]) == false) $Options["PdoDebug"] = false;
+    $Options["PdoDebug"] ??= false;
 
     if(isset($Options["Site"])){
       $site[0] = "site=:site";
