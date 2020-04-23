@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.04.16.02
+// Version 2020.04.23.00
 
 class PhpLiveDbBackup{
   private $PhpLivePdo = null;
@@ -23,7 +23,7 @@ class PhpLiveDbBackup{
     }else{
       $PhpLivePdo = $this->PhpLivePdo;
     }
-    if(isset($Options["Folder"]) == false) $Options["Folder"] = "/sql/";
+    $Options["Folder"] ??= "/sql/";
 
     $this->ZipOpen($Options["Folder"]);
     $tables = $PhpLivePdo->SQL("show tables like '##%'");
@@ -131,7 +131,7 @@ class PhpLiveDbBackup{
     }else{
       $PhpLivePdo = $this->PhpLivePdo;
     }
-    if(isset($Options["Folder"]) == false) $Options["Folder"] = "/sql/";
+    $Options["Folder"] ??= "/sql/";
 
     $this->ZipOpen($Options["Folder"]);
     $tables = $PhpLivePdo->SQL("show tables like '##%'");
