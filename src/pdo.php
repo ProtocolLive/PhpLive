@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.04.22.01
+// Version 2020.04.23.00
 
 define("PdoStr", PDO::PARAM_STR);
 define("PdoInt", PDO::PARAM_INT);
@@ -26,9 +26,9 @@ class PhpLivePdo{
    * @return object Connection
    */
   public function __construct($Options){
-    if(isset($Options["Drive"]) == false) $Options["Drive"] = "mysql";
-    if(isset($Options["Charset"]) == false) $Options["Charset"] = "utf8";
-    if(isset($Options["TimeOut"]) == false) $Options["TimeOut"] = 5;
+    $Options["Drive"] ??= "mysql";
+    $Options["Charset"] ??= "utf8";
+    $Options["TimeOut"] ??= 5;
     if(isset($Options["Prefix"])) $this->Prefix = $Options["Prefix"];
 
     $this->Conn = new PDO(
@@ -49,8 +49,8 @@ class PhpLivePdo{
    * @return mixed
    */
   public function SQL($Query, $Params = null, $Options = []){
-    if(isset($Options["Target"]) == false) $Options["Target"] = null;
-    if(isset($Options["Safe"]) == false) $Options["Safe"] = true;
+    $Options["Target"] ??= null;
+    $Options["Safe"] ??= true;
 
     $Query = $this->Clean($Query);
     if($this->Prefix !== null){
