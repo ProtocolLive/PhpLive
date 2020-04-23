@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.04.22.00
+// Version 2020.04.22.01
 
 define("PdoStr", PDO::PARAM_STR);
 define("PdoInt", PDO::PARAM_INT);
@@ -253,7 +253,7 @@ class PhpLivePdo{
         ["ipreverse", gethostbyaddr($_SERVER["REMOTE_ADDR"]), PdoStr],
         ["agent", $_SERVER["HTTP_USER_AGENT"], PdoStr],
         ["query", $Options["Dump"], PdoStr],
-        ["target", $Options["Target"], $Options["Target"] == null? PdoNull : PdoInt]
+        ["target", $Options["Target"], $Options["Target"] == null? PdoNull: PdoInt]
       ]
     ]);
   }
