@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.04.26.00
+// Version 2020.04.27.00
 
 define("PdoStr", PDO::PARAM_STR);
 define("PdoInt", PDO::PARAM_INT);
@@ -10,9 +10,9 @@ define("PdoBool", PDO::PARAM_BOOL);
 define("PdoSql", 6);
 
 class PhpLivePdo{
-  private $Conn = null;
-  private $Prefix = null;
-  Private $Error = false;
+  private ?object $Conn = null;
+  private string $Prefix = "";
+  private array $Error = [];
 
   /**
    * @param string $Drive (Optional) MySql as default
@@ -25,11 +25,11 @@ class PhpLivePdo{
    * @param int $TimeOut (Optional) Connection timeout
    * @return object Connection
    */
-  public function __construct($Options){
+  public function __construct(array $Options){
     $Options["Drive"] ??= "mysql";
     $Options["Charset"] ??= "utf8";
     $Options["TimeOut"] ??= 5;
-    if(isset($Options["Prefix"])) $this->Prefix = $Options["Prefix"];
+    $this->Prefix = $Options["Prefix"]?? "";
 
     $this->Conn = new PDO(
       $Options["Drive"] . ":host=" . $Options["Ip"] . ";dbname=" . $Options["Db"] . ";charset=" . $Options["Charset"],
@@ -48,7 +48,7 @@ class PhpLivePdo{
    * @param boolean $Debug (Options)(Optional) Dump the query for debug
    * @return mixed
    */
-  public function SQL($Query, $Params = null, $Options = []){
+  public function SQL(string $Query, array $Params = [], array $Options = []){
     $Options["Target"] ??= null;
     $Options["Safe"] ??= true;
 
@@ -159,7 +159,7 @@ class PhpLivePdo{
    * @param array $Fields
    * @return int
    */
-  public function  SqlInsert($Options, $Options2 = []){
+  public function SqlInsert(array $Options, array $Options2 = []):int{
     $return = "insert into " . $Options["Table"] . "(";
     $holes = [];
     $i = 1;
@@ -184,7 +184,7 @@ class PhpLivePdo{
    * @param array $Where
    * @return int
    */
-  public function  SqlUpdate($Options, $Options2 = []){
+  public function SqlUpdate(array $Options, array $Options2 = []):int{
     $return = "update " . $Options["Table"] . " set ";
     $holes = [];
     $i = 1;
@@ -204,11 +204,11 @@ class PhpLivePdo{
   /**
    * @return array
    */
-  public function GetError(){
+  public function GetError():array{
     return $this->Error;
   }
 
-  private function SetError($Number, $Msg){
+  private function SetError(int $Number, string $Msg):void{
     $this->Error = [$Number, $Msg];
     $folder = __DIR__ . "/errors-pdo/";
     if(is_dir($folder) == false){
@@ -226,7 +226,7 @@ class PhpLivePdo{
    * @param string $Query
    * @return string
    */
-  private function Clean($Query){
+  private function Clean(string $Query):string{
     $Query = str_replace("\n", "", $Query);
     $Query = str_replace("\t", "", $Query);
     $Query = str_replace("\r", "", $Query);
@@ -242,7 +242,7 @@ class PhpLivePdo{
    * @param int $Type Action identification
    * @param int $Target User afected by query
    */
-  private function SqlLog($Options){
+  private function SqlLog(array $Options):void{
     $this->SqlInsert([
       "Table" => "sys_logs",
       "Fields" => [
@@ -262,7 +262,7 @@ class PhpLivePdo{
    * @param string $Field
    * @return string
    */
-  private function Reserved($Field){
+  private function Reserved(string $Field):string{
     if($Field == "order" or $Field == "default"){
       $Field = "`" . $Field . "`";
     }
