@@ -17,8 +17,8 @@
             "md5": "c5abc67582896d37c452442297a98a91"
         },
         "perms.php": {
-            "Version": "2020.03.27.02",
-            "md5": "0d1260ac9df6bc7c56c82c6c40dc0d66"
+            "Version": "2020.04.27.00",
+            "md5": "e6e0d4407694e95a2018c77d4a2fe669"
         },
         "PhpUpdate.php": {
             "Version": "2020.04.27.00",

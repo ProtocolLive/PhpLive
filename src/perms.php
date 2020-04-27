@@ -1,16 +1,16 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.03.27.02
+// Version 2020.04.27.00
 
 class PhpLivePerms{
-  private $PhpLivePdo = null;
+  private ?object $PhpLivePdo = null;
 
-  public function __construct(&$PhpLivePdo = null){
+  public function __construct(object &$PhpLivePdo = null){
     $this->PhpLivePdo = $PhpLivePdo;
   }
 
-  public function Access($Options){
+  public function Access(array $Options):array{
     if($this->PhpLivePdo === null){
       if(isset($Options["PhpLivePdo"]) == false){
         return false;
@@ -86,7 +86,7 @@ class PhpLivePerms{
     return $return;
   }
 
-  private function SetPerms($All, $Perms){
+  private function SetPerms(array $All, array $Perms):array{
     if($All["r"] !== 0)
       $All["r"] = $Perms["r"];
     if($All["w"] !== 0)
