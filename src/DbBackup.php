@@ -1,19 +1,19 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.04.23.00
+// Version 2020.04.27.00
 
 class PhpLiveDbBackup{
-  private $PhpLivePdo = null;
-  private $Delete = [];
-  private $Time;
-  private $Zip;
+  private ?object $PhpLivePdo = null;
+  private array $Delete = [];
+  private string $Time;
+  private object $Zip;
 
-  public function __construct(&$PhpLivePdo = null){
+  public function __construct(object &$PhpLivePdo = null){
     $this->PhpLivePdo = $PhpLivePdo;
   }
 
-  public function BackupTables($Options = []){
+  public function BackupTables(array $Options = []):string{
     if($this->PhpLivePdo === null){
       if(isset($Options["PhpLivePdo"]) == false){
         return false;
@@ -121,7 +121,7 @@ class PhpLiveDbBackup{
     return substr($_SERVER["REQUEST_URI"], 0, strrpos($_SERVER["REQUEST_URI"], "/")) . $Options["Folder"] . $this->Time . ".zip";
   }
 
-  public function BackupData($Options = []){
+  public function BackupData(array $Options = []):string{
     if($this->PhpLivePdo === null){
       if(isset($Options["PhpLivePdo"]) == false){
         return false;
@@ -173,7 +173,7 @@ class PhpLiveDbBackup{
     return substr($_SERVER["REQUEST_URI"], 0, strrpos($_SERVER["REQUEST_URI"], "/")) . $Options["Folder"] . $this->Time . ".zip";
   }
 
-  private function ZipOpen($Folder){
+  private function ZipOpen(string $Folder):void{
     $this->Time = date("YmdHis");
     if(file_exists($Folder) == false){
       mkdir($Folder);
@@ -182,11 +182,11 @@ class PhpLiveDbBackup{
     $this->Zip->open($Folder . $this->Time . ".zip", ZipArchive::CREATE);
   }
 
-  private function ZipClose(){
+  private function ZipClose():void{
     $this->Zip->close();
   }
 
-  private function Delete(){
+  private function Delete():void{
     foreach($this->Delete as $file){
       unlink($file);
     }
