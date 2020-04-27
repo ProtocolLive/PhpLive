@@ -1,9 +1,9 @@
 <?php
 //Protocol Corporation Ltda.
 //https://github.com/ProtocolLive/PhpLive
-//Version 2020.01.31.00
+//Version 2020.04.27.00
 
-function PhpUpdate(){
+function PhpUpdate():string{
   if(extension_loaded("openssl") == false){
     return false;
   }
