@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.04.27.00
+// Version 2020.04.27.01
 
 define("PdoStr", PDO::PARAM_STR);
 define("PdoInt", PDO::PARAM_INT);
@@ -61,27 +61,23 @@ class PhpLivePdo{
     $command = explode(" ", $Query);
     $command = strtolower($command[0]);
     //Search from PdoSql and parse
-    if($Params != null){
-      foreach($Params as $id => $Param){
-        if($Param[2] == PdoSql){
-          if(is_numeric($Param[0])){
-            $out = 0;
-            for($i = 1; $i <= $Param[0]; $i++){
-              $in = strpos($Query, "?", $out);
-              $out = $in + 1;
-            }
-          }else{
-            $in = strpos($Query, $Param[0]);
-            $out = strpos($Query, ",", $in);
-            if($out === false){
-              $out = strpos($Query, ")", $in);
-            }
+    foreach($Params as $id => $Param){
+      if($Param[2] == PdoSql){
+        if(is_numeric($Param[0])){
+          $out = 0;
+          for($i = 1; $i <= $Param[0]; $i++){
+            $in = strpos($Query, "?", $out);
           }
-          $temp = substr($Query, 0, $in);
-          $temp .= $Param[1];
-          $Query = $temp . substr($Query, $out);
-          unset($Params[$id]);
+          $Query = substr_replace($Query, $Param[1], $in, 1);
+        }else{
+          $in = strpos($Query, $Param[0]);
+          $out = strpos($Query, ",", $in);
+          if($out === false){
+            $out = strpos($Query, ")", $in);
+          }
+          $Query = substr_replace($Query, $Param[1], $in, $out);
         }
+        unset($Params[$id]);
       }
     }
     //Prepare
