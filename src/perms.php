@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.04.27.00
+// Version 2020.04.27.01
 
 class PhpLivePerms{
   private ?object $PhpLivePdo = null;
@@ -50,7 +50,7 @@ class PhpLivePerms{
       [1, $Options["Resource"], PdoInt]
     ]);
     if(count($result) > 0){
-      $return = $SetPerms($return, $result[0]);
+      $return = $this->SetPerms($return, $result[0]);
     }
     // Unauthenticated?
     if(isset($Options["User"]) == false or is_null($Options["User"])){
