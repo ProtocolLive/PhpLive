@@ -1,16 +1,16 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.04.23.01
+// Version 2020.04.27.00
 
 class PhpLiveForms{
-  private $PhpLivePdo = null;
+  private ?object $PhpLivePdo = null;
 
-  public function __construct(&$PhpLivePdo = null){
+  public function __construct(object &$PhpLivePdo = null){
     $this->PhpLivePdo = $PhpLivePdo;
   }
 
-  public function Form($Options){
+  public function Form(array $Options):boolean{
     if($this->PhpLivePdo === null){
       if(isset($Options["PhpLivePdo"]) == false){
         return false;
@@ -22,6 +22,7 @@ class PhpLiveForms{
     }
     $Options["PdoDebug"] ??= false;
 
+    // Get site
     if(isset($Options["Site"])){
       $site[0] = "site=:site";
       $site[1] = [
@@ -38,6 +39,7 @@ class PhpLiveForms{
       $site[0] = "site is null";
       $site[1] = [[":form", $Options["Form"], PdoStr]];
     }
+    // Get form
     $form = $PhpLivePdo->SQL("
       select *
       from forms_forms
@@ -56,6 +58,7 @@ class PhpLiveForms{
       echo ' autocomplete="off"';
     }
     echo ">";
+    // Get fields
     $fields = $PhpLivePdo->SQL("
       select *
       from forms_fields
@@ -130,6 +133,7 @@ class PhpLiveForms{
       }
     }
     echo "</p>";
+    // Submit button
     $fields = $PhpLivePdo->SQL("
       select *
       from forms_fields
@@ -146,5 +150,6 @@ class PhpLiveForms{
     }
     echo "></p>";
     echo "</form>";
+    return true;
   }
 }
