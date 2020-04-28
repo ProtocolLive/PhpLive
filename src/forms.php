@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.04.27.00
+// Version 2020.04.28.00
 
 class PhpLiveForms{
   private ?object $PhpLivePdo = null;
@@ -10,7 +10,7 @@ class PhpLiveForms{
     $this->PhpLivePdo = $PhpLivePdo;
   }
 
-  public function Form(array $Options):boolean{
+  public function Form(array $Options):bool{
     if($this->PhpLivePdo === null){
       if(isset($Options["PhpLivePdo"]) == false){
         return false;
