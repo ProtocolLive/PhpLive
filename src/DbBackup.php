@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.04.27.00
+// Version 2020.04.29.00
 
 class PhpLiveDbBackup{
   private ?object $PhpLivePdo = null;
@@ -24,9 +24,17 @@ class PhpLiveDbBackup{
       $PhpLivePdo = $this->PhpLivePdo;
     }
     $Options["Folder"] ??= "/sql/";
+    $Options["Progress"] ??= true;
+    $options["Progress"]["Translate"]["Tables"] ??= "tables";
+    $options["Progress"]["Translate"]["FK"] ??= "Foreign keys";
 
     $this->ZipOpen($Options["Folder"]);
     $tables = $PhpLivePdo->SQL("show tables like '##%'");
+    if($Options["Progress"] == true){
+      $count = count($tables);
+      $left = 0;
+      echo $count . " " . $options["Progress"]["Translate"]["Tables"] . "<br>0%<br>";
+    }
 
     $file = fopen($Options["Folder"] . "tables.sql", "w");
     foreach($tables as $table){
@@ -86,6 +94,13 @@ class PhpLiveDbBackup{
         $line .= ",\n";
       }
       fwrite($file, substr($line, 0, -2) . "\n);\n\n");
+      if($Options["Progress"] == true){
+        echo round(++$left * 100 / $count) . "%<br>";
+      }
+    }
+    if($Options["Progress"] == true){
+      $left = 0;
+      echo $options["Progress"]["Translate"]["FK"] . "<br>0%<br>";
     }
     foreach($tables as $table){
       $cols = $PhpLivePdo->SQL("
@@ -113,6 +128,9 @@ class PhpLiveDbBackup{
         }
         fwrite($file, substr($line, 0, -2) . ";\n\n");
       }
+      if($Options["Progress"] == true){
+        echo round(++$left * 100 / $count) . "%<br>";
+      }
     }
     fclose($file);
     $this->Zip->addFile($Options["Folder"] . "tables.sql", "tables.sql");
@@ -132,9 +150,16 @@ class PhpLiveDbBackup{
       $PhpLivePdo = $this->PhpLivePdo;
     }
     $Options["Folder"] ??= "/sql/";
+    $Options["Progress"] ??= true;
+    $options["Progress"]["Translate"]["Tables"] ??= "tables";
 
     $this->ZipOpen($Options["Folder"]);
     $tables = $PhpLivePdo->SQL("show tables like '##%'");
+    if($Options["Progress"] == true){
+      $count = count($tables);
+      $left = 0;
+      echo $count . " " . $options["Progress"]["Translate"]["Tables"] . "<br>0%<br>";
+    }
     foreach($tables as $table){
       $PhpLivePdo->SQL("lock table $table[0] write");
       $result = $PhpLivePdo->SQL("select * from " . $table[0]);
@@ -166,6 +191,9 @@ class PhpLiveDbBackup{
         $PhpLivePdo->SQL("unlock tables");
         fclose($file);
         $this->Zip->addFile($Options["Folder"] . $table[0] . ".sql", $table[0] . ".sql");
+      }
+      if($Options["Progress"] == true){
+        echo round(++$left * 100 / $count) . "%<br>";
       }
     }
     $this->ZipClose();
