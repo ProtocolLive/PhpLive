@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.04.29.00
+// Version 2020.04.29.01
 
 class PhpLiveDbBackup{
   private ?object $PhpLivePdo = null;
@@ -25,15 +25,15 @@ class PhpLiveDbBackup{
     }
     $Options["Folder"] ??= "/sql/";
     $Options["Progress"] ??= true;
-    $options["Progress"]["Translate"]["Tables"] ??= "tables";
-    $options["Progress"]["Translate"]["FK"] ??= "Foreign keys";
+    $Options["Translate"]["Tables"] ??= "tables";
+    $Options["Translate"]["FK"] ??= "Foreign keys";
 
     $this->ZipOpen($Options["Folder"]);
     $tables = $PhpLivePdo->SQL("show tables like '##%'");
     if($Options["Progress"] == true){
       $count = count($tables);
       $left = 0;
-      echo $count . " " . $options["Progress"]["Translate"]["Tables"] . "<br>0%<br>";
+      echo $count . " " . $Options["Translate"]["Tables"] . "<br>0%<br>";
     }
 
     $file = fopen($Options["Folder"] . "tables.sql", "w");
@@ -100,7 +100,7 @@ class PhpLiveDbBackup{
     }
     if($Options["Progress"] == true){
       $left = 0;
-      echo $options["Progress"]["Translate"]["FK"] . "<br>0%<br>";
+      echo $Options["Translate"]["FK"] . "<br>0%<br>";
     }
     foreach($tables as $table){
       $cols = $PhpLivePdo->SQL("
@@ -151,14 +151,14 @@ class PhpLiveDbBackup{
     }
     $Options["Folder"] ??= "/sql/";
     $Options["Progress"] ??= true;
-    $options["Progress"]["Translate"]["Tables"] ??= "tables";
+    $Options["Translate"]["Tables"] ??= "tables";
 
     $this->ZipOpen($Options["Folder"]);
     $tables = $PhpLivePdo->SQL("show tables like '##%'");
     if($Options["Progress"] == true){
       $count = count($tables);
       $left = 0;
-      echo $count . " " . $options["Progress"]["Translate"]["Tables"] . "<br>0%<br>";
+      echo $count . " " . $Options["Translate"]["Tables"] . "<br>0%<br>";
     }
     foreach($tables as $table){
       $PhpLivePdo->SQL("lock table $table[0] write");
