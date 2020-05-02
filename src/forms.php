@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.04.28.00
+// Version 2020.05.02.00
 
 class PhpLiveForms{
   private ?object $PhpLivePdo = null;
@@ -21,6 +21,7 @@ class PhpLiveForms{
       $PhpLivePdo = $this->PhpLivePdo;
     }
     $Options["PdoDebug"] ??= false;
+    $Options["AjaxAppend"] ??= false;
 
     // Get site
     if(isset($Options["Site"])){
@@ -144,11 +145,18 @@ class PhpLiveForms{
       ],
       ["Debug" => $Options["PdoDebug"]]
     );
-    echo '<p><input type="submit" value="' . $fields[0]["label"] . '"';
+    echo '<p><input type="submit" value="' . $fields[0]["label"] . '" onclick="';
     if($form[0]["method"] == "ajax"){
-      echo " onclick=\"Ajax('" . $Options["Page"] . "','" . $Options["Place"] . "','" . $Options["Form"] . "');" . $fields[0]["js_code"] . '"';
+      if($Options["AjaxAppend"]){
+        echo "AjaxAppend('" . $Options["Page"] . "','" . $Options["Place"] . "','" . $Options["Form"] . "'," . $Options["AjaxAppend"] . ");";
+      }else{
+        echo "Ajax('" . $Options["Page"] . "','" . $Options["Place"] . "','" . $Options["Form"] . "');";
+      }
     }
-    echo "></p>";
+    if($fields[0]["js_event"] == "onclick"){
+      echo $fields[0]["js_code"];
+    }
+    echo '"></p>';
     echo "</form>";
     return true;
   }
