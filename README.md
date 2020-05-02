@@ -1,5 +1,5 @@
 # PhpLive
-PHP libaries to help me to learn programming and help others
+PHP libraries to help me to learn programming and help others
 
 Docs:
 https://protocollive.github.io/PhpLive/
