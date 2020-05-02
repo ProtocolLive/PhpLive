@@ -1,0 +1,27 @@
+a{
+  text-decoration:none;
+}
+a:hover{
+  text-decoration: underline;
+}
+.menu{
+  border-bottom: dotted 1px #ccc;
+}
+.menulink{
+  color: #ccc;
+}
+.color1{
+  color: #793862;
+}
+.color2{
+  color: #369;
+}
+.color3{
+  color: #693;
+}
+.color4{
+  color: #d00;
+}
+.color5{
+  color: #FF8000;
+}
