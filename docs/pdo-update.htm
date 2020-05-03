@@ -7,58 +7,42 @@
     <table style="width:88%;margin-left: auto;margin-right: auto;">
       <tr>
         <td style="background-color: #F2F2F2; padding: 20px;">
-          <div style="font-size: 22px; border-bottom: dotted 1px;" class="color1">
-            <strong>PhpLivePdo::SqlUpdate</strong>
-          </div>
+          <div class="maintitle">PhpLivePdo::SqlUpdate</div>
           <p>Execute a update query. This function its good to avoid differences when specifying tokens.</p>
           <p>&nbsp;</p>
 
-          <div style="font-size: 18px; border-bottom: dotted 1px;" class="color1">
-            <strong>Sintaxe</strong>
-          </div>
-          <br>
+          <div class="title">Sintaxe</div><br>
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
-            <strong>
-              <span class="color1">public</span> <span class="color2">PhpLivePdo::SqlUpdate</span> ( 
-              <span class="color3">array</span> <span class="color2">$Options</span> [,
-              <span class="color3">array</span> <span class="color2">$Options2</span>]);
-            </strong>
+            <span class="const">public</span> <span class="func">PhpLivePdo::SqlUpdate</span> ( 
+            <span class="type">array</span> <span class="var">$Options</span> [,
+            <span class="type">array</span> <span class="var">$Options2</span> = [] ] ) : <span class="const">int</span>;
           </div>
           <p>&nbsp;</p>
 
-          <div style="font-size: 18px; border-bottom: dotted 1px;" class="color1">
-            <strong>Parameters</strong>
-          </div>
-          <p><strong>List of <span class="color2">$Options</span>:</strong></p>
+          <div class="title">Parameters</div>
+          <p><strong>List of <span class="var">$Options</span>:</strong></p>
           <p>&nbsp;&nbsp;Table - The table afected;</p>
           <p>&nbsp;&nbsp;Fields - The fields to be changed;</p>
           <p>&nbsp;&nbsp;Where - The conditions;</p>
-          <p><strong><span class="color2">$Options2</span> are the <span class="color2">$Options</span> in the <span class="color2">SQL</span> function</strong></p>
+          <p><strong><span class="var">$Options2</span> are the <span class="var">$Options</span> in the <a herf="pdo-sql.htm" class="var">SQL</a> function</strong></p>
           <p>&nbsp;</p>
 
-          <div style="font-size: 18px; border-bottom: dotted 1px;" class="color1">
-            <strong>Return Values</strong>
-          </div>
+          <div class="title">Return Values</div>
           <p>Returns the number of rows affected.</p>
           <p>&nbsp;</p>
 
-          <div style="font-size: 18px; border-bottom: dotted 1px;" class="color1">
-            <strong>Examples</strong>
-          </div>
-          <br>
+          <div class="title">Examples</div><br>
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
-            <strong>
-              <span class="color2">$PDO->SqlUpdate</span>([<br>
-                &nbsp;&nbsp;&nbsp;<span class="color4">"Table"</span> => <span class="color4">"users"</span>,<br>
-                &nbsp;&nbsp;&nbsp;<span class="color4">"Fields"</span> => [<br>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="color4">"email"</span>, <span class="color2">$_POST</span>[<span class="color4">"email"</span>], <span class="color2">PdoStr</span>],<br>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="color4">"pwd"</span>, <span class="color2">$_POST</span>[<span class="color4">"pwd"</span>], <span class="color2">PdoStr</span>],<br>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="color4">"name"</span>, <span class="color2">$_POST</span>[<span class="color4">"name"</span>], <span class="color2">PdoStr</span>]<br>
-                &nbsp;&nbsp;&nbsp;],<br>
-                &nbsp;&nbsp;&nbsp;<span class="color4">"Where"</span> => [<span class="color4">"user_id"</span>, <span class="color2">$_GET</span>[<span class="color4">"id"</span>], <span class="color2">PdoInt</span>]<br>
-              ]);<br>
-              <span class="color5">// update users set email='a@a.com',pwd='123',name='adm' where user_id=1</span>
-            </strong>
+            <span class="func">$PDO->SqlUpdate</span>([<br>
+              &nbsp;&nbsp;&nbsp;<span class="string">"Table"</span> => <span class="string">"users"</span>,<br>
+              &nbsp;&nbsp;&nbsp;<span class="string">"Fields"</span> => [<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"email"</span>, <span class="var">$_POST</span>[<span class="string">"email"</span>], <span class="const">PdoStr</span>],<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"pwd"</span>, <span class="var">$_POST</span>[<span class="string">"pwd"</span>], <span class="const">PdoStr</span>],<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"name"</span>, <span class="var">$_POST</span>[<span class="string">"name"</span>], <span class="const">PdoStr</span>]<br>
+              &nbsp;&nbsp;&nbsp;],<br>
+              &nbsp;&nbsp;&nbsp;<span class="string">"Where"</span> => [<span class="string">"user_id"</span>, <span class="var">$_GET</span>[<span class="string">"id"</span>], <span class="const">PdoInt</span>]<br>
+            ]);<br>
+            <span class="comment">// update users set email='a@a.com',pwd='123',name='adm' where user_id=1</span>
           </div>
           <p>&nbsp;</p>
 

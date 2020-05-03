@@ -7,28 +7,26 @@
     <table style="width:88%;margin-left: auto;margin-right: auto;">
       <tr>
         <td style="background-color: #F2F2F2; padding: 20px;">
-          <div style="font-size: 22px; border-bottom: dotted 1px;" class="color1">
+          <div class="maintitle">
             <strong>PhpLivePdo::__construct</strong>
           </div>
           <p>Creates a PDO instance representing a connection to a database</p>
           <p>&nbsp;</p>
 
-          <div style="font-size: 18px; border-bottom: dotted 1px;" class="color1">
+          <div class="title">
             <strong>Sintaxe</strong>
           </div>
           <br>
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
-            <strong>
-              <span class="color1">public</span> <span class="color2">PhpLivePdo::__construct</span> ( 
-              <span class="color3">array</span> <span class="color2">$Options</span>);
-            </strong>
+            <span class="const">public</span> <span class="func">PhpLivePdo::__construct</span> ( 
+            <span class="type">array</span> <span class="var">$Options</span> );
           </div>
           <p>&nbsp;</p>
 
-          <div style="font-size: 18px; border-bottom: dotted 1px;" class="color1">
+          <div class="title">
             <strong>Parameters</strong>
           </div>
-          <p><strong>List of <span class="color2">$Options</span>:</strong></p>
+          <p><strong>List of <span class="var">$Options</span>:</strong></p>
           <p>&nbsp;&nbsp;Drive (Optional - Default: mysql) - The database used;</p>
           <p>&nbsp;&nbsp;Ip - Database address, ip or dns;</p>
           <p>&nbsp;&nbsp;Db - Default database schema;</p>
@@ -39,38 +37,36 @@
           <p>&nbsp;&nbsp;Prefix (Optional) - Text to be concated with "_" and table name;</p>
           <p>&nbsp;</p>
 
-          <div style="font-size: 18px; border-bottom: dotted 1px;" class="color1">
+          <div class="title">
             <strong>Return Values</strong>
           </div>
           <p>Returns a PDO object on success.</p>
           <p>&nbsp;</p>
 
-          <div style="font-size: 18px; border-bottom: dotted 1px;" class="color1">
+          <div class="title">
             <strong>Errors/Exceptions</strong>
           </div>
           <p>Throws a <a href="https://www.php.net/manual/en/class.pdoexception.php" target="_blank">PDOException</a> if the attempt to connect to the requested database fails.</p>
           <p>&nbsp;</p>
 
-          <div style="font-size: 18px; border-bottom: dotted 1px;" class="color1">
+          <div class="title">
             <strong>Dependencies</strong>
           </div>
           <p>- PHP 7;</p>
           <p>- One of the PDO PHP extensions;</p>
           <p>&nbsp;</p>
 
-          <div style="font-size: 18px; border-bottom: dotted 1px;" class="color1">
+          <div class="title">
             <strong>Examples</strong>
           </div>
           <br>
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
-            <strong>
-              <span class="color2">$conn</span> = <span class="color3">new</span> <span class="color2">PhpLivePdo</span>([<br>
-                &nbsp;&nbsp;&nbsp;<span class="color4">"Ip"</span> => <span class="color4">"localhost"</span>,<br>
-                &nbsp;&nbsp;&nbsp;<span class="color4">"User"</span> => <span class="color4">"root"</span>,<br>
-                &nbsp;&nbsp;&nbsp;<span class="color4">"Pwd"</span> => <span class="color4">"password"</span>,<br>
-                &nbsp;&nbsp;&nbsp;<span class="color4">"Db"</span> => <span class="color4">"mysite"</span><br>
-              ]);
-            </strong>
+            <span class="var">$conn</span> = <span class="type">new</span> <span class="func">PhpLivePdo</span>([<br>
+              &nbsp;&nbsp;&nbsp;<span class="string">"Ip"</span> => <span class="string">"localhost"</span>,<br>
+              &nbsp;&nbsp;&nbsp;<span class="string">"User"</span> => <span class="string">"root"</span>,<br>
+              &nbsp;&nbsp;&nbsp;<span class="string">"Pwd"</span> => <span class="string">"password"</span>,<br>
+              &nbsp;&nbsp;&nbsp;<span class="string">"Db"</span> => <span class="string">"mysite"</span><br>
+            ]);
           </div>
           <p>&nbsp;</p>
 

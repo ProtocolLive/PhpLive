@@ -7,138 +7,106 @@
     <table style="width:88%;margin-left: auto;margin-right: auto;">
       <tr>
         <td style="background-color: #F2F2F2; padding: 20px;">
-          <div style="font-size: 22px; border-bottom: dotted 1px;" class="color1">
-            <strong>PhpLivePdo::SQL</strong>
-          </div>
+          <div class="maintitle">PhpLivePdo::SQL</div>
           <p>Send a query to run in database</p>
           <p>&nbsp;</p>
 
-          <div style="font-size: 18px; border-bottom: dotted 1px;" class="color1">
-            <strong>Sintaxe</strong>
-          </div>
+          <div class="title">Sintaxe</div>
           <br>
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
-            <strong>
-              <span class="color1">public</span> <span class="color2">PhpLivePdo::SQL</span> ( 
-              <span class="color3">string</span> <span class="color2">$Query</span>[,
-              <span class="color3">array</span> <span class="color2">$Params</span>[,
-              <span class="color3">array</span> <span class="color2">$Options</span>
-              ] ] );
-            </strong>
+            <span class="const">public</span> <span class="func">PhpLivePdo::SQL</span> ( 
+            <span class="type">string</span> <span class="var">$Query</span> [,
+            <span class="type">array</span> <span class="var">$Params</span> = <span class="const">null</span> [,
+            <span class="type">array</span> <span class="var">$Options</span> = <span class="const">null</span>
+            ] ] ) : <span class="const">mixed</span>;
           </div>
           <p>&nbsp;</p>
 
-          <div style="font-size: 18px; border-bottom: dotted 1px;" class="color1">
-            <strong>Parameters</strong>
-          </div>
-          <p><strong class="color2">$Query</strong></p>
+          <div class="title">Parameters</div>
+          <p><strong class="var">$Query</strong></p>
           <p>The query to be executed</p>
-          <p><strong class="color2">$Params</strong></p>
+          <p><strong class="var">$Params</strong></p>
           <p>A array with the tokens to be replaced:</p>
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
-            <strong>
-              [TokenName, TokenData, TokenType]
-            </strong>
+            [TokenName, TokenData, TokenType]
           </div>
           <p>TokenName can be a number or a string like starting with ":";</p>
           <p>TokenData its the value to be replaced;</p>
-          <p>TokenType can be the constants of <span class="color2">PhpLivePdo</span> (<span class="color2">PdoInt</span>, <span class="color2">PdoStr</span>, <span class="color2">PdoNull</span>, <span class="color2">PdoBool</span>, <span class="color2">PdoSql</span>) or the <a href="https://www.php.net/manual/pt_BR/pdo.constants.php" target="_blank">constants of PDO</a>;</p>
+          <p>TokenType can be the constants of <span class="func">PhpLivePdo</span> (<span class="const">PdoInt</span>, <span class="const">PdoStr</span>, <span class="const">PdoNull</span>, <span class="const">PdoBool</span>, <span class="const">PdoSql</span>) or the <a href="https://www.php.net/manual/pt_BR/pdo.constants.php" target="_blank">constants of PDO</a>;</p>
 
-          <p><strong>List of <span class="color2">$Options</span>:</strong></p>
-          <p>&nbsp;&nbsp;Safe (Boolean)(Optional - Default: true) - Dont run query update or delete without where condition or the query truncate;</p>
-          <p>&nbsp;&nbsp;Debug (Boolean)(Optional - Default: false) - Dump the query after parsed;</p>
+          <p><strong>List of <span class="var">$Options</span>:</strong></p>
+          <p>&nbsp;&nbsp;Safe (Boolean)(Optional - Default: <span class="const">true</span>) - Dont run query update or delete without where condition or the query truncate;</p>
+          <p>&nbsp;&nbsp;Debug (Boolean)(Optional - Default: <span class="const">false</span>) - Dump the query after parsed;</p>
           <p>&nbsp;&nbsp;Log (Integer)(Optional) - The log description of the event;</p>
           <p>&nbsp;&nbsp;User (Integer)(Optional - Mandatory with Log) - The user running the query;</p>
           <p>&nbsp;&nbsp;Target (Integer)(Optional - Optional with Log) - The user afected by the query;</p>
           <p>&nbsp;</p>
 
-          <div style="font-size: 18px; border-bottom: dotted 1px;" class="color1">
-            <strong>The special type <span class="color2">PdoSql</span></strong>
-          </div>
+          <div class="title">The special type <span class="const">PdoSql</span></div>
           <p>This special type put a text outside quote to be executed by SQL.</p>
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
-            <strong>
-              <span class="color2">$PDO->SQL</span>(<span class="color4">"update products set quantity=?,price=?,total=? where product=?"</span>, [<br>
-              &nbsp;&nbsp;[<span class="color2">1</span>, <span class="color2">2</span>, <span class="color2">PdoInt</span>],<br>
-              &nbsp;&nbsp;[<span class="color2">2</span>, <span class="color4">"2.99"</span>, <span class="color2">PdoStr</span>],<br>
-              &nbsp;&nbsp;[<span class="color2">3</span>, <span class="color4">"quantity*price"</span>, <span class="color2">PdoSql</span>],<br>
-              &nbsp;&nbsp;[<span class="color2">4</span>, <span class="color2">35</span>, <span class="color2">PdoInt</span>],<br>
-              ]);<br>
-              <span class="color5">//update products set quantity=2,price='2.99',total=quantity*price where product=35</span>
-            </strong>
+            <span class="func">$PDO->SQL</span>(<span class="string">"update products set quantity=?,price=?,total=? where product=?"</span>, [<br>
+            &nbsp;&nbsp;[<span class="const">1</span>, <span class="const">2</span>, <span class="const">PdoInt</span>],<br>
+            &nbsp;&nbsp;[<span class="const">2</span>, <span class="string">"2.99"</span>, <span class="const">PdoStr</span>],<br>
+            &nbsp;&nbsp;[<span class="const">3</span>, <span class="string">"quantity*price"</span>, <span class="const">PdoSql</span>],<br>
+            &nbsp;&nbsp;[<span class="const">4</span>, <span class="const">35</span>, <span class="const">PdoInt</span>],<br>
+            ]);<br>
+            <span class="comment">//update products set quantity=2,price='2.99',total=quantity*price where product=35</span>
           </div>
           <p>&nbsp;</p>
 
-          <div style="font-size: 18px; border-bottom: dotted 1px;" class="color1">
-            <strong>Return Values</strong>
-          </div>
-          <p>Return an integer in case of insert, update and delete, an array in case of select, or <strong>FALSE</strong> in case of error in <span class="color2">PhpLivePdo</span>;</p>
+          <div class="title">Return Values</div>
+          <p>Return an integer in case of insert, update and delete, an array in case of select, or <strong class="const">FALSE</strong> in case of error in <span class="func">PhpLivePdo</span>;</p>
           <p>&nbsp;</p>
 
-          <div style="font-size: 18px; border-bottom: dotted 1px;" class="color1">
-            <strong>Examples</strong>
-          </div>
+          <div class="title">Examples</div>
           <br>
-          <p><strong>A simple query:</strong></p>
+          <p><strong></strong>A simple query:</strong></p>
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
-            <strong>
-              <span class="color2">$result</span> = <span class="color2">$PDO->SQL</span>(<span class="color4">"select * from users"</span>);
-            </strong>
+            <span class="var">$result</span> = <span class="func">$PDO->SQL</span>(<span class="string">"select * from users"</span>);
           </div>
           <p><strong>A query with ordened tokens:</strong></p>
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
-            <strong>
-              <span class="color2">$result</span> = <span class="color2">$PDO->SQL</span>(<span class="color4">"select * from users where email=? and city=?"</span>, [<br>
-                &nbsp;&nbsp;&nbsp;[<span class="color2">1</span>, <span class="color2">$_POST[<span class="color4">"email"</span>]</span>, <span class="color2">PdoStr</span>],<br>
-                &nbsp;&nbsp;&nbsp;[<span class="color2">2</span>, <span class="color2">$_POST[<span class="color4">"city"</span>]</span>, <span class="color2">PdoInt</span>]<br>
-              ]);
-            </strong>
+            <span class="var">$result</span> = <span class="func">$PDO->SQL</span>(<span class="string">"select * from users where email=? and city=?"</span>, [<br>
+              &nbsp;&nbsp;&nbsp;[<span class="const">1</span>, <span class="var">$_POST[<span class="string">"email"</span>]</span>, <span class="const">PdoStr</span>],<br>
+              &nbsp;&nbsp;&nbsp;[<span class="const">2</span>, <span class="var">$_POST[<span class="string">"city"</span>]</span>, <span class="const">PdoInt</span>]<br>
+            ]);
           </div>
           <p><strong>A query with named tokens:</strong></p>
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
-            <strong>
-              <span class="color2">$result</span> = <span class="color2">$PDO->SQL</span>(<span class="color4">"select * from users where name like :name or city like :name"</span>, [<br>
-                &nbsp;&nbsp;&nbsp;[<span class="color4">":name"</span>, <span class="color4">"%"</span> . <span class="color2">$_POST[<span class="color4">"name"</span>]</span> . <span class="color4">"%"</span>, <span class="color2">PdoStr</span>],<br>
-              ]);
-            </strong>
+            <span class="var">$result</span> = <span class="func">$PDO->SQL</span>(<span class="string">"select * from users where name like :name or city like :name"</span>, [<br>
+              &nbsp;&nbsp;&nbsp;[<span class="string">":name"</span>, <span class="string">"%"</span> . <span class="var">$_POST[<span class="string">"name"</span>]</span> . <span class="string">"%"</span>, <span class="const">PdoStr</span>],<br>
+            ]);
           </div>
           <p><strong>A simple query with table prefix:</strong></p>
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
-            <strong>
-              <span class="color2">$result</span> = <span class="color2">$PDO->SQL</span>(<span class="color4">"select * from ##users"</span>);<br>
-              <span class="color5">// Execute the query: select * from sys_users</span>
-            </strong>
+            <span class="var">$result</span> = <span class="var">$PDO->SQL</span>(<span class="string">"select * from ##users"</span>);<br>
+            <span class="comment">// Execute the query: select * from sys_users</span>
           </div>
           <br>
           
           <p><strong>Getting the values returned:</strong></p>
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
-            <strong>
-              <span class="color2">$result</span> = <span class="color2">$PDO->SQL</span>(<span class="color4">"select * from ##users"</span>);<br>
-              <span class="color3">echo</span> <span class="color4">"Welcome "</span> . <span class="color2">$result</span>[<span class="color2">0</span>][<span class="color4">"name"</span>];
-            </strong>
+            <span class="var">$result</span> = <span class="func">$PDO->SQL</span>(<span class="string">"select * from ##users"</span>);<br>
+            <span class="func">echo</span> <span class="string">"Welcome "</span> . <span class="var">$result</span>[<span class="const">0</span>][<span class="string">"name"</span>];
           </div>
           <p><strong>Getting the values returned:</strong></p>
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
-            <strong>
-              <span class="color2">$result</span> = <span class="color2">$PDO->SQL</span>(<span class="color4">"select * from ##users"</span>);<br>
-              <span class="color3">foreach</span>(<span class="color2">$result</span> <span class="color3">as</span> <span class="color2">$line</span>){<br>
-                &nbsp;&nbsp;&nbsp;<span class="color3">echo</span> <span class="color2">$line</span>[<span class="color4">"name"</span>] . <span class="color4">"&lt;br>"</span>;<br>
-              }
-            </strong>
+            <span class="var">$result</span> = <span class="var">$PDO->SQL</span>(<span class="string">"select * from ##users"</span>);<br>
+            <span class="func">foreach</span>(<span class="var">$result</span> <span class="func">as</span> <span class="var">$line</span>){<br>
+              &nbsp;&nbsp;&nbsp;<span class="func">echo</span> <span class="var">$line</span>[<span class="string">"name"</span>] . <span class="string">"&lt;br>"</span>;<br>
+            }
           </div>
           <p><strong>Debbuging a query:</strong></p>
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
-            <strong>
-              <span class="color2">$result</span> = <span class="color2">$PDO->SQL</span>(<span class="color4">"select * from users where email=? and city=?"</span>,<br>
-                &nbsp;&nbsp;&nbsp;[<br>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="color2">1</span>, <span class="color2">$_POST</span>[<span class="color4">"email"</span>], <span class="color2">PdoStr</span>],<br>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="color2">2</span>, <span class="color2">$_POST</span>[<span class="color4">"city"</span>], <span class="color2">PdoInt</span>]<br>
-                &nbsp;&nbsp;&nbsp;], [<br>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="color4">"Debug"</span> => <span class="color2">true</span><br>
-                &nbsp;&nbsp;&nbsp;]<br>
-              );
-            </strong>
+            <span class="var">$result</span> = <span class="func">$PDO->SQL</span>(<span class="string">"select * from users where email=? and city=?"</span>,<br>
+              &nbsp;&nbsp;&nbsp;[<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="const">1</span>, <span class="var">$_POST</span>[<span class="string">"email"</span>], <span class="const">PdoStr</span>],<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="const">2</span>, <span class="var">$_POST</span>[<span class="string">"city"</span>], <span class="const">PdoInt</span>]<br>
+              &nbsp;&nbsp;&nbsp;], [<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"Debug"</span> => <span class="const">true</span><br>
+              &nbsp;&nbsp;&nbsp;]<br>
+            );
           </div>
           <p>&nbsp;</p>
 

@@ -1,8 +1,25 @@
+html{
+  background-color: #333;
+  font-family: 'Fira Sans', 'Source Sans Pro', Helvetica, Arial, sans-serif;
+}
 a{
   text-decoration:none;
 }
 a:hover{
   text-decoration: underline;
+}
+
+.maintitle{
+  color: #793862;
+  font-size: 22px;
+  border-bottom: dotted 1px;
+  font-weight: bold;
+}
+.title{
+  color: #793862;
+  font-size: 18px;
+  border-bottom: dotted 1px;
+  font-weight: bold;
 }
 .menu{
   border-bottom: dotted 1px #ccc;
@@ -10,18 +27,21 @@ a:hover{
 .menulink{
   color: #ccc;
 }
-.color1{
-  color: #793862;
-}
-.color2{
+.func{
   color: #369;
 }
-.color3{
+.type{
   color: #693;
 }
-.color4{
+.var{
+  color: #369;
+}
+.const{
+  color: #936;
+}
+.string{
   color: #d00;
 }
-.color5{
+.comment{
   color: #FF8000;
 }
