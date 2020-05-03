@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.04.27.02
+// Version 2020.05.03.00
 
 define("PdoStr", PDO::PARAM_STR);
 define("PdoInt", PDO::PARAM_INT);
@@ -205,7 +205,7 @@ class PhpLivePdo{
     return $this->Error;
   }
 
-  private function SetError(int $Number, string $Msg):void{
+  private function SetError(string $Number, string $Msg):void{
     $this->Error = [$Number, $Msg];
     $folder = __DIR__ . "/errors-pdo/";
     if(is_dir($folder) == false){
