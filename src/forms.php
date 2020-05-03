@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.02.00
+// Version 2020.05.03.00
 
 class PhpLiveForms{
   private ?object $PhpLivePdo = null;
@@ -49,6 +49,16 @@ class PhpLiveForms{
       $site[1],
       ["Debug" => $Options["PdoDebug"]]
     );
+    if(count($form) == 0):
+      if(ini_get("display_errors")):
+        echo "PhpLiveForms - Form <strong>" . $Options["Form"];
+        if(session_name() != "PHPSESSID"):
+          echo "</strong> for site <strong>" . session_name();
+        endif;
+        echo "</strong> not found";
+      endif;
+      return false;
+    endif;
     echo '<form name="' . $form[0]["form"] . '"';
     if($form[0]["method"] == "ajax"){
       echo ' onsubmit="return false;"';
