@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.03.00
+// Version 2020.05.04.00
 
 define("PdoStr", PDO::PARAM_STR);
 define("PdoInt", PDO::PARAM_INT);
@@ -196,6 +196,27 @@ class PhpLivePdo{
     $return .= " where " . $Options["Where"][0] . "=?";
     $holes[] = [$i, $Options["Where"][1], $Options["Where"][2]];
     return $this->SQL($return, $holes, $Options2);
+  }
+
+  /**
+   * @param string $Table
+   * @param array $Fields
+   * @param array $Where
+   * @return int
+   */
+  public function UpdateDiff(array $Options, array $Options2 = []):int{
+    $data = $this->SQL("select * from " . $Options["Table"] . " where " . $Options["Where"][0] . "=" . $Options["Where"][1]);
+    $data = $data[0];
+    foreach($Options["Fields"] as &$field):
+      if($field[1] == $data[$field[0]]):
+        unset($field);
+      endif;
+    endforeach;
+    if(count($Options["Fields"]) > 0):
+      return $this->SqlUpdate($Options, $Options2);
+    else:
+      return 0;
+    endif;
   }
 
   /**
