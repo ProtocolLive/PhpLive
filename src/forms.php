@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.04.02
+// Version 2020.05.04.03
 
 class PhpLiveForms{
   private ?object $PhpLivePdo = null;
@@ -131,7 +131,8 @@ class PhpLiveForms{
         endif;
         echo "><br>";
       elseif($field["type"] == "textarea"):
-        echo '<textarea name="' . $Options["Data"][$field["name"]] . '">';
+        echo $field["label"] . ":<br>";
+        echo '<textarea name="' . $field["name"] . '">';
         if(isset($Options["Data"])):
           echo $Options["Data"][$field["name"]];
         elseif($field["default"] != null):
