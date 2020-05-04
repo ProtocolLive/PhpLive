@@ -8,6 +8,9 @@ a{
 a:hover{
   text-decoration: underline;
 }
+a:visited{
+  color: #00f;
+}
 
 .maintitle{
   color: #793862;
@@ -25,7 +28,7 @@ a:hover{
   border-bottom: dotted 1px #ccc;
 }
 .menulink{
-  color: #ccc;
+  color: #ccc !important;
 }
 .func{
   color: #369;
