@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.04.00
+// Version 2020.05.04.01
 
 class PhpLiveForms{
   private ?object $PhpLivePdo = null;
@@ -11,35 +11,35 @@ class PhpLiveForms{
   }
 
   public function Form(array $Options):bool{
-    if($this->PhpLivePdo === null){
-      if(isset($Options["PhpLivePdo"]) == false){
+    if($this->PhpLivePdo === null):
+      if(isset($Options["PhpLivePdo"]) == false):
         return false;
-      }else{
+      else:
         $PhpLivePdo = &$Options["PhpLivePdo"];
-      }
-    }else{
+      endif;
+    else:
       $PhpLivePdo = $this->PhpLivePdo;
-    }
+    endif;
     $Options["PdoDebug"] ??= false;
     $Options["AjaxAppend"] ??= false;
 
     // Get site
-    if(isset($Options["Site"])){
+    if(isset($Options["Site"])):
       $site[0] = "site=:site";
       $site[1] = [
         [":site", $Options["Site"], PdoStr],
         [":form", $Options["Form"], PdoStr]
       ];
-    }elseif(session_name() != "PHPSESSID"){
+    elseif(session_name() != "PHPSESSID"):
       $site[0] = "site=:site";
       $site[1] = [
         [":site", session_name(), PdoStr],
         [":form", $Options["Form"], PdoStr]
       ];
-    }else{
+    else:
       $site[0] = "site is null";
       $site[1] = [[":form", $Options["Form"], PdoStr]];
-    }
+    endif;
     // Get form
     $form = $PhpLivePdo->SQL("
       select *
@@ -61,14 +61,14 @@ class PhpLiveForms{
       return false;
     endif;
     echo '<form name="' . $form[0]["form"] . '"';
-    if($form[0]["method"] == "ajax"){
+    if($form[0]["method"] == "ajax"):
       echo ' onsubmit="return false;"';
-    }else{
+    else:
       echo ' method="' . $form[0]["method"] . '" action="' . $form[0]["action"] . '"';
-    }
-    if($form[0]["autocomplete"] == 0){
+    endif;
+    if($form[0]["autocomplete"] == 0):
       echo ' autocomplete="off"';
-    }
+    endif;
     echo ">";
     // Get fields
     $fields = $PhpLivePdo->SQL("
@@ -83,8 +83,8 @@ class PhpLiveForms{
       ["Debug" => $Options["PdoDebug"]]
     );
     echo "<p>";
-    foreach($fields as $field){
-      if($field["type"] == "select"){
+    foreach($fields as $field):
+      if($field["type"] == "select"):
         // Check if select data exist
         if(isset($Options["Selects"][$field["name"]]) == false):
           if(ini_get("display_errors")):
@@ -98,63 +98,66 @@ class PhpLiveForms{
         endif;
         echo $field["label"] . ":<br>";
         echo '<select name="' . $field["name"] . '">';
-        if($Options["Selects"][$field["name"]][0][0] > 0){
+        // Check the first option of select data
+        // Show a default value if not specified
+        // or a default value not specified
+        if($Options["Selects"][$field["name"]][0][0] > 0 and $field["default"] == null):
           echo '<option value="0" selected disabled></option>';
-        }
-        foreach($Options["Selects"][$field["name"]] as $select){
+        endif;
+        foreach($Options["Selects"][$field["name"]] as $select):
           echo '<option value="' . $select[0] . '"';
-          if(isset($Options["Data"]) and $select[0] == $Options["Data"][$field["name"]]){
+          if(isset($Options["Data"]) and $select[0] == $Options["Data"][$field["name"]]):
             echo " selected";
-          }elseif($field["default"] !== null and $select[0] == $field["default"]){
+          elseif($field["default"] !== null and $select[0] == $field["default"]):
             echo " selected";
-          }
+          endif;
           echo ">" . $select[1] . "</option>";
-        }
+        endforeach;
         echo "</select><br>";
-      }elseif($field["type"] == "checkbox"){
+      elseif($field["type"] == "checkbox"):
         echo '<p><input type="checkbox" name="' . $field["name"] . '"';
-        if(isset($Options["Data"])){
-          if($Options["Data"][$field["name"]] == 1){
+        if(isset($Options["Data"])):
+          if($Options["Data"][$field["name"]] == 1):
             echo " checked";
-          }
-        }elseif($field["default"] == 1){
+          endif;
+        elseif($field["default"] == 1):
           echo " checked";
-        }
+        endif;
         echo "> " . $field["label"] . "</p>";
-      }elseif($field["type"] == "hidden"){
+      elseif($field["type"] == "hidden"):
         echo '<input type="' . $field["type"] . '" name="' . $field["name"] . '"';
-        if(isset($Options["Hiddens"])){
+        if(isset($Options["Hiddens"])):
           echo ' value="' . $Options["Hiddens"][$field["name"]] . '"';
-        }
+        endif;
         echo "><br>";
-      }else{
+      else:
         echo $field["label"] . ":<br>";
         echo '<input type="' . $field["type"] . '" name="' . $field["name"] . '"';
-        if($field["size"] != null){
+        if($field["size"] != null):
           echo ' size="' . $field["size"] . '"';
-        }
-        if(isset($Options["Data"])){
+        endif;
+        if(isset($Options["Data"])):
           echo ' value="' . $Options["Data"][$field["name"]] . '"';
-        }elseif($field["default"] != null){
+        elseif($field["default"] != null):
           echo ' value="' . $field["default"] . '"';
-        }
-        if($field["style"] != null){
+        endif;
+        if($field["style"] != null):
           echo ' style="' . $field["style"] . '"';
-        }
-        if($field["class"] != null){
+        endif;
+        if($field["class"] != null):
           echo ' class="' . $field["class"] . '"';
-        }
-        if($field["js_event"] != null){
+        endif;
+        if($field["js_event"] != null):
           echo " " . $field["js_event"] . '="' . $field["js_code"] . '"';
-        }
-        if($field["mode"] == 1 and isset($Options["Data"])){
+        endif;
+        if($field["mode"] == 1 and isset($Options["Data"])):
           echo " disabled";
-        }elseif($field["mode"] == 2 and isset($Options["Data"]) == false){
+        elseif($field["mode"] == 2 and isset($Options["Data"]) == false):
           echo " disabled";
-        }
+        endif;
         echo "><br>";
-      }
-    }
+      endif;
+    endforeach;
     echo "</p>";
     // Submit button
     $fields = $PhpLivePdo->SQL("
@@ -168,16 +171,16 @@ class PhpLiveForms{
       ["Debug" => $Options["PdoDebug"]]
     );
     echo '<p><input type="submit" value="' . $fields[0]["label"] . '" onclick="';
-    if($form[0]["method"] == "ajax"){
-      if($Options["AjaxAppend"]){
+    if($form[0]["method"] == "ajax"):
+      if($Options["AjaxAppend"]):
         echo "AjaxAppend('" . $Options["Page"] . "','" . $Options["Place"] . "','" . $Options["Form"] . "'," . $Options["AjaxAppend"] . ");";
-      }else{
+      else:
         echo "Ajax('" . $Options["Page"] . "','" . $Options["Place"] . "','" . $Options["Form"] . "');";
-      }
-    }
-    if($fields[0]["js_event"] == "onclick"){
+      endif;
+    endif;
+    if($fields[0]["js_event"] == "onclick"):
       echo $fields[0]["js_code"];
-    }
+    endif;
     echo '"></p>';
     echo "</form>";
     return true;
