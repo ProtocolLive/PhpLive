@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-//Version 2020.05.03.01
+//Version 2020.05.04.00
 
 class GithubImport{
   private bool $Log = true;
@@ -12,9 +12,9 @@ class GithubImport{
   ];
 
   public function __construct($Options = null){
-    if(extension_loaded("openssl") == false){
+    if(extension_loaded("openssl") == false):
       die("GithubImport error: PHP extension OpenSSL not loaded!");
-    }
+    endif;
     $this->Status["Time"] = date("Y-m-d H:i:s");
     $this->Status["ApiIntegrity"] = $this->GetFile("https://raw.githubusercontent.com/ProtocolLive/GithubImport/master/src/GithubImport.php.md5") == md5_file(__FILE__);
     $this->Log = $Options["Log"]?? true;
@@ -36,40 +36,40 @@ class GithubImport{
       "Downloaded" => false,
       "Include" => null
     ];
-    if(file_exists($fileway) == true){
+    if(file_exists($fileway) == true):
       $this->Status["Files"][$Options["File"]]["Local"] = md5_file($fileway);
       $this->Status["Files"][$Options["File"]]["Server"] = $this->GetFile("https://raw.githubusercontent.com/" . $Options["User"] . "/" . $Options["Repo"] . "/" . $Options["Trunk"] . "/src/" . $Options["File"] . ".md5");
       if($Options["Download"] == true
       and $this->Status["Files"][$Options["File"]]["Server"] !== false
-      and $this->Status["Files"][$Options["File"]]["Local"] != $this->Status["Files"][$Options["File"]]["Server"]){
+      and $this->Status["Files"][$Options["File"]]["Local"] != $this->Status["Files"][$Options["File"]]["Server"]):
         unlink($fileway);
-      }
-    }
-    if(file_exists($fileway) == false and $Options["Download"] == true){
+    endif;
+    endif;
+    if(file_exists($fileway) == false and $Options["Download"] == true):
       $file = $this->GetFile("https://raw.githubusercontent.com/" . $Options["User"] . "/" . $Options["Repo"] . "/" . $Options["Trunk"] . "/src/" . $Options["File"]);
-      if($file !== false){
-        if(is_dir($Options["Folder"]) == false){
+      if($file !== false):
+        if(is_dir($Options["Folder"]) == false):
           mkdir($Options["Folder"]);
-        }
-        if(is_dir($Options["Folder"] . "/" . $Options["Repo"]) == false){
+        endif;
+        if(is_dir($Options["Folder"] . "/" . $Options["Repo"]) == false):
           mkdir($Options["Folder"] . "/" . $Options["Repo"]);
-        }
+        endif;
         file_put_contents($fileway, $file);
         $this->Status["Files"][$Options["File"]]["Downloaded"] = true;
-      }
-    }
-    if($Options["IncludeType"] == 0){
+      endif;
+    endif;
+    if($Options["IncludeType"] == 0):
       require_once($fileway);
       $this->Status["Files"][$Options["File"]]["Include"] = "require_once";
-    }elseif($Options["IncludeType"] == 1){
+    elseif($Options["IncludeType"] == 1):
       include_once($fileway);
       $this->Status["Files"][$Options["File"]]["Include"] = "include_once";
-    }
-    if($this->Log == true){
+    endif;
+    if($this->Log == true):
       $log = @$this->GetFile($Options["Folder"] . "/GithubImportLog.txt");
       $log = substr($log, 0, 4096);
       @file_put_contents($Options["Folder"] . "/GithubImportLog.txt", json_encode($this->Status, JSON_PRETTY_PRINT) . "\n" . $log);
-    }
+    endif;
     return true;
   }
 
