@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.03.00
+// Version 2020.05.04.00
 
 class PhpLiveForms{
   private ?object $PhpLivePdo = null;
@@ -49,13 +49,14 @@ class PhpLiveForms{
       $site[1],
       ["Debug" => $Options["PdoDebug"]]
     );
+    // check if form exist
     if(count($form) == 0):
       if(ini_get("display_errors")):
-        echo "PhpLiveForms - Form <strong>" . $Options["Form"];
+        echo "PhpLiveForms - Form " . $Options["Form"];
         if(session_name() != "PHPSESSID"):
-          echo "</strong> for site <strong>" . session_name();
+          echo ", site <strong>" . session_name();
         endif;
-        echo "</strong> not found";
+        echo " not found";
       endif;
       return false;
     endif;
@@ -84,6 +85,17 @@ class PhpLiveForms{
     echo "<p>";
     foreach($fields as $field){
       if($field["type"] == "select"){
+        // Check if select data exist
+        if(isset($Options["Selects"][$field["name"]]) == false):
+          if(ini_get("display_errors")):
+            echo "PhpLiveForms - Data for select " . $field["name"] . ", form ". $Options["Form"];
+            if(session_name() != "PHPSESSID"):
+              echo ", site " . session_name();
+            endif;
+            echo " not found";
+          endif;
+          return false;
+        endif;
         echo $field["label"] . ":<br>";
         echo '<select name="' . $field["name"] . '">';
         if($Options["Selects"][$field["name"]][0][0] > 0){
