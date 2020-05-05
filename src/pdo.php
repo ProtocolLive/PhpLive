@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.04.00
+// Version 2020.05.05.00
 
 define("PdoStr", PDO::PARAM_STR);
 define("PdoInt", PDO::PARAM_INT);
@@ -199,6 +199,7 @@ class PhpLivePdo{
   }
 
   /**
+   * Update only the diferents fields
    * @param string $Table
    * @param array $Fields
    * @param array $Where
@@ -216,6 +217,31 @@ class PhpLivePdo{
       return $this->SqlUpdate($Options, $Options2);
     else:
       return 0;
+    endif;
+  }
+
+  /**
+   * Update a row, or insert if not exist
+   * @param string $Table
+   * @param array $Fields
+   * @param array $Where
+   * @return int
+   */
+  public function UpdateInsert(array $Options, array $Options2 = []):int{
+    $data = $this->SQL("select " . $Options["Fields"][0][0] . " from " . $Options["Table"] . " where " . $Options["Where"][0] . "=?", [
+      [1, $Options["Where"][1], $Options["Where"][2]]
+    ]);
+    if(count($data) == 1):
+      return $this->SqlUpdate([
+        "Table" => $Options["Table"],
+        "Fields" => $Options["Fields"],
+        "Where" => $Options["Where"]
+      ], $Options2);
+    else:
+      return $this->SqlInsert([
+        "Table" => $Options["Table"],
+        "Fields" => $Options["Fields"]
+      ], $Options2);
     endif;
   }
 
