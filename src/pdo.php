@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.05.01
+// Version 2020.05.05.02
 
 define("PdoStr", PDO::PARAM_STR);
 define("PdoInt", PDO::PARAM_INT);
@@ -53,86 +53,86 @@ class PhpLivePdo{
     $Options["Safe"] ??= true;
 
     $Query = $this->Clean($Query);
-    if($this->Prefix !== null){
+    if($this->Prefix !== null):
       $Query = str_replace("##", $this->Prefix . "_", $Query);
-    }else{
+    else:
       $Query = str_replace("##", "", $Query);
-    }
+    endif;
     $command = explode(" ", $Query);
     $command = strtolower($command[0]);
     //Search from PdoSql and parse
-    foreach($Params as $id => $Param){
-      if($Param[2] == PdoSql){
-        if(is_numeric($Param[0])){
+    foreach($Params as $id => $Param):
+      if($Param[2] == PdoSql):
+        if(is_numeric($Param[0])):
           $out = 0;
-          for($i = 1; $i <= $Param[0]; $i++){
+          for($i = 1; $i <= $Param[0]; $i++):
             $in = strpos($Query, "?", $out);
             $out = $in + 1;
-          }
+          endfor;
           $Query = substr_replace($Query, $Param[1], $in, 1);
-        }else{
+        else:
           $in = strpos($Query, $Param[0]);
           $out = strpos($Query, ",", $in);
-          if($out === false){
+          if($out === false):
             $out = strpos($Query, ")", $in);
-          }
+          endif;
           $Query = substr_replace($Query, $Param[1], $in, $out);
-        }
+        endif;
         unset($Params[$id]);
-      }
-    }
+      endif;
+    endforeach;
     //Prepare
     $result = $this->Conn->prepare($Query);
     //Bind tokens
-    if($Params != null){
-      foreach($Params as &$Param){
-        if(count($Param) != 3){
+    if($Params != null):
+      foreach($Params as &$Param):
+        if(count($Param) != 3):
           $this->SetError(1, "Incorrect number of parameters when specifying a token");
-        }else{
-          if($Param[2] == PdoInt){
+        else:
+          if($Param[2] == PdoInt):
             $Param[1] = str_replace(",", ".", $Param[1]);
-            if(strpos($Param[1], ".") !== false){
+            if(strpos($Param[1], ".") !== false):
               $Param[2] = PdoStr;
-            }
-          }elseif($Param[2] == PdoBool){
+            endif;
+          elseif($Param[2] == PdoBool):
             $Param[1] = $Param[1] == "true"? true: false;
-          }
+          endif;
           $result->bindValue($Param[0], $Param[1], $Param[2]);
-        }
-      }
-    }
+        endif;
+      endforeach;
+    endif;
     //Safe execution
-    if($Options["Safe"] == true){
-      if($command == "truncate" or (($command == "update" or $command == "delete") and strpos($Query, "where") === false)){
+    if($Options["Safe"] == true):
+      if($command == "truncate" or (($command == "update" or $command == "delete") and strpos($Query, "where") === false)):
         $this->SetError(2, "Query not allowed in safe mode");
-      }
-    }
+      endif;
+    endif;
     //Execute
     $result->execute();
     //Error
     $error = $result->errorInfo();
-    if($error[0] != "00000"){
+    if($error[0] != "00000"):
       $this->SetError($error[0], $error[2]);
-    }
+    endif;
     //Debug
-    if(isset($Options["Debug"]) and $Options["Debug"] == true){?>
+    if(isset($Options["Debug"]) and $Options["Debug"] == true):?>
       <pre style="text-align:left">
         <?php $result->debugDumpParams();?><br>
         <?php debug_print_backtrace();?>
       </pre><?php
-    }
+    endif;
     //Return
-    if($command == "select" or $command == "show" or $command == "call"){
+    if($command == "select" or $command == "show" or $command == "call"):
       $return = $result->fetchAll();
-    }elseif($command == "insert"){
+    elseif($command == "insert"):
       $return = $this->Conn->lastInsertId();
-    }elseif($command == "update" or $command == "delete"){
+    elseif($command == "update" or $command == "delete"):
       $return = $result->rowCount();
-    }else{
+    else:
       $return = true;
-    }
+    endif;
     //Log
-    if(isset($Options["Log"]) and $Options["Log"] != null and isset($Options["User"]) and $Options["User"] != null){
+    if(isset($Options["Log"]) and $Options["Log"] != null and isset($Options["User"]) and $Options["User"] != null):
       ob_start();
       $result->debugDumpParams();
       $dump = ob_get_contents();
@@ -147,7 +147,7 @@ class PhpLivePdo{
         "Log" => $Options["Log"],
         "Target" => $Options["Target"]
       ]);
-    }
+    endif;
     return $return;
   }
 
@@ -160,16 +160,16 @@ class PhpLivePdo{
     $return = "insert into " . $Options["Table"] . "(";
     $holes = [];
     $i = 1;
-    foreach($Options["Fields"] as $field){
+    foreach($Options["Fields"] as $field):
       $return .= $this->Reserved($field[0]) . ",";
       $holes[] = [$i, $field[1], $field[2]];
       $i++;
-    }
+    endforeach;
     $return = substr($return, 0, -1);
     $return .= ") values(";
-    for($j = 1; $j < $i; $j++){
+    for($j = 1; $j < $i; $j++):
       $return .= "?,";
-    }
+    endfor;
     $return = substr($return, 0, -1);
     $return .= ");";
     return $this->Run($return, $holes, $Options2);
@@ -185,13 +185,13 @@ class PhpLivePdo{
     $return = "update " . $Options["Table"] . " set ";
     $holes = [];
     $i = 1;
-    foreach($Options["Fields"] as $field){
+    foreach($Options["Fields"] as $field):
       $return .= $this->Reserved($field[0]) . "=?,";
       $holes[] = [$i, $field[1], $field[2]];
-      if($field[2] != PdoSql){
+      if($field[2] != PdoSql):
         $i++;
-      }
-    }
+      endif;
+    endforeach;
     $return = substr($return, 0, -1);
     $return .= " where " . $Options["Where"][0] . "=?";
     $holes[] = [$i, $Options["Where"][1], $Options["Where"][2]];
@@ -255,15 +255,15 @@ class PhpLivePdo{
   private function SetError(string $Number, string $Msg):void{
     $this->Error = [$Number, $Msg];
     $folder = __DIR__ . "/errors-pdo/";
-    if(is_dir($folder) == false){
+    if(is_dir($folder) == false):
       mkdir($folder);
-    }
+    endif;
     file_put_contents($folder . date("Y-m-d_H-i-s") . ".txt", json_encode(debug_backtrace(), JSON_PRETTY_PRINT));
-    if(ini_get("display_errors") == true){
+    if(ini_get("display_errors") == true):
       echo "<pre style=\"text-align:left\">";
       var_dump(debug_backtrace());
       die();
-    }
+    endif;
   }
 
   /**
@@ -307,9 +307,9 @@ class PhpLivePdo{
    * @return string
    */
   private function Reserved(string $Field):string{
-    if($Field == "order" or $Field == "default"){
+    if($Field == "order" or $Field == "default"):
       $Field = "`" . $Field . "`";
-    }
+    endif;
     return $Field;
   }
 }
