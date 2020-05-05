@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.05.05
+// Version 2020.05.05.06
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -285,10 +285,9 @@ class PhpLivePdo{
    * @return string
    */
   private function Clean(string $Query):string{
-    $Query = str_replace('\n', '', $Query);
-    $Query = str_replace('\t', '', $Query);
-    $Query = str_replace('\r', '', $Query);
-    $Query = str_replace('\n', ' ', $Query);
+    $Query = str_replace("\t", '', $Query);
+    $Query = str_replace("\r", '', $Query);
+    $Query = str_replace("\n", ' ', $Query);
     $Query = trim($Query);
     return $Query;
   }
