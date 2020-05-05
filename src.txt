@@ -5,8 +5,8 @@
             "md5": "7e3342bd3940e49930c65646c3ce9fe6"
         },
         "DbBackup.php": {
-            "Version": "2020.05.05.04",
-            "md5": "f6c2c46f6feee95b7f6b91c4c6b5dd84"
+            "Version": "2020.05.05.05",
+            "md5": "99dcc311c1fb70193bb7752945f45838"
         },
         "forms.php": {
             "Version": "2020.05.05.01",

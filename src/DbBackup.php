@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.05.04
+// Version 2020.05.05.05
 
 class PhpLiveDbBackup{
   private ?object $PhpLivePdo = null;
@@ -155,33 +155,29 @@ class PhpLiveDbBackup{
       printf('%d %s<br>0%%<br>', $count, $Options['Translate']['Tables']);
     endif;
     foreach($tables as $table):
-      $PhpLivePdo->Run('lock table $table[0] write');
-      $result = $PhpLivePdo->Run('select * from ' . $table[0]);
-      $lines = count($result);
-      if($lines > 0):
+      $PhpLivePdo->Run('lock table ' . $table[0] . ' write');
+      $rows = $PhpLivePdo->Run('select * from ' . $table[0]);
+      if(count($rows) > 0):
         $file = fopen($Options['Folder'] . $table[0] . '.sql', 'w');
         $this->Delete[] = $Options['Folder'] . $table[0] . '.sql';
-        fwrite($file, 'insert into ' . $table[0] . ' values\n');
-        for($i = 0; $i < $lines; $i++):
-          fwrite($file, '(');
-          $fields = count($result[$i]) / 2;
-          for($j = 0; $j < $fields; $j++):
-            if($result[$i][$j] == ''):
-              fwrite($file, 'null');
-            elseif(is_numeric($result[$i][$j]) == false):
-              fwrite($file, "'" . str_replace("'", "''", $result[$i][$j]) . "'");
-            else:
-              fwrite($file, $result[$i][$j]);
+        foreach($rows as $row):
+          fwrite($file, 'insert into ' . $table[0] . ' values(');
+          $values = '';
+          foreach($row as $col => $value):
+            if(is_numeric($col) == true): // avoid duplicated rows returned by PDO
+              if($value == ''):
+                $values .= 'null,';
+              elseif(is_numeric($value)):
+                $values .= $value . ',';
+              else:
+                $values .= "'" . $value . "',";
+              endif;
             endif;
-            if($j < $fields - 1):
-              fwrite($file, ',');
-            endif;
-          endfor;
-          fwrite($file, ')');
-          if($i < $lines - 1):
-            fwrite($file, ',\n');
-          endif;
-        endfor;
+          endforeach;
+          $values = substr($values, 0, -1);
+          fwrite($file, $values);
+          fwrite($file, ");\n");
+        endforeach;
         $PhpLivePdo->Run('unlock tables');
         fclose($file);
         $this->Zip->addFile($Options['Folder'] . $table[0] . '.sql', $table[0] . '.sql');
