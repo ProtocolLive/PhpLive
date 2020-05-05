@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.05.01
+// Version 2020.05.05.02
 
 class PhpLiveDbBackup{
   private ?object $PhpLivePdo = null;
@@ -55,13 +55,7 @@ class PhpLiveDbBackup{
       ]);
       $line = "create table " . $table[0] . "(\n";
       foreach($cols as $col){
-        if($col["COLUMN_NAME"] == "order" 
-        or $col["COLUMN_NAME"] == "default"
-        or $col["COLUMN_NAME"] == "group"){
-          $line .= "  `" . $col["COLUMN_NAME"] . "` " . $col["DATA_TYPE"];
-        }else{
-          $line .= "  " . $col["COLUMN_NAME"] . " " . $col["DATA_TYPE"];
-        }
+        $line .= "  " . $PhpLivePdo->Reserved($col["COLUMN_NAME"]) . " " . $col["DATA_TYPE"];
         //Field size for integers is deprecated
         if($col["DATA_TYPE"] == "varchar"){
           $line .= "(" . $col["CHARACTER_MAXIMUM_LENGTH"] . ")";
