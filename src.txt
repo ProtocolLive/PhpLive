@@ -5,12 +5,12 @@
             "md5": "7e3342bd3940e49930c65646c3ce9fe6"
         },
         "DbBackup.php": {
-            "Version": "2020.05.05.00",
-            "md5": "afdb658e897fdfee3e5c3effd9671b3e"
+            "Version": "2020.05.05.01",
+            "md5": "5f2d702e093e43661732f07046bad368"
         },
         "forms.php": {
-            "Version": "2020.05.05.00",
-            "md5": "7300da182d16a7d7dd8815a27c79e709"
+            "Version": "2020.05.05.01",
+            "md5": "adaedb8aafcf7cac55291fddcd087b16"
         },
         "pdo.php": {
             "Version": "2020.05.05.01",

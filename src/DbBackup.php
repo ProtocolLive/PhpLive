@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.05.00
+// Version 2020.05.05.01
 
 class PhpLiveDbBackup{
   private ?object $PhpLivePdo = null;
@@ -33,7 +33,7 @@ class PhpLiveDbBackup{
     if($Options["Progress"] == true){
       $count = count($tables);
       $left = 0;
-      echo $count . " " . $Options["Translate"]["Tables"] . "<br>0%<br>";
+      printf("%d %s<br>0%%<br>", $count, $Options["Translate"]["Tables"]);
     }
 
     $file = fopen($Options["Folder"] . "tables.sql", "w");
@@ -95,12 +95,12 @@ class PhpLiveDbBackup{
       }
       fwrite($file, substr($line, 0, -2) . "\n);\n\n");
       if($Options["Progress"] == true){
-        echo round(++$left * 100 / $count) . "%<br>";
+        printf("%d%%<br>", ++$left * 100 / $count);
       }
     }
     if($Options["Progress"] == true){
       $left = 0;
-      echo $Options["Translate"]["FK"] . "<br>0%<br>";
+      printf("%s<br>0%%<br>", $Options["Translate"]["FK"]);
     }
     foreach($tables as $table){
       $cols = $PhpLivePdo->Run("
@@ -129,7 +129,7 @@ class PhpLiveDbBackup{
         fwrite($file, substr($line, 0, -2) . ";\n\n");
       }
       if($Options["Progress"] == true){
-        echo round(++$left * 100 / $count) . "%<br>";
+        printf("%d%%<br>", ++$left * 100 / $count);
       }
     }
     fclose($file);
@@ -158,7 +158,7 @@ class PhpLiveDbBackup{
     if($Options["Progress"] == true){
       $count = count($tables);
       $left = 0;
-      echo $count . " " . $Options["Translate"]["Tables"] . "<br>0%<br>";
+      printf("%d %s<br>0%%<br>", $count, $Options["Translate"]["Tables"]);
     }
     foreach($tables as $table){
       $PhpLivePdo->Run("lock table $table[0] write");
@@ -193,7 +193,7 @@ class PhpLiveDbBackup{
         $this->Zip->addFile($Options["Folder"] . $table[0] . ".sql", $table[0] . ".sql");
       }
       if($Options["Progress"] == true){
-        echo round(++$left * 100 / $count) . "%<br>";
+        printf("%d%%<br>", ++$left * 100 / $count);
       }
     }
     $this->ZipClose();
