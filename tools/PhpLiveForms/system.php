@@ -1,5 +1,5 @@
 <?php
-//2020.05.04.00
+//2020.05.05.00
 declare(strict_types = 1);
 ini_set("display_errors", "1");
 ini_set("display_startup_errors", "1");
@@ -8,7 +8,7 @@ ini_set("html_errors", "1");
 ini_set("max_execution_time", "15");
 session_start();
 
-require_once("GithubImport.php");
+require_once("../common/GithubImport.php");
 $GHI = new GithubImport;
 
 $GHI->Get([

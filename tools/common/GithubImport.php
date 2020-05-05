@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-//Version 2020.05.04.00
+//Version 2020.05.05.00
 
 class GithubImport{
   private bool $Log = true;
@@ -78,16 +78,10 @@ class GithubImport{
   }
 
   private function GetFile(string $File):string{
-    $return = @file_get_contents(
-      $File,
-      0,
-      stream_context_create([
-        "http" => [
-          "timeout" => 1
-        ]
-      ])
-    );
-    if($return === "") $return = false;
+    $temp = ini_get("default_socket_timeout");
+    ini_set("default_socket_timeout", 1);
+    $return = file_get_contents($File);
+    ini_set("default_socket_timeout", $temp);
     return $return;
   }
 }
