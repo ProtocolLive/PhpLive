@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.04.29.01
+// Version 2020.05.05.00
 
 class PhpLiveDbBackup{
   private ?object $PhpLivePdo = null;
@@ -29,7 +29,7 @@ class PhpLiveDbBackup{
     $Options["Translate"]["FK"] ??= "Foreign keys";
 
     $this->ZipOpen($Options["Folder"]);
-    $tables = $PhpLivePdo->SQL("show tables like '##%'");
+    $tables = $PhpLivePdo->Run("show tables like '##%'");
     if($Options["Progress"] == true){
       $count = count($tables);
       $left = 0;
@@ -38,7 +38,7 @@ class PhpLiveDbBackup{
 
     $file = fopen($Options["Folder"] . "tables.sql", "w");
     foreach($tables as $table){
-      $cols = $PhpLivePdo->SQL("select COLUMN_NAME,
+      $cols = $PhpLivePdo->Run("select COLUMN_NAME,
           DATA_TYPE,
           CHARACTER_MAXIMUM_LENGTH,
           NUMERIC_PRECISION,
@@ -103,7 +103,7 @@ class PhpLiveDbBackup{
       echo $Options["Translate"]["FK"] . "<br>0%<br>";
     }
     foreach($tables as $table){
-      $cols = $PhpLivePdo->SQL("
+      $cols = $PhpLivePdo->Run("
         select CONSTRAINT_NAME,
           COLUMN_NAME,
           cu.REFERENCED_TABLE_NAME,
@@ -154,15 +154,15 @@ class PhpLiveDbBackup{
     $Options["Translate"]["Tables"] ??= "tables";
 
     $this->ZipOpen($Options["Folder"]);
-    $tables = $PhpLivePdo->SQL("show tables like '##%'");
+    $tables = $PhpLivePdo->Run("show tables like '##%'");
     if($Options["Progress"] == true){
       $count = count($tables);
       $left = 0;
       echo $count . " " . $Options["Translate"]["Tables"] . "<br>0%<br>";
     }
     foreach($tables as $table){
-      $PhpLivePdo->SQL("lock table $table[0] write");
-      $result = $PhpLivePdo->SQL("select * from " . $table[0]);
+      $PhpLivePdo->Run("lock table $table[0] write");
+      $result = $PhpLivePdo->Run("select * from " . $table[0]);
       $lines = count($result);
       if($lines > 0){
         $file = fopen($Options["Folder"] . $table[0] . ".sql", "w");
@@ -188,7 +188,7 @@ class PhpLiveDbBackup{
             fwrite($file, ",\n");
           }
         }
-        $PhpLivePdo->SQL("unlock tables");
+        $PhpLivePdo->Run("unlock tables");
         fclose($file);
         $this->Zip->addFile($Options["Folder"] . $table[0] . ".sql", $table[0] . ".sql");
       }

@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.04.27.01
+// Version 2020.05.05.00
 
 class PhpLivePerms{
   private ?object $PhpLivePdo = null;
@@ -25,14 +25,14 @@ class PhpLivePerms{
     //Get resource id by name
     if(is_numeric($Options["Resource"]) == false){
       if(session_name() == "PHPSESSID"){
-        $result = $PhpLivePdo->SQL("select resource_id
+        $result = $PhpLivePdo->Run("select resource_id
           from sys_resources
           where resource=?
             and site is null", [
           [1, $Options["Resource"], PdoStr]
         ]);
       }else{
-        $result = $PhpLivePdo->SQL("select resource_id
+        $result = $PhpLivePdo->Run("select resource_id
           from sys_resources
           where resource=?
             and site=?", [
@@ -43,7 +43,7 @@ class PhpLivePerms{
       $Options["Resource"] = $result[0][0];
     }
     // Permissions for everyone
-    $result = $PhpLivePdo->SQL("select r,w,o
+    $result = $PhpLivePdo->Run("select r,w,o
       from sys_perms
       where resource_id=?
         and group_id=1", [
@@ -57,7 +57,7 @@ class PhpLivePerms{
       return $return;
     }
     // Admin?
-    $result = $PhpLivePdo->SQL("select *
+    $result = $PhpLivePdo->Run("select *
       from sys_usergroup
       where group_id=3
         and user_id=?", [
@@ -67,7 +67,7 @@ class PhpLivePerms{
       return ["r" => 1, "w" => 1, "o" => 1];
     }
     // Others
-    $result = $PhpLivePdo->SQL("select r,w,o
+    $result = $PhpLivePdo->Run("select r,w,o
       from sys_perms
       where resource_id=:resource
         and(

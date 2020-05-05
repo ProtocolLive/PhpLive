@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.04.03
+// Version 2020.05.05.00
 
 class PhpLiveForms{
   private ?object $PhpLivePdo = null;
@@ -41,7 +41,7 @@ class PhpLiveForms{
       $site[1] = [[":form", $Options["Form"], PdoStr]];
     endif;
     // Get form
-    $form = $PhpLivePdo->SQL("
+    $form = $PhpLivePdo->Run("
       select *
       from forms_forms
       where $site[0]
@@ -71,7 +71,7 @@ class PhpLiveForms{
     endif;
     echo ">";
     // Get fields
-    $fields = $PhpLivePdo->SQL("
+    $fields = $PhpLivePdo->Run("
       select *
       from forms_fields
       where form_id=?
@@ -169,7 +169,7 @@ class PhpLiveForms{
     endforeach;
     echo "</p>";
     // Submit button
-    $fields = $PhpLivePdo->SQL("
+    $fields = $PhpLivePdo->Run("
       select *
       from forms_fields
       where form_id=?
