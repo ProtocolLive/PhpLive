@@ -12,6 +12,14 @@ a:visited{
   color: #00f;
 }
 
+.menu1{
+  border: none;
+  height: 100px;
+}
+.menu2{
+  border: none;
+  height: 200px;
+}
 .maintitle{
   color: #793862;
   font-size: 22px;

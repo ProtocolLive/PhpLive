@@ -1,19 +1,19 @@
 <html>
   <head>
-    <title>PhpLivePdo - SqlUpdate</title>
+    <title>PhpLivePdo - UpdateInsert</title>
     <link rel="stylesheet" href="global.css">
   </head>
   <body style="background-color: #333; font-family: 'Fira Sans', 'Source Sans Pro', Helvetica, Arial, sans-serif;">
     <table style="width:88%;margin-left: auto;margin-right: auto;">
       <tr>
         <td style="background-color: #F2F2F2; padding: 20px;">
-          <div class="maintitle">PhpLivePdo::SqlUpdate</div>
-          <p>Execute a update query. This function its good to avoid differences when specifying tokens.</p>
+          <div class="maintitle">PhpLivePdo::UpdateInsert</div>
+          <p>Run a update query or a insert query in case of the where clause is not satisfied</p>
           <p>&nbsp;</p>
 
           <div class="title">Sintaxe</div><br>
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
-            <span class="const">public</span> <span class="func">PhpLivePdo::SqlUpdate</span> ( 
+            <span class="const">public</span> <span class="func">PhpLivePdo::UpdateInsert</span> ( 
             <span class="type">array</span> <span class="var">$Options</span> [,
             <span class="type">array</span> <span class="var">$Options2</span> = [] ] ) : <span class="const">int</span>;
           </div>
@@ -31,6 +31,10 @@
           <p>Returns the number of rows affected.</p>
           <p>&nbsp;</p>
 
+          <div class="title">Atention</div>
+          <p>- You have to specify the parameters as if you were going to use the function <a href="pdo-insert.htm" class="func">SqlInsert</a>, in case it have to run this function;</p>
+          <p>&nbsp;</p>
+
           <div class="title">Limitations</div>
           <p>- The clause where only use "=" comparator;</p>
           <p>- The clause where only use one condition;</p>
@@ -38,16 +42,17 @@
 
           <div class="title">Examples</div><br>
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
+            <span class="comment">// Original data: email=a@a.com,pwd=123,name='adm'</span><br>
             <span class="func">$PDO->SqlUpdate</span>([<br>
               &nbsp;&nbsp;&nbsp;<span class="string">"Table"</span> => <span class="string">"users"</span>,<br>
               &nbsp;&nbsp;&nbsp;<span class="string">"Fields"</span> => [<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"email"</span>, <span class="var">$_POST</span>[<span class="string">"email"</span>], <span class="const">PdoStr</span>],<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"pwd"</span>, <span class="var">$_POST</span>[<span class="string">"pwd"</span>], <span class="const">PdoStr</span>],<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"name"</span>, <span class="var">$_POST</span>[<span class="string">"name"</span>], <span class="const">PdoStr</span>]<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"email"</span>, <span class="string">"a@a.com"</span>, <span class="const">PdoStr</span>],<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"pwd"</span>, <span class="string">"321"</span>, <span class="const">PdoStr</span>],<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"name"</span>, <span class="string">"adm"</span>, <span class="const">PdoStr</span>]<br>
               &nbsp;&nbsp;&nbsp;],<br>
               &nbsp;&nbsp;&nbsp;<span class="string">"Where"</span> => [<span class="string">"user_id"</span>, <span class="var">$_GET</span>[<span class="string">"id"</span>], <span class="const">PdoInt</span>]<br>
             ]);<br>
-            <span class="comment">// update users set email='a@a.com',pwd='123',name='adm' where user_id=1</span>
+            <span class="comment">// Run: update users pwd='321' where user_id=1</span>
           </div>
           <p>&nbsp;</p>
 
