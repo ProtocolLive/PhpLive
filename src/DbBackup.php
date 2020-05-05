@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.05.05
+// Version 2020.05.05.06
 
 class PhpLiveDbBackup{
   private ?object $PhpLivePdo = null;
@@ -53,7 +53,7 @@ class PhpLiveDbBackup{
         order by ordinal_position', [
         [1, $table[0], PdoStr]
       ]);
-      $line = 'create table ' . $table[0] . '(\n';
+      $line = 'create table ' . $table[0] . "(\n";
       foreach($cols as $col):
         $line .= '  ' . $PhpLivePdo->Reserved($col['COLUMN_NAME']) . ' ' . $col['DATA_TYPE'];
         //Field size for integers is deprecated
@@ -85,9 +85,9 @@ class PhpLiveDbBackup{
         elseif($col['COLUMN_KEY'] == 'UNI'):
           $line .= ' unique key';
         endif;
-        $line .= ',\n';
+        $line .= ",\n";
       endforeach;
-      fwrite($file, substr($line, 0, -2) . '\n);\n\n');
+      fwrite($file, substr($line, 0, -2) . "\n);\n\n");
       if($Options['Progress'] == true):
         printf('%d%%<br>', ++$left * 100 / $count);
       endif;
@@ -113,14 +113,14 @@ class PhpLiveDbBackup{
         ]
       );
       if(count($cols) > 0):
-        $line = 'alter table ' . $table[0] . '\n';
+        $line = 'alter table ' . $table[0] . "\n";
         foreach($cols as $col):
           $line .= '  add constraint ' . $col['CONSTRAINT_NAME'];
           $line .= ' foreign key(' . $col['COLUMN_NAME'] . ') references ';
           $line .= $col['REFERENCED_TABLE_NAME'] . '(' . $col['REFERENCED_COLUMN_NAME'] . ') ';
-          $line .= 'on delete ' . $col['DELETE_RULE'] . ' on update ' . $col['UPDATE_RULE'] . ',\n';
+          $line .= 'on delete ' . $col['DELETE_RULE'] . ' on update ' . $col['UPDATE_RULE'] . ",\n";
         endforeach;
-        fwrite($file, substr($line, 0, -2) . ';\n\n');
+        fwrite($file, substr($line, 0, -2) . ";\n\n");
       endif;
       if($Options['Progress'] == true):
         printf('%d%%<br>', ++$left * 100 / $count);
