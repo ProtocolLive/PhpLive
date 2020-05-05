@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.05.00
+// Version 2020.05.05.01
 
 define("PdoStr", PDO::PARAM_STR);
 define("PdoInt", PDO::PARAM_INT);
@@ -48,7 +48,7 @@ class PhpLivePdo{
    * @param boolean $Debug (Options)(Optional) Dump the query for debug
    * @return mixed
    */
-  public function SQL(string $Query, array $Params = [], array $Options = []){
+  public function Run(string $Query, array $Params = [], array $Options = []){
     $Options["Target"] ??= null;
     $Options["Safe"] ??= true;
 
@@ -156,7 +156,7 @@ class PhpLivePdo{
    * @param array $Fields
    * @return int
    */
-  public function SqlInsert(array $Options, array $Options2 = []):int{
+  public function Insert(array $Options, array $Options2 = []):int{
     $return = "insert into " . $Options["Table"] . "(";
     $holes = [];
     $i = 1;
@@ -172,7 +172,7 @@ class PhpLivePdo{
     }
     $return = substr($return, 0, -1);
     $return .= ");";
-    return $this->SQL($return, $holes, $Options2);
+    return $this->Run($return, $holes, $Options2);
   }
 
   /**
@@ -181,7 +181,7 @@ class PhpLivePdo{
    * @param array $Where
    * @return int
    */
-  public function SqlUpdate(array $Options, array $Options2 = []):int{
+  public function Update(array $Options, array $Options2 = []):int{
     $return = "update " . $Options["Table"] . " set ";
     $holes = [];
     $i = 1;
@@ -195,7 +195,7 @@ class PhpLivePdo{
     $return = substr($return, 0, -1);
     $return .= " where " . $Options["Where"][0] . "=?";
     $holes[] = [$i, $Options["Where"][1], $Options["Where"][2]];
-    return $this->SQL($return, $holes, $Options2);
+    return $this->Run($return, $holes, $Options2);
   }
 
   /**
@@ -206,7 +206,7 @@ class PhpLivePdo{
    * @return int
    */
   public function UpdateDiff(array $Options, array $Options2 = []):int{
-    $data = $this->SQL("select * from " . $Options["Table"] . " where " . $Options["Where"][0] . "=" . $Options["Where"][1]);
+    $data = $this->Run("select * from " . $Options["Table"] . " where " . $Options["Where"][0] . "=" . $Options["Where"][1]);
     $data = $data[0];
     foreach($Options["Fields"] as &$field):
       if($field[1] == $data[$field[0]]):
@@ -214,7 +214,7 @@ class PhpLivePdo{
       endif;
     endforeach;
     if(count($Options["Fields"]) > 0):
-      return $this->SqlUpdate($Options, $Options2);
+      return $this->Update($Options, $Options2);
     else:
       return 0;
     endif;
@@ -228,17 +228,17 @@ class PhpLivePdo{
    * @return int
    */
   public function UpdateInsert(array $Options, array $Options2 = []):int{
-    $data = $this->SQL("select " . $Options["Fields"][0][0] . " from " . $Options["Table"] . " where " . $Options["Where"][0] . "=?", [
+    $data = $this->Run("select " . $Options["Fields"][0][0] . " from " . $Options["Table"] . " where " . $Options["Where"][0] . "=?", [
       [1, $Options["Where"][1], $Options["Where"][2]]
     ]);
     if(count($data) == 1):
-      return $this->SqlUpdate([
+      return $this->Update([
         "Table" => $Options["Table"],
         "Fields" => $Options["Fields"],
         "Where" => $Options["Where"]
       ], $Options2);
     else:
-      return $this->SqlInsert([
+      return $this->Insert([
         "Table" => $Options["Table"],
         "Fields" => $Options["Fields"]
       ], $Options2);
@@ -287,7 +287,7 @@ class PhpLivePdo{
    * @param int $Target User afected by query
    */
   private function SqlLog(array $Options):void{
-    $this->SqlInsert([
+    $this->Insert([
       "Table" => "sys_logs",
       "Fields" => [
         ["time", date("Y-m-d H:i:s"), PdoStr],
