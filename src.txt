@@ -9,8 +9,8 @@
             "md5": "ab3d7b65fa2c6e2a73fc821f3f318a38"
         },
         "forms.php": {
-            "Version": "2020.05.05.01",
-            "md5": "adaedb8aafcf7cac55291fddcd087b16"
+            "Version": "2020.05.05.02",
+            "md5": "8908d16fdb59f9550571389314614397"
         },
         "pdo.php": {
             "Version": "2020.05.05.05",
