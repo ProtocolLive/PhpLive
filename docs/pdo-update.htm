@@ -41,11 +41,11 @@
             <span class="func">$PDO->SqlUpdate</span>([<br>
               &nbsp;&nbsp;&nbsp;<span class="string">"Table"</span> => <span class="string">"users"</span>,<br>
               &nbsp;&nbsp;&nbsp;<span class="string">"Fields"</span> => [<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"email"</span>, <span class="var">$_POST</span>[<span class="string">"email"</span>], <span class="const">PdoStr</span>],<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"pwd"</span>, <span class="var">$_POST</span>[<span class="string">"pwd"</span>], <span class="const">PdoStr</span>],<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"name"</span>, <span class="var">$_POST</span>[<span class="string">"name"</span>], <span class="const">PdoStr</span>]<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"email"</span>, <span class="string">"a@a.com"</span>], <span class="const">PdoStr</span>],<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"pwd"</span>, <span class="string">"123"</span>, <span class="const">PdoStr</span>],<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"name"</span>, <span class="string">"adm"</span>, <span class="const">PdoStr</span>]<br>
               &nbsp;&nbsp;&nbsp;],<br>
-              &nbsp;&nbsp;&nbsp;<span class="string">"Where"</span> => [<span class="string">"user_id"</span>, <span class="var">$_GET</span>[<span class="string">"id"</span>], <span class="const">PdoInt</span>]<br>
+              &nbsp;&nbsp;&nbsp;<span class="string">"Where"</span> => [<span class="string">"user_id"</span>, <span class="const">1</span>, <span class="const">PdoInt</span>]<br>
             ]);<br>
             <span class="comment">// update users set email='a@a.com',pwd='123',name='adm' where user_id=1</span>
           </div>

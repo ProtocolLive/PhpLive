@@ -36,10 +36,10 @@
             <span class="func">$PDO->SqlInsert</span>([<br>
               &nbsp;&nbsp;&nbsp;<span class="string">"Table"</span> => <span class="string">"users"</span>,<br>
               &nbsp;&nbsp;&nbsp;<span class="string">"Fields"</span> => [<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"email"</span>, <span class="var">$_POST</span>[<span class="string">"email"</span>], <span class="const">PdoStr</span>],<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"pwd"</span>, <span class="var">$_POST</span>[<span class="string">"pwd"</span>], <span class="const">PdoStr</span>],<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"name"</span>, <span class="var">$_POST</span>[<span class="string">"name"</span>], <span class="const">PdoStr</span>],<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"level"</span>, <span class="var">$_POST</span>[<span class="string">"level"</span>], <span class="const">PdoInt</span>]<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"email"</span>, <span class="string">"a@a.com"</span>, <span class="const">PdoStr</span>],<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"pwd"</span>, <span class="string">"123"</span>, <span class="const">PdoStr</span>],<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"name"</span>, <span class="string">"adm"</span>, <span class="const">PdoStr</span>],<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"level"</span>, <span class="const">1</span>, <span class="const">PdoInt</span>]<br>
               &nbsp;&nbsp;&nbsp;]<br>
             ]);<br>
             <span class="comment">// insert into users(email,pwd,name,level) values('a@a.com','123','adm',1)</span>
