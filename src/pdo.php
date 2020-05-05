@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.05.02
+// Version 2020.05.05.03
 
 define("PdoStr", PDO::PARAM_STR);
 define("PdoInt", PDO::PARAM_INT);
@@ -115,11 +115,12 @@ class PhpLivePdo{
       $this->SetError($error[0], $error[2]);
     endif;
     //Debug
-    if(isset($Options["Debug"]) and $Options["Debug"] == true):?>
-      <pre style="text-align:left">
-        <?php $result->debugDumpParams();?><br>
-        <?php debug_print_backtrace();?>
-      </pre><?php
+    if(isset($Options["Debug"]) and $Options["Debug"] == true):
+      print '<pre style="text-align:left">';
+        $result->debugDumpParams();
+        print '<br>';
+        print debug_print_backtrace();
+      print '</pre>';
     endif;
     //Return
     if($command == "select" or $command == "show" or $command == "call"):
@@ -259,8 +260,10 @@ class PhpLivePdo{
       mkdir($folder);
     endif;
     file_put_contents($folder . date("Y-m-d_H-i-s") . ".txt", json_encode(debug_backtrace(), JSON_PRETTY_PRINT));
-    if(ini_get("display_errors") == true):
-      echo "<pre style=\"text-align:left\">";
+    if(ini_get("display_errors")):
+      if(ini_get("html_errors")):
+        print '<pre style="text-align:left">';
+      endif;
       var_dump(debug_backtrace());
       die();
     endif;
