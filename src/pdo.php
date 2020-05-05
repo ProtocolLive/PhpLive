@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.05.04
+// Version 2020.05.05.05
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -253,6 +253,17 @@ class PhpLivePdo{
     return $this->Error;
   }
 
+  /**
+   * @param string $Field
+   * @return string
+   */
+  public function Reserved(string $Field):string{
+    if($Field == 'order' or $Field == 'default'):
+      $Field = '`' . $Field . '`';
+    endif;
+    return $Field;
+  }
+
   private function SetError(string $Number, string $Msg):void{
     $this->Error = [$Number, $Msg];
     $folder = __DIR__ . '/errors-pdo/';
@@ -303,16 +314,5 @@ class PhpLivePdo{
         ['target', $Options['Target'], $Options['Target'] == null? PdoNull: PdoInt]
       ]
     ]);
-  }
-
-  /**
-   * @param string $Field
-   * @return string
-   */
-  private function Reserved(string $Field):string{
-    if($Field == 'order' or $Field == 'default'):
-      $Field = '`' . $Field . '`';
-    endif;
-    return $Field;
   }
 }
