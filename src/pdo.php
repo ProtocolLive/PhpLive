@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.06.00
+// Version 2020.05.06.01
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -15,15 +15,15 @@ class PhpLivePdo{
   private array $Error = [];
 
   /**
-   * @param string $Drive (Optional) MySql as default
-   * @param string $Ip
-   * @param string $User
-   * @param string $Pwd
-   * @param string $Db
-   * @param string $Prefix (Optional) Change ## for the tables prefix 
-   * @param string $Charset (Optional) UTF8 as default
-   * @param int $TimeOut (Optional) Connection timeout
-   * @return object Connection
+   * @param string $Drive ($Options)(Optional) MySql as default
+   * @param string $Ip ($Options)
+   * @param string $User ($Options)
+   * @param string $Pwd ($Options)
+   * @param string $Db ($Options)
+   * @param string $Prefix ($Options)(Optional) Change ## for the tables prefix 
+   * @param string $Charset ($Options)(Optional) UTF8 as default
+   * @param int $TimeOut ($Options)(Optional) Connection timeout
+   * @return object
    */
   public function __construct(array $Options){
     $Options['Drive'] ??= 'mysql';
@@ -42,10 +42,11 @@ class PhpLivePdo{
   /**
    * @param string $Query
    * @param array $Params
-   * @param int $Log (Options)(Optional) Event to be logged
-   * @param int $User (Options)(Optional) User executing the query
-   * @param int $Target (Options)(Optional) User efected
-   * @param boolean $Debug (Options)(Optional) Dump the query for debug
+   * @param int Log ($Options)(Optional) Event to be logged
+   * @param int User ($Options)(Optional) User executing the query
+   * @param int Target ($Options)(Optional) User efected
+   * @param bool Debug ($Options)(Optional) Dump the query for debug
+   * @param bool Safe ($Options)(Optional) Only runs a safe query
    * @return mixed
    */
   public function Run(string $Query, array $Params = [], array $Options = []){
@@ -153,8 +154,8 @@ class PhpLivePdo{
   }
 
   /**
-   * @param string $Table
-   * @param array $Fields
+   * @param string Table
+   * @param array Fields
    * @return int
    */
   public function Insert(array $Options, array $Options2 = []):int{
@@ -178,9 +179,9 @@ class PhpLivePdo{
 
   /**
    * Update only the diferents fields
-   * @param string $Table
-   * @param array $Fields
-   * @param array $Where
+   * @param string Table ($Options)
+   * @param array Fields ($Options)
+   * @param array Where ($Options)
    * @return int
    */
   public function Update(array $Options, array $Options2 = []):int{
@@ -202,9 +203,9 @@ class PhpLivePdo{
 
   /**
    * Update a row, or insert if not exist
-   * @param string $Table
-   * @param array $Fields
-   * @param array $Where
+   * @param string Table ($Options)
+   * @param array Fields ($Options)
+   * @param array Where ($Options)
    * @return int
    */
   public function UpdateInsert(array $Options, array $Options2 = []):int{
@@ -233,7 +234,7 @@ class PhpLivePdo{
   }
 
   /**
-   * @param string $Field
+   * @param string Field
    * @return string
    */
   public function Reserved(string $Field):string{
