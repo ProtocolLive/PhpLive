@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.06.01
+// Version 2020.05.06.02
 
 class PhpLiveForms{
   private ?object $PhpLivePdo = null;
@@ -60,11 +60,12 @@ class PhpLiveForms{
       endif;
       return false;
     endif;
+    // Build form
     printf('<form name="%s"', $form[0]['form']);
     if($form[0]['method'] == 'ajax'):
       print ' onsubmit="return false;"';
     else:
-      printf(' method="%s" action="%s"', $form[0]['method'], $form[0]['action']);
+      printf(' method="%s" action="%s"', $form[0]['method'], $Options['Page']);
     endif;
     if($form[0]['autocomplete'] == 0):
       print ' autocomplete="off"';

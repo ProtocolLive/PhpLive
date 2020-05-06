@@ -3,7 +3,6 @@ create table forms_forms(
   site varchar(15),
   form varchar(15) not null,
   method varchar(15) not null,
-  action varchar(100),
   autocomplete tinyint unsigned not null default 1
 );
 
