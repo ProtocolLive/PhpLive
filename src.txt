@@ -21,8 +21,8 @@
             "md5": "f0abd441a926b86297242beef72b9bb3"
         },
         "PhpUpdate.php": {
-            "Version": "2020.04.27.00",
-            "md5": "f10b31ca3c35cce827fe3af399d2a722"
+            "Version": "2020.05.05.00",
+            "md5": "11ae1f822fd112cef35578000bcca29f"
         }
     }
 }
