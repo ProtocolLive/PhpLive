@@ -39,7 +39,7 @@ a:visited{
   color: #ccc !important;
 }
 .func{
-  color: #369;
+  color: #369 !important;
 }
 .type{
   color: #693;
