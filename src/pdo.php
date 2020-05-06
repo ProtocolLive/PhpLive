@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.05.07
+// Version 2020.05.06.00
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -185,12 +185,14 @@ class PhpLivePdo{
    */
   public function Update(array $Options, array $Options2 = []):int{
     $data = $this->Run('select * from ' . $Options['Table'] . ' where ' . $Options['Where'][0] . '=' . $Options['Where'][1]);
-    $data = $data[0];
-    foreach($Options['Fields'] as &$field):
-      if($field[1] == $data[$field[0]]):
-        unset($field);
-      endif;
-    endforeach;
+    if(count($data) == 1):
+      $data = $data[0];
+      foreach($Options['Fields'] as &$field):
+        if($field[1] == $data[$field[0]]):
+          unset($field);
+        endif;
+      endforeach;
+    endif;
     if(count($Options['Fields']) > 0):
       return $this->RunUpdate($Options, $Options2);
     else:
