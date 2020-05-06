@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.06.00
+// Version 2020.05.06.01
 
 class PhpLiveForms{
   private ?object $PhpLivePdo = null;
@@ -182,14 +182,14 @@ class PhpLiveForms{
     printf('<p><input type="submit" value="%s" onclick="', $fields[0]['label']);
     if($form[0]['method'] == 'ajax'):
       if($Options['AjaxAppend']):
-        printf('AjaxAppend("%s","%s","%s",%s);',
+        printf("AjaxAppend('%s','%s','%s',%s);",
           $Options['Page'],
           $Options['Place'],
           $Options['Form'],
           $Options['AjaxAppend']
         );
       else:
-        printf('Ajax("%s","%s","%s");',
+        printf("Ajax('%s','%s','%s');",
           $Options['Page'],
           $Options['Place'],
           $Options['Form']
