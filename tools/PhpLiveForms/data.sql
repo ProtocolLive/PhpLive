@@ -16,7 +16,7 @@ insert into forms_fields values
 (11,2,'Order','order','number',100,0,null,null,null,null,null,100),
 (12,2,'Default','default','text',null,0,null,null,null,null,null,100),
 (13,2,'Size','size','number',null,0,null,null,null,null,null,100),
-(14,2,'Estyle','style','text',null,0,null,null,null,null,null,100),
+(14,2,'Style','style','text',null,0,null,null,null,null,null,100),
 (15,2,'Class','class','text',null,0,null,null,null,null,null,100),
 (16,2,'JS event','js_event','text',null,0,null,null,null,null,null,100),
 (17,2,'JS code','js_code','text',null,0,null,null,null,null,null,100),
