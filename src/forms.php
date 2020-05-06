@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.05.02
+// Version 2020.05.06.00
 
 class PhpLiveForms{
   private ?object $PhpLivePdo = null;
@@ -44,7 +44,7 @@ class PhpLiveForms{
     $form = $PhpLivePdo->Run('
       select *
       from forms_forms
-      where $site[0]
+      where ' . $site[0] . '
         and form=:form',
       $site[1],
       ['Debug' => $Options['PdoDebug']]
