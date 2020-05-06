@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.05.03
+// Version 2020.05.06.00
 
 class GithubImport{
   private bool $Log = true;
@@ -45,7 +45,7 @@ class GithubImport{
         unlink($fileway);
       endif;
     endif;
-    if(file_exists($fileway) == false and $Options['Download'] == true):
+    if(file_exists($fileway) == false and $Options['Download'] == true and $this->Status['Files'][$Options['File']]['Server'] !== false):
       $file = $this->GetFile('https://raw.githubusercontent.com/' . $Options['User'] . '/' . $Options['Repo'] . '/' . $Options['Trunk'] . '/src/' . $Options['File']);
       if($file !== false):
         if(is_dir($Options['Folder']) == false):
