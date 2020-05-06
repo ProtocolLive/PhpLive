@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.05.08
+// Version 2020.05.06.00
 
 class PhpLiveDbBackup{
   private ?object $PhpLivePdo = null;
@@ -13,7 +13,7 @@ class PhpLiveDbBackup{
     $this->PhpLivePdo = $PhpLivePdo;
   }
 
-  public function BackupTables(array $Options = []):string{
+  public function Tables(array $Options = []):string{
     if($this->PhpLivePdo === null):
       if(isset($Options['PhpLivePdo']) == false):
         return false;
@@ -133,7 +133,7 @@ class PhpLiveDbBackup{
     return substr($_SERVER['REQUEST_URI'], 0, strrpos($_SERVER['REQUEST_URI'], '/')) . $Options['Folder'] . $this->Time . '.zip';
   }
 
-  public function BackupData(array $Options = []):string{
+  public function Data(array $Options = []):string{
     if($this->PhpLivePdo === null):
       if(isset($Options['PhpLivePdo']) == false):
         return false;
