@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.05.07
+// Version 2020.05.05.08
 
 class PhpLiveDbBackup{
   private ?object $PhpLivePdo = null;
@@ -170,7 +170,7 @@ class PhpLiveDbBackup{
               elseif(is_numeric($value)):
                 $values .= $value . ',';
               else:
-                $values .= "'$value',";
+                $values .= "'" . str_replace("'", "''", $value) . "',";
               endif;
             endif;
           endforeach;
