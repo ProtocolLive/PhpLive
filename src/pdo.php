@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.05.06
+// Version 2020.05.05.07
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -177,36 +177,13 @@ class PhpLivePdo{
   }
 
   /**
-   * @param string $Table
-   * @param array $Fields
-   * @param array $Where
-   * @return int
-   */
-  public function Update(array $Options, array $Options2 = []):int{
-    $return = 'update ' . $Options['Table'] . ' set ';
-    $holes = [];
-    $i = 1;
-    foreach($Options['Fields'] as $field):
-      $return .= $this->Reserved($field[0]) . '=?,';
-      $holes[] = [$i, $field[1], $field[2]];
-      if($field[2] != PdoSql):
-        $i++;
-      endif;
-    endforeach;
-    $return = substr($return, 0, -1);
-    $return .= ' where ' . $Options['Where'][0] . '=?';
-    $holes[] = [$i, $Options['Where'][1], $Options['Where'][2]];
-    return $this->Run($return, $holes, $Options2);
-  }
-
-  /**
    * Update only the diferents fields
    * @param string $Table
    * @param array $Fields
    * @param array $Where
    * @return int
    */
-  public function UpdateDiff(array $Options, array $Options2 = []):int{
+  public function Update(array $Options, array $Options2 = []):int{
     $data = $this->Run('select * from ' . $Options['Table'] . ' where ' . $Options['Where'][0] . '=' . $Options['Where'][1]);
     $data = $data[0];
     foreach($Options['Fields'] as &$field):
@@ -215,7 +192,7 @@ class PhpLivePdo{
       endif;
     endforeach;
     if(count($Options['Fields']) > 0):
-      return $this->Update($Options, $Options2);
+      return $this->RunUpdate($Options, $Options2);
     else:
       return 0;
     endif;
@@ -264,6 +241,23 @@ class PhpLivePdo{
     return $Field;
   }
 
+  private function RunUpdate(array $Options, array $Options2 = []):int{
+    $return = 'update ' . $Options['Table'] . ' set ';
+    $holes = [];
+    $i = 1;
+    foreach($Options['Fields'] as $field):
+      $return .= $this->Reserved($field[0]) . '=?,';
+      $holes[] = [$i, $field[1], $field[2]];
+      if($field[2] != PdoSql):
+        $i++;
+      endif;
+    endforeach;
+    $return = substr($return, 0, -1);
+    $return .= ' where ' . $Options['Where'][0] . '=?';
+    $holes[] = [$i, $Options['Where'][1], $Options['Where'][2]];
+    return $this->Run($return, $holes, $Options2);
+  }
+
   private function SetError(string $Number, string $Msg):void{
     $this->Error = [$Number, $Msg];
     $folder = __DIR__ . '/errors-pdo/';
@@ -280,10 +274,6 @@ class PhpLivePdo{
     endif;
   }
 
-  /**
-   * @param string $Query
-   * @return string
-   */
   private function Clean(string $Query):string{
     $Query = str_replace("\t", '', $Query);
     $Query = str_replace("\r", '', $Query);
@@ -292,13 +282,6 @@ class PhpLivePdo{
     return $Query;
   }
 
-  /**
-   * @param object $Conn (Optional)
-   * @param int $User User executing the query
-   * @param string $Dump The dump created by SQL function
-   * @param int $Type Action identification
-   * @param int $Target User afected by query
-   */
   private function SqlLog(array $Options):void{
     $this->Insert([
       'Table' => 'sys_logs',
