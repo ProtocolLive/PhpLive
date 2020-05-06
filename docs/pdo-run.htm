@@ -87,13 +87,13 @@
           <p><strong>Getting the values returned:</strong></p>
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
             <span class="var">$result</span> = <span class="func">$PDO->Run</span>(<span class="string">"select * from ##users"</span>);<br>
-            <span class="func">echo</span> <span class="string">"Welcome "</span> . <span class="var">$result</span>[<span class="const">0</span>][<span class="string">"name"</span>];
+            <span class="type">echo</span> <span class="string">"Welcome "</span> . <span class="var">$result</span>[<span class="const">0</span>][<span class="string">"name"</span>];
           </div>
           <p><strong>Getting the values returned:</strong></p>
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
             <span class="var">$result</span> = <span class="var">$PDO->Run</span>(<span class="string">"select * from ##users"</span>);<br>
-            <span class="func">foreach</span>(<span class="var">$result</span> <span class="func">as</span> <span class="var">$line</span>){<br>
-              &nbsp;&nbsp;&nbsp;<span class="func">echo</span> <span class="var">$line</span>[<span class="string">"name"</span>] . <span class="string">"&lt;br>"</span>;<br>
+            <span class="type">foreach</span>(<span class="var">$result</span> <span class="type">as</span> <span class="var">$line</span>){<br>
+              &nbsp;&nbsp;&nbsp;<span class="type">echo</span> <span class="var">$line</span>[<span class="string">"name"</span>] . <span class="string">"&lt;br>"</span>;<br>
             }
           </div>
           <p><strong>Debbuging a query:</strong></p>
