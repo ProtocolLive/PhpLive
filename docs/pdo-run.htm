@@ -65,6 +65,17 @@
           <p>Return an integer in case of insert, update and delete, an array in case of select, or <strong class="const">FALSE</strong> in case of error in <span class="func">PhpLivePdo</span>;</p>
           <p>&nbsp;</p>
 
+          <div class="title">
+            <strong>Errors</strong>
+          </div>
+          <p>
+            If an error happens, a log file is created in the same directory of the library.<br>
+            If the PHP ini configuration display_errors are defined as <span class="const">true</span>,
+            the error are dumped in the screen, with the <a href="https://www.php.net/manual/en/function.debug-backtrace" target="_blank" class="func">debug_backtrace</a>.<br>
+            Also you can get the code and description with the function <a href="pdo-errorget.htm" class="func">PhpLivePdo::ErrorGet</a>.
+          </p>
+          <p>&nbsp;</p>
+
           <div class="title">Examples</div>
           <br>
           <p><strong></strong>A simple query:</strong></p>

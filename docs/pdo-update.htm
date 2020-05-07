@@ -70,6 +70,17 @@
           <p>Returns the number of rows affected.</p>
           <p>&nbsp;</p>
 
+          <div class="title">
+            <strong>Errors</strong>
+          </div>
+          <p>
+            If an error happens, a log file is created in the same directory of the library.<br>
+            If the PHP ini configuration display_errors are defined as <span class="const">true</span>,
+            the error are dumped in the screen, with the <a href="https://www.php.net/manual/en/function.debug-backtrace" target="_blank" class="func">debug_backtrace</a>.<br>
+            Also you can get the code and description with the function <a href="pdo-errorget.htm" class="func">PhpLivePdo::ErrorGet</a>.
+          </p>
+          <p>&nbsp;</p>
+
           <div class="title">Limitations</div>
           <p>- The clause where only use "=" comparator;</p>
           <p>- The clause where only use one condition;</p>
