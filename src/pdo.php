@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.07.00
+// Version 2020.05.07.01
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -290,6 +290,7 @@ class PhpLivePdo{
       'Table' => 'sys_logs',
       'Fields' => [
         ['time', date('Y-m-d H:i:s'), PdoStr],
+        ['site', $this->Prefix, $this->Prefix == null? PdoNull: PdoStr],
         ['user_id', $Options['User'], PdoInt],
         ['log', $Options['Log'], PdoInt],
         ['ip', $_SERVER['REMOTE_ADDR'], PdoStr],
