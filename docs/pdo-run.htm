@@ -42,16 +42,7 @@
           <p>&nbsp;</p>
 
           <div class="title">The special type <span class="const">PdoSql</span></div>
-          <p>This special type put a text outside quote to be executed by SQL.</p>
-          <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
-            <span class="func">$PDO->Run</span>(<span class="string">"update products set quantity=?,price=?,total=? where product=?"</span>, [<br>
-            &nbsp;&nbsp;[<span class="const">1</span>, <span class="const">2</span>, <span class="const">PdoInt</span>],<br>
-            &nbsp;&nbsp;[<span class="const">2</span>, <span class="string">"2.99"</span>, <span class="const">PdoStr</span>],<br>
-            &nbsp;&nbsp;[<span class="const">3</span>, <span class="string">"quantity*price"</span>, <span class="const">PdoSql</span>],<br>
-            &nbsp;&nbsp;[<span class="const">4</span>, <span class="const">35</span>, <span class="const">PdoInt</span>],<br>
-            ]);<br>
-            <span class="comment">//update products set quantity=2,price='2.99',total=quantity*price where product=35</span>
-          </div>
+          <p>This special type not make sense with command <span class="func">PhpLivePdo::Run</span>. See the command <a href="pdo-insert.htm#PdoSql" class="func">PhpLivePdo::Insert</a></p>
           <p>&nbsp;</p>
 
           <div class="title">Return Values</div>

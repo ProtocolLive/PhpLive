@@ -34,6 +34,22 @@
           <p><strong><span class="var">$Options2</span> are the <span class="var">$Options</span> in the <a href="pdo-run.htm" class="func">PhpLivePdo::Run</a> function</strong></p>
           <p>&nbsp;</p>
 
+          <a name="PdoSql"></a>
+          <div class="title">The special type <span class="const">PdoSql</span></div>
+          <p>This special type put the value outside quotes to be executed by SQL.</p>
+          <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
+            <span class="func">$PDO->Insert</span>([<br>
+            &nbsp;&nbsp;<span class="string">"Table"</span> => <span class="string">"products"</span>,<br>
+            &nbsp;&nbsp;<span class="string">"Fields"</span> => [<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"quantity"</span>, <span class="const">2</span>, <span class="const">PdoInt</span>],<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"price"</span>, <span class="const">2.99</span>, <span class="const">PdoInt</span>],<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"total"</span>, <span class="string">"quantity*price"</span>, <span class="const">PdoSql</span>]<br>
+            &nbsp;&nbsp;]<br>
+            ]);<br>
+            <span class="comment">//insert into products(quantity,price,total) values(2,'2.99',quantity*price)</span>
+          </div>
+          <p>&nbsp;</p>
+
           <div class="title">Return Values</div>
           <p>Returns the last auto_increment value.</p>
           <p>&nbsp;</p>
