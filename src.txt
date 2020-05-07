@@ -13,8 +13,8 @@
             "md5": "4ca16430ac5568feee81c335f1d5a4d1"
         },
         "pdo.php": {
-            "Version": "2020.05.07.01",
-            "md5": "978c6c61841ba4692db15fc0e62aa5f4"
+            "Version": "2020.05.07.02",
+            "md5": "dc9301071a7911012d3070005cb47a2f"
         },
         "perms.php": {
             "Version": "2020.05.05.01",

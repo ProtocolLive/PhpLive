@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.07.01
+// Version 2020.05.07.02
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -88,7 +88,7 @@ class PhpLivePdo{
     if($Params != null):
       foreach($Params as &$Param):
         if(count($Param) != 3):
-          $this->SetError(1, 'Incorrect number of parameters when specifying a token');
+          $this->ErrorSet(1, 'Incorrect number of parameters when specifying a token');
         else:
           if($Param[2] == PdoInt):
             $Param[1] = str_replace(',', '.', $Param[1]);
@@ -105,7 +105,7 @@ class PhpLivePdo{
     //Safe execution
     if($Options['Safe'] == true):
       if($command == 'truncate' or (($command == 'update' or $command == 'delete') and strpos($Query, 'where') === false)):
-        $this->SetError(2, 'Query not allowed in safe mode');
+        $this->ErrorSet(2, 'Query not allowed in safe mode');
       endif;
     endif;
     //Execute
@@ -113,7 +113,7 @@ class PhpLivePdo{
     //Error
     $error = $result->errorInfo();
     if($error[0] != '00000'):
-      $this->SetError($error[0], $error[2]);
+      $this->ErrorSet($error[0], $error[2]);
     endif;
     //Debug
     if(isset($Options['Debug']) and $Options['Debug'] == true):
@@ -229,7 +229,7 @@ class PhpLivePdo{
   /**
    * @return array
    */
-  public function GetError():array{
+  public function ErrorGet():array{
     return $this->Error;
   }
 
@@ -261,7 +261,7 @@ class PhpLivePdo{
     return $this->Run($return, $holes, $Options2);
   }
 
-  private function SetError(string $Number, string $Msg):void{
+  private function ErrorSet(string $Number, string $Msg):void{
     $this->Error = [$Number, $Msg];
     $folder = __DIR__ . '/errors-pdo/';
     if(is_dir($folder) == false):
