@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.06.00
+// Version 2020.05.07.00
 
 class PhpLiveDbBackup{
   private ?object $PhpLivePdo = null;
@@ -26,7 +26,7 @@ class PhpLiveDbBackup{
     $Options['Folder'] ??= '/sql/';
     $Options['Progress'] ??= true;
     $Options['Translate']['Tables'] ??= 'tables';
-    $Options['Translate']['FK'] ??= 'Foreign keys';
+    $Options['Translate']['FK'] ??= 'foreign keys';
 
     $this->ZipOpen($Options['Folder']);
     $tables = $PhpLivePdo->Run("show tables like '##%'");
@@ -92,36 +92,32 @@ class PhpLiveDbBackup{
         printf('%d%%<br>', ++$left * 100 / $count);
       endif;
     endforeach;
+    //foreign keys
+    $cols = $PhpLivePdo->Run('
+      select
+        rc.table_name,
+        constraint_name,
+        column_name,
+        rc.referenced_table_name,
+        referenced_column_name,
+        delete_rule,
+        update_rule
+      from
+        information_schema.referential_constraints rc
+          left join information_schema.key_column_usage using(constraint_name)
+    ');
+    $count = count($cols);
     if($Options['Progress'] == true):
       $left = 0;
-      printf('%s<br>0%%<br>', $Options['Translate']['FK']);
+      printf('%d %s<br>0%%<br>', $count, $Options['Translate']['FK']);
     endif;
-    foreach($tables as $table):
-      $cols = $PhpLivePdo->Run('
-        select CONSTRAINT_NAME,
-          COLUMN_NAME,
-          cu.REFERENCED_TABLE_NAME,
-          REFERENCED_COLUMN_NAME,
-          DELETE_RULE,
-          UPDATE_RULE
-        from information_schema.KEY_COLUMN_USAGE cu
-          left join information_schema.REFERENTIAL_CONSTRAINTS using(CONSTRAINT_NAME)
-        where cu.TABLE_NAME=?
-          and REFERENCED_COLUMN_NAME is not null',
-        [
-          [1, $table[0], PdoStr]
-        ]
-      );
-      if(count($cols) > 0):
-        $line = 'alter table ' . $table[0] . "\n";
-        foreach($cols as $col):
-          $line .= '  add constraint ' . $col['CONSTRAINT_NAME'];
-          $line .= ' foreign key(' . $col['COLUMN_NAME'] . ') references ';
-          $line .= $col['REFERENCED_TABLE_NAME'] . '(' . $col['REFERENCED_COLUMN_NAME'] . ') ';
-          $line .= 'on delete ' . $col['DELETE_RULE'] . ' on update ' . $col['UPDATE_RULE'] . ",\n";
-        endforeach;
-        fwrite($file, substr($line, 0, -2) . ";\n\n");
-      endif;
+    foreach($cols as $col):
+      $line = 'alter table ' . $col['TABLE_NAME'] . "\n";
+      $line .= '  add constraint ' . $col['CONSTRAINT_NAME'];
+      $line .= ' foreign key(' . $col['column_name'] . ') references ';
+      $line .= $col['REFERENCED_TABLE_NAME'] . '(' . $col['referenced_column_name'] . ') ';
+      $line .= 'on delete ' . $col['DELETE_RULE'] . ' on update ' . $col['UPDATE_RULE'] . ",\n";
+      fwrite($file, substr($line, 0, -2) . ";\n\n");
       if($Options['Progress'] == true):
         printf('%d%%<br>', ++$left * 100 / $count);
       endif;
