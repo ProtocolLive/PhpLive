@@ -209,9 +209,10 @@ class PhpLivePdo{
    * @return int
    */
   public function UpdateInsert(array $Options, array $Options2 = []):int{
-    $data = $this->Run('select ' . $Options['Fields'][0][0] . ' from ' . $Options['Table'] . ' where ' . $Options['Where'][0] . '=?', [
-      [1, $Options['Where'][1], $Options['Where'][2]]
-    ]);
+    $query = 'select ' . $Options['Fields'][0][0] . ' from ' . $Options['Table'] . ' where ';
+    $temp = $this->BuildWhere($Options['Where']);
+    $query .= $temp['Query'];
+    $data = $this->Run($query, $temp['Tokens'], $Options2);
     if(count($data) == 1):
       return $this->Update([
         'Table' => $Options['Table'],
@@ -244,20 +245,36 @@ class PhpLivePdo{
     return $Field;
   }
 
+  private function BuildWhere($Wheres){
+    // 0 field, 1 value, 2 type, 3 operator, 4 condition
+    $return = ['Query' => '', 'Tokens' => []];
+    foreach($Wheres as $id => $where):
+      $where[0] = $this->Reserved($where[0]);
+      if($id == 0):
+        $return['Query'] = $where[0] . $where[3] . $where[1];
+      else:
+        $return['Query'] .= ' ' . $where[4] . ' ' . $where[0] . $where[3] . $where[1];
+      endif;
+      $return['Tokens'][] = [$i, $where[1], $where[2]];
+    endforeach;
+    return $return;
+  }
+
   private function RunUpdate(array $Options, array $Options2 = []):int{
-    $return = 'update ' . $Options['Table'] . ' set ';
-    $holes = [];
+    $query = 'update ' . $Options['Table'] . ' set ';
     $i = 1;
+    $tokens = [];
     foreach($Options['Fields'] as $field):
-      $return .= $this->Reserved($field[0]) . '=?,';
-      $holes[] = [$i, $field[1], $field[2]];
+      $query .= $this->Reserved($field[0]) . '=?,';
+      $tokens[] = [$i, $field[1], $field[2]];
       if($field[2] != PdoSql):
         $i++;
       endif;
     endforeach;
-    $return = substr($return, 0, -1);
-    $return .= ' where ' . $Options['Where'][0] . '=?';
-    $holes[] = [$i, $Options['Where'][1], $Options['Where'][2]];
+    $query = substr($return, 0, -1);
+    $temp = BuildWhere($Options['Where']);
+    $query .= ' where ' . $temp['Query'];
+    $tokens = array_merge($tokens, $temp['Tokens']);
     return $this->Run($return, $holes, $Options2);
   }
 
