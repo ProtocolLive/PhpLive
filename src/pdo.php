@@ -250,6 +250,7 @@ class PhpLivePdo{
     $return = ['Query' => '', 'Tokens' => []];
     foreach($Wheres as $id => $where):
       $where[0] = $this->Reserved($where[0]);
+      $where[3] ??= '=';
       if($id == 0):
         $return['Query'] = $where[0] . $where[3] . $where[1];
       else:
