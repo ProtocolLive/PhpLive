@@ -32,7 +32,7 @@ if(isset($_GET['a']) == false):
           <a href="#" onclick="Ajax('/admin/forms.php?a=formsform&id=<?php print $form['form_id'];?>','AjaxWindow1Page');WindowOpen('Edit form');">
             <img src="/common/images/edit.gif">
           </a>
-          <a href="#" onclick="if(confirm('Do you realy want to delete this form?'))
+          <a href="#" onclick="if(confirm('Do you really want to delete this form?'))
           Ajax('/admin/forms.php?a=formsdel&id=<?php print $form['form_id'];?>','AjaxPage');">
             <img src="/common/images/del.gif">
           </a>
@@ -134,7 +134,7 @@ elseif($_GET['a'] == 'fields'):
           <a href="#" onclick="Ajax('/admin/forms.php?a=fieldsform&form=<?php print $_GET['form'];?>&id=<?php print $field['field_id'];?>','AjaxWindow1Page');WindowOpen('Editar campo');">
             <img src="/common/images/edit.gif">
           </a>
-          <a href="#" onclick="if(confirm('Do you realy want to delete this field?'))
+          <a href="#" onclick="if(confirm('Do you really want to delete this field?'))
           Ajax('/admin/forms.php?a=fieldsdel&form=<?php print $_GET['form'];?>&id=<?php print $field['field_id'];?>','AjaxPage');">
             <img src="/common/images/del.gif">
           </a>
