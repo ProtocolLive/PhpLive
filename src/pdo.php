@@ -251,6 +251,10 @@ class PhpLivePdo{
     foreach($Wheres as $id => $where):
       $where[0] = $this->Reserved($where[0]);
       $where[3] ??= '=';
+      if($where[3] == 'is' or $where[3] == 'is not'):
+        $where[2] = PdoSql;
+        $where[3] = ' ' . $where[3] . ' ';
+      endif;
       if($id == 0):
         $return['Query'] = $where[0] . $where[3] . $where[1];
       else:
