@@ -1,35 +1,54 @@
 <?php
-//2020.05.05.00
+//2020.05.08.00
 require_once('system.php');
 
+$types = [
+  ['checkbox', 'Checkbox'],
+  ['date', 'Date'],
+  ['select', 'List'],
+  ['number', 'Number'],
+  ['submit', 'Submit button'],
+  ['text', 'Text'],
+  ['textarea', 'Textarea']
+];
+
 if(isset($_GET['a']) == false):
-  require_once('head.php');
-  $forms = $PDO->SQL('select * from forms_forms order by site,form');?>
+  $forms = $PDO->Run('select * from forms_forms order by site,form');?>
   <table class="center">
     <tr>
-      <th class="sticky"><a href="#" onclick="Ajax('/PhpLiveForms/index.php?a=formsform','AjaxWindow1Page');WindowOpen('New form');"><img src="/common/images/add1.gif"></a></th>
+      <th class="sticky">
+        <a href="#" onclick="Ajax('/admin/forms.php?a=formsform','AjaxWindow1Page');WindowOpen('New form');">
+          <img src="/common/images/add1.gif">
+        </a>
+      </th>
       <th class="sticky">Site</th>
       <th class="sticky">Form</th>
       <th class="sticky">Method</th>
-      <th class="sticky">Action</th>
       <th class="sticky">Auto complete</th>
     </tr><?php
     foreach($forms as $form):?>
       <tr class="alternate mouse">
         <td>
-          <a href="#" onclick="Ajax('/PhpLiveForms/index.php?a=formsform&id=<?php echo $form['form_id'];?>','AjaxWindow1Page');WindowOpen('Form');"><img src="/common/images/edit.gif"></a>
+          <a href="#" onclick="Ajax('/admin/forms.php?a=formsform&id=<?php print $form['form_id'];?>','AjaxWindow1Page');WindowOpen('Edit form');">
+            <img src="/common/images/edit.gif">
+          </a>
           <a href="#" onclick="if(confirm('Do you realy want to delete this form?'))
-            Ajax('/PhpLiveForms/index.php?a=formsdel&id=<?php echo $form['form_id'];?>','AjaxPage');"><img src="/common/images/del.gif"></a>
+          Ajax('/admin/forms.php?a=formsdel&id=<?php print $form['form_id'];?>','AjaxPage');">
+            <img src="/common/images/del.gif">
+          </a>
         </td>
-        <td><?php echo $form['site'];?></td>
-        <td><a href="#" onclick="Ajax('/PhpLiveForms/index.php?a=fields&form=<?php echo $form['form_id'];?>','AjaxPage')"><?php echo $form['form'];?></a></td>
-        <td><?php echo $form['method'];?></td>
-        <td><?php echo $form['action'];?></td>
-        <td><?php echo $form['autocomplete'] == 0? 'No': 'Yes';?></td>
+        <td><?php print $form['site'];?></td>
+        <td>
+          <a href="#" onclick="Ajax('/admin/forms.php?a=fields&form=<?php print $form['form_id'];?>','AjaxPage')">
+            <?php print $form['form'];?>
+          </a>
+        </td>
+        <td><?php print $form['method'];?></td>
+        <td><?php print $form['action'];?></td>
+        <td><?php print $form['autocomplete'] == 0? 'No': 'Yes';?></td>
       </tr><?php
     endforeach;?>
   </table><?php
-  require_once('../common/foot.php');
 elseif($_GET['a'] == 'formsform'):
   $selects = [
     'autocomplete' => [
@@ -43,13 +62,13 @@ elseif($_GET['a'] == 'formsform'):
     ]
   ];
   if(isset($_GET['id'])):
-    $form = $PDO->SQL('select * from forms_forms where form_id=?', [
+    $form = $PDO->Run('select * from forms_forms where form_id=?', [
       [1, $_GET['id'], PdoInt]
     ]);
     $Forms->Form([
       'Site' => 'admin',
       'Form' => 'form',
-      'Page' => '/PhpLiveForms/index.php?a=formsok&id=' . $_GET['id'],
+      'Page' => '/admin/forms.php?a=formsok&id=' . $_GET['id'],
       'Place' => 'AjaxWindow1Page',
       'Selects' => $selects,
       'Data' => $form[0]
@@ -58,46 +77,45 @@ elseif($_GET['a'] == 'formsform'):
     $Forms->Form([
       'Site' => 'admin',
       'Form' => 'form',
-      'Page' => '/PhpLiveForms/index.php?a=formsok',
+      'Page' => '/admin/forms.php?a=formsok',
       'Place' => 'AjaxWindow1Page',
       'Selects' => $selects
     ]);
   endif;
 elseif($_GET['a'] == 'formsok'):
-  $fields = [
-    ['site', $_POST['site'], PdoStr],
-    ['form', $_POST['form'], PdoStr],
-    ['method', $_POST['method'], PdoStr],
-    ['action', $_POST['action'], $_POST['action'] == ''? PdoNull: PdoStr],
-    ['autocomplete', $_POST['autocomplete'], PdoStr]
-  ];
+  $_GET['id'] ??= null;
+  $PDO->UpdateInsert([
+    'Table' => 'forms_forms',
+    'Fields' => [
+      ['site', $_POST['site'], PdoStr],
+      ['form', $_POST['form'], PdoStr],
+      ['method', $_POST['method'], PdoStr],
+      ['autocomplete', $_POST['autocomplete'], PdoStr]
+    ],
+    'Where' => ['form_id', $_GET['id'], PdoInt]
+  ]);
   if(isset($_GET['id'])):
-    $PDO->SqlUpdate([
-      'Table' => 'forms_forms',
-      'Fields' => $fields,
-      'Where' => ['form_id', $_GET['id'], PdoInt]
-    ]);?>
-    <p>Form edited</p><?php
+    print '<p>Form edited</p>';
   else:
-    $PDO->SqlInsert([
-      'Table' => 'forms_forms',
-      'Fields' => $fields
-    ]);?>
-    <p>Form added</p><?php
+    print '<p>Form added</p>';
   endif;?>
-  <p><a href="#" onclick="Ajax('/PhpLiveForms/index.php?a=forms','AjaxPage');WindowClose();">Refresh</a><?php
+  <p><a href="#" onclick="Ajax('/admin/forms.php?a=forms','AjaxPage');WindowClose();">Continue</a><?php
 elseif($_GET['a'] == 'formsdel'):
-  $PDO->SQL('delete from forms_forms where form_id=?', [
+  $PDO->Run('delete from forms_forms where form_id=?', [
     [1, $_GET['id'], PdoInt]
   ]);
-  header('location:index.php?a=forms');
+  header('location:forms.php?a=forms');
 elseif($_GET['a'] == 'fields'):
-  $fields = $PDO->SQL('select * from forms_fields where form_id=? order by `order`', [
+  $fields = $PDO->Run('select * from forms_fields where form_id=? order by `order`', [
     [1, $_GET['form'], PdoInt]
   ]);?>
   <table class="center">
     <tr>
-      <th><a href="#" onclick="Ajax('/PhpLiveForms/index.php?a=fieldsform&form=<?php echo $_GET['form'];?>','AjaxWindow1Page');WindowOpen('New field');"><img src="/common/images/add1.gif"></a></th>
+      <th>
+        <a href="#" onclick="Ajax('/admin/forms.php?a=fieldsform&form=<?php print $_GET['form'];?>','AjaxWindow1Page');WindowOpen('New field');">
+          <img src="/common/images/add1.gif">
+        </a>
+      </th>
       <th>Label</th>
       <th>Name</th>
       <th>Type</th>
@@ -113,58 +131,39 @@ elseif($_GET['a'] == 'fields'):
     foreach($fields as $field):?>
       <tr class="alternate mouse">
         <td>
-          <a href="#" onclick="Ajax('/PhpLiveForms/index.php?a=fieldsform&form=<?php echo $_GET['form'];?>&id=<?php echo $field['field_id'];?>','AjaxWindow1Page');WindowOpen('Edit field');"><img src="/common/images/edit.gif"></a>
+          <a href="#" onclick="Ajax('/admin/forms.php?a=fieldsform&form=<?php print $_GET['form'];?>&id=<?php print $field['field_id'];?>','AjaxWindow1Page');WindowOpen('Editar campo');">
+            <img src="/common/images/edit.gif">
+          </a>
           <a href="#" onclick="if(confirm('Do you realy want to delete this field?'))
-            Ajax('/PhpLiveForms/index.php?a=fieldsdel&form=<?php echo $_GET['form'];?>&id=<?php echo $field['field_id'];?>','AjaxPage');"><img src="/common/images/del.gif"></a>
+          Ajax('/admin/forms.php?a=fieldsdel&form=<?php print $_GET['form'];?>&id=<?php print $field['field_id'];?>','AjaxPage');">
+            <img src="/common/images/del.gif">
+          </a>
         </td>
-        <td><?php echo $field["label"];?></td>
-        <td><?php echo $field["name"];?></td>
-        <td><?php
-          if($field['type'] == 'text'):
-            echo 'Text';
-          elseif($field['type'] == 'number'):
-            echo 'Number';
-          elseif($field['type'] == 'date'):
-            echo 'Date';
-          elseif($field['type'] == 'select'):
-            echo 'List';
-          elseif($field['type'] == 'checkbox'):
-            echo 'Checkbox';
-          elseif($field['type'] == 'submit'):
-            echo 'Submit button';
-          endif;?>
-        </td>
-        <td><?php echo $field['default'];?></td>
+        <td><?php print $field['label'];?></td>
+        <td><?php print $field['name'];?></td>
+        <td><?php print $types[array_search($field['type'], array_column($types, 0))][1];?></td>
+        <td><?php print $field['default'];?></td>
         <td><?php 
           if($field['mode'] == 0):
-            echo 'Normal';
+            print 'Normal';
           elseif($field['mode'] == 1):
-            echo 'Only insert';
+            print 'Only insert';
           else:
-            echo 'Only update';
+            print 'Only update';
           endif;?>
         </td>
-        <td><?php echo $field['size'];?></td>
-        <td><?php echo $field['style'];?></td>
-        <td><?php echo $field['class'];?></td>
-        <td><?php echo $field['js_event'];?></td>
-        <td><?php echo $field['js_code'];?></td>
-        <td><?php echo $field['order'];?></td>
+        <td><?php print $field['size'];?></td>
+        <td><?php print $field['style'];?></td>
+        <td><?php print $field['class'];?></td>
+        <td><?php print $field['js_event'];?></td>
+        <td><?php print $field['js_code'];?></td>
+        <td><?php print $field['order'];?></td>
       </tr><?php
     endforeach;?>
   </table><?php
 elseif($_GET['a'] == 'fieldsform'):
   $selects = [
-    'type' => [
-      ['checkbox', 'Checkbox'],
-      ['date', 'Date'],
-      ['select', 'List'],
-      ['number', 'Number'],
-      ['password', 'Password'],
-      ['submit', 'Submit button'],
-      ['text', 'Text'],
-      ['textarea', 'Text area']
-    ],
+    'type' => $types,
     'mode' => [
       [0, 'Normal'],
       [1, 'Only insert'],
@@ -172,13 +171,13 @@ elseif($_GET['a'] == 'fieldsform'):
     ]
   ];
   if(isset($_GET['id'])):
-    $data = $PDO->SQL('select * from forms_fields where field_id=?', [
+    $data = $PDO->Run('select * from forms_fields where field_id=?', [
       [1, $_GET['id'], PdoInt]
     ]);
     $Forms->Form([
       'Site' => 'admin',
       'Form' => 'fields',
-      'Page' => '/PhpLiveForms/index.php?a=fieldsok&form=' . $_GET['form'] . '&id=' . $_GET['id'],
+      'Page' => '/admin/forms.php?a=fieldsok&form=' . $_GET['form'] . '&id=' . $_GET['id'],
       'Place' => 'AjaxWindow1Page',
       'Data' => $data[0],
       'Selects' => $selects
@@ -187,7 +186,7 @@ elseif($_GET['a'] == 'fieldsform'):
     $Forms->Form([
       'Site' => 'admin',
       'Form' => 'fields',
-      'Page' => '/PhpLiveForms/index.php?a=fieldsok&form=' . $_GET['form'],
+      'Page' => '/admin/forms.php?a=fieldsok&form=' . $_GET['form'],
       'Place' => 'AjaxWindow1Page',
       'Selects' => $selects
     ]);
@@ -196,37 +195,32 @@ elseif($_GET['a'] == 'fieldsok'):
   if($_POST['js_event'] == ''):
     $_POST['js_code'] = '';
   endif;
-  $fields = [
-    ['label', $_POST['label'], PdoStr],
-    ['name', $_POST['name'], $_POST['name'] == ''? PdoNull: PdoStr],
-    ['type', $_POST['type'], PdoStr],
-    ['default', $_POST['default'], $_POST['default'] == ''? PdoNull: PdoStr],
-    ['mode', $_POST['mode'], PdoInt],
-    ['size', $_POST['size'], $_POST['size'] == ''? PdoNull: PdoInt],
-    ['style', $_POST['style'], $_POST['style'] == ''? PdoNull: PdoStr],
-    ['class', $_POST['class'], $_POST['class'] == ''? PdoNull: PdoStr],
-    ['js_event', $_POST['js_event'], $_POST['js_event'] == ''? PdoNull: PdoStr],
-    ['js_code', $_POST['js_code'], $_POST['js_code'] == ''? PdoNull: PdoStr],
-    ['order', $_POST['order'], PdoInt]
-  ];
+  $PDO->UpdateInsert([
+    'Table' => 'forms_fields',
+    'Fields' => [
+      ['label', $_POST['label'], PdoStr],
+      ['name', $_POST['name'], $_POST['name'] == ''? PdoNull: PdoStr],
+      ['type', $_POST['type'], PdoStr],
+      ['default', $_POST['default'], $_POST['default'] == ''? PdoNull: PdoStr],
+      ['mode', $_POST['mode'], PdoInt],
+      ['size', $_POST['size'], $_POST['size'] == ''? PdoNull: PdoInt],
+      ['style', $_POST['style'], $_POST['style'] == ''? PdoNull: PdoStr],
+      ['class', $_POST['class'], $_POST['class'] == ''? PdoNull: PdoStr],
+      ['js_event', $_POST['js_event'], $_POST['js_event'] == ''? PdoNull: PdoStr],
+      ['js_code', $_POST['js_code'], $_POST['js_code'] == null? PdoNull: PdoStr],
+      ['order', $_POST['order'], PdoInt]
+    ],
+    'Where' => ['field_id', $_GET['id'], PdoInt]
+  ]);
   if(isset($_GET['id'])):
-    $PDO->SqlUpdate([
-      'Table' => 'forms_fields',
-      'Fields' => $fields,
-      'Where' => ['field_id', $_GET['id'], PdoInt]
-    ]);?>
-    <p>Field edited</p><?php
+    print '<p>Field edited</p>';
   else:
-    $PDO->SqlInsert([
-      'Table' => 'forms_fields',
-      'Fields' => $fields
-    ]);?>
-    <p>Field added</p><?php
+    print '<p>Field added</p>';
   endif;?>
-  <p><a href="#" onclick="Ajax('/PhpLiveForms/index.php?a=fields&form=<?php echo $_GET['form'];?>','AjaxPage');WindowClose();">Refresh</a><?php
+  <p><a href="#" onclick="Ajax('/admin/forms.php?a=fields&form=<?php print $_GET['form'];?>','AjaxPage');WindowClose();">Continue</a><?php
 elseif($_GET['a'] == 'fieldsdel'):
-  $PDO->SQL('delete from forms_fields where field_id=?', [
+  $PDO->Run('delete from forms_fields where field_id=?', [
     [1, $_GET['id'], PdoInt]
   ]);
-  header('location:index.php?a=fields&form=' . $_GET['form']);
+  header('location:forms.php?a=fields&form=' . $_GET['form']);
 endif;
