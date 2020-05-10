@@ -185,7 +185,14 @@ class PhpLivePdo{
    * @return int
    */
   public function Update(array $Options, array $Options2 = []):int{
-    $data = $this->Run('select * from ' . $Options['Table'] . ' where ' . $Options['Where'][0] . '=' . $Options['Where'][1]);
+    $query = '';
+    $temp = $this->BuildWhere($Options['Where']);
+    // Get fields list
+    foreach($Options["Fields"] as $field):
+      $query .= $field[0] . ',';
+    endforeach;
+    $query = 'select ' . substr($query, 0, -1) . ' from ' . $Options['Table'] . ' where ' . $temp['Query'];
+    $data = $this->Run($query, $temp['Tokens'], $Options2);
     if(count($data) == 1):
       $data = $data[0];
       foreach($Options['Fields'] as $id => $field):
@@ -209,9 +216,8 @@ class PhpLivePdo{
    * @return int
    */
   public function UpdateInsert(array $Options, array $Options2 = []):int{
-    $query = 'select ' . $Options['Fields'][0][0] . ' from ' . $Options['Table'] . ' where ';
     $temp = $this->BuildWhere($Options['Where']);
-    $query .= $temp['Query'];
+    $query = 'select ' . $Options['Fields'][0][0] . ' from ' . $Options['Table'] . ' where ' . $temp['Query'];
     $data = $this->Run($query, $temp['Tokens'], $Options2);
     if(count($data) == 1):
       return $this->Update([
@@ -245,7 +251,25 @@ class PhpLivePdo{
     return $Field;
   }
 
-  private function BuildWhere($Wheres){
+  private function BuildUpdate(array $Options):int{
+    $return = ['Query' => '', 'Tokens' => []];
+    $return['Query'] = 'update ' . $Options['Table'] . ' set ';
+    $i = 1;
+    foreach($Options['Fields'] as $field):
+      $return['Query'] .= $this->Reserved($field[0]) . '=?,';
+      $return['Tokens'][] = [$i, $field[1], $field[2]];
+      if($field[2] != PdoSql):
+        $i++;
+      endif;
+    endforeach;
+    $return['Query'] = substr($return['Query'], 0, -1);
+    $temp = BuildWhere($Options['Where'], $i);
+    $return['Query'] .= ' where ' . $temp['Query'];
+    $return['Tokens'] = array_merge($return['Tokens'], $temp['Tokens']);
+    return $return;
+  }
+
+  private function BuildWhere(array $Wheres, int $Count = 1):array{
     // 0 field, 1 value, 2 type, 3 operator, 4 condition
     $return = ['Query' => '', 'Tokens' => []];
     foreach($Wheres as $id => $where):
@@ -253,35 +277,16 @@ class PhpLivePdo{
       $where[3] ??= '=';
       $where[4] ??= 'and';
       if($where[3] == 'is' or $where[3] == 'is not'):
-        $where[2] = PdoSql;
         $where[3] = ' ' . $where[3] . ' ';
       endif;
       if($id == 0):
-        $return['Query'] = $where[0] . $where[3] . $where[1];
+        $return['Query'] = $where[0] . $where[3] . '?';
       else:
-        $return['Query'] .= ' ' . $where[4] . ' ' . $where[0] . $where[3] . $where[1];
+        $return['Query'] .= ' ' . $where[4] . ' ' . $where[0] . $where[3] . '?';
       endif;
-      $return['Tokens'][] = [$i, $where[1], $where[2]];
+      $return['Tokens'][] = [$Count++, $where[1], $where[2]];
     endforeach;
     return $return;
-  }
-
-  private function RunUpdate(array $Options, array $Options2 = []):int{
-    $query = 'update ' . $Options['Table'] . ' set ';
-    $i = 1;
-    $tokens = [];
-    foreach($Options['Fields'] as $field):
-      $query .= $this->Reserved($field[0]) . '=?,';
-      $tokens[] = [$i, $field[1], $field[2]];
-      if($field[2] != PdoSql):
-        $i++;
-      endif;
-    endforeach;
-    $query = substr($return, 0, -1);
-    $temp = BuildWhere($Options['Where']);
-    $query .= ' where ' . $temp['Query'];
-    $tokens = array_merge($tokens, $temp['Tokens']);
-    return $this->Run($return, $holes, $Options2);
   }
 
   private function ErrorSet(string $Number, string $Msg):void{
