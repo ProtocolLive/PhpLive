@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.07.03
+// Version 2020.05.09.00
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -160,21 +160,21 @@ class PhpLivePdo{
    */
   public function Insert(array $Options, array $Options2 = []):int{
     $return = 'insert into ' . $Options['Table'] . '(';
-    $holes = [];
+    $tokens = [];
     $i = 1;
     foreach($Options['Fields'] as $field):
       $return .= $this->Reserved($field[0]) . ',';
-      $holes[] = [$i, $field[1], $field[2]];
+      $tokens[] = [$i, $field[1], $field[2]];
       $i++;
     endforeach;
     $return = substr($return, 0, -1);
     $return .= ') values(';
-    for($j = 1; $j < $i; $j++):
+    foreach($Options['Fields'] as $field):
       $return .= '?,';
-    endfor;
+    endforeach;
     $return = substr($return, 0, -1);
     $return .= ');';
-    return $this->Run($return, $holes, $Options2);
+    return $this->Run($return, $tokens, $Options2);
   }
 
   /**
@@ -185,7 +185,14 @@ class PhpLivePdo{
    * @return int
    */
   public function Update(array $Options, array $Options2 = []):int{
-    $data = $this->Run('select * from ' . $Options['Table'] . ' where ' . $Options['Where'][0] . '=' . $Options['Where'][1]);
+    $query = '';
+    $temp = $this->BuildWhere($Options['Where']);
+    // Get fields list
+    foreach($Options["Fields"] as $field):
+      $query .= $field[0] . ',';
+    endforeach;
+    $query = 'select ' . substr($query, 0, -1) . ' from ' . $Options['Table'] . ' where ' . $temp['Query'];
+    $data = $this->Run($query, $temp['Tokens'], $Options2);
     if(count($data) == 1):
       $data = $data[0];
       foreach($Options['Fields'] as $id => $field):
@@ -195,7 +202,8 @@ class PhpLivePdo{
       endforeach;
     endif;
     if(count($Options['Fields']) > 0):
-      return $this->RunUpdate($Options, $Options2);
+      $temp = $this->BuildUpdate($Options);
+      return $this->Run($temp['Query'], $temp['Tokens'], $Options2);
     else:
       return 0;
     endif;
@@ -209,9 +217,9 @@ class PhpLivePdo{
    * @return int
    */
   public function UpdateInsert(array $Options, array $Options2 = []):int{
-    $data = $this->Run('select ' . $Options['Fields'][0][0] . ' from ' . $Options['Table'] . ' where ' . $Options['Where'][0] . '=?', [
-      [1, $Options['Where'][1], $Options['Where'][2]]
-    ]);
+    $temp = $this->BuildWhere($Options['Where']);
+    $query = 'select ' . $Options['Fields'][0][0] . ' from ' . $Options['Table'] . ' where ' . $temp['Query'];
+    $data = $this->Run($query, $temp['Tokens'], $Options2);
     if(count($data) == 1):
       return $this->Update([
         'Table' => $Options['Table'],
@@ -244,21 +252,42 @@ class PhpLivePdo{
     return $Field;
   }
 
-  private function RunUpdate(array $Options, array $Options2 = []):int{
-    $return = 'update ' . $Options['Table'] . ' set ';
-    $holes = [];
+  private function BuildUpdate(array $Options):array{
+    $return = ['Query' => '', 'Tokens' => []];
+    $return['Query'] = 'update ' . $Options['Table'] . ' set ';
     $i = 1;
     foreach($Options['Fields'] as $field):
-      $return .= $this->Reserved($field[0]) . '=?,';
-      $holes[] = [$i, $field[1], $field[2]];
+      $return['Query'] .= $this->Reserved($field[0]) . '=?,';
+      $return['Tokens'][] = [$i, $field[1], $field[2]];
       if($field[2] != PdoSql):
         $i++;
       endif;
     endforeach;
-    $return = substr($return, 0, -1);
-    $return .= ' where ' . $Options['Where'][0] . '=?';
-    $holes[] = [$i, $Options['Where'][1], $Options['Where'][2]];
-    return $this->Run($return, $holes, $Options2);
+    $return['Query'] = substr($return['Query'], 0, -1);
+    $temp = $this->BuildWhere($Options['Where'], $i);
+    $return['Query'] .= ' where ' . $temp['Query'];
+    $return['Tokens'] = array_merge($return['Tokens'], $temp['Tokens']);
+    return $return;
+  }
+
+  private function BuildWhere(array $Wheres, int $Count = 1):array{
+    // 0 field, 1 value, 2 type, 3 operator, 4 condition
+    $return = ['Query' => '', 'Tokens' => []];
+    foreach($Wheres as $id => $where):
+      $where[0] = $this->Reserved($where[0]);
+      $where[3] ??= '=';
+      $where[4] ??= 'and';
+      if($where[3] == 'is' or $where[3] == 'is not'):
+        $where[3] = ' ' . $where[3] . ' ';
+      endif;
+      if($id == 0):
+        $return['Query'] = $where[0] . $where[3] . '?';
+      else:
+        $return['Query'] .= ' ' . $where[4] . ' ' . $where[0] . $where[3] . '?';
+      endif;
+      $return['Tokens'][] = [$Count++, $where[1], $where[2]];
+    endforeach;
+    return $return;
   }
 
   private function ErrorSet(string $Number, string $Msg):void{

@@ -24,13 +24,19 @@
           <p>&nbsp;&nbsp;Table (<span class="type">string</span>) - The table afected;</p>
           <p>&nbsp;&nbsp;Fields (<span class="type">array</span>) - The fields to be changed;</p>
           <p>&nbsp;&nbsp;Where (<span class="type">array</span>) - The conditions;</p>
-          <p>Sintaxe of <strong>Fields</strong> and <strong>Where</strong> options:</p>
+          <p>Sintaxe of <strong>Fields</strong> option:</p>
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
             [TokenName, TokenData, TokenType]
           </div>
-          <p>TokenName (<span class="type">int</span> or <span class="type">string</span>) - A number or a string starting with ":";</p>
+          <p>Sintaxe of <strong>Where</strong> option:</p>
+          <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
+            [TokenName, TokenData, TokenType, [ TokenComparation = '=', [ WhereCondition = 'and' ] ] ]
+          </div>
+          <p>TokenName (<span class="type">int</span> or <span class="type">string</span>) - A number or a string starting with ':';</p>
           <p>TokenData (<span class="type">int</span> or <span class="type">string</span>) - The value to be replaced;</p>
           <p>TokenType (<span class="type">int</span>) - The constants of <span class="func">PhpLivePdo</span> (<span class="const">PdoInt</span>, <span class="const">PdoStr</span>, <span class="const">PdoNull</span>, <span class="const">PdoBool</span>, <span class="const">PdoSql</span>) or the <a href="https://www.php.net/manual/pt_BR/pdo.constants.php" target="_blank">constants of PDO</a>;</p>
+          <p>TokenComparation (<span class="type">string</span>)(Optional - Default: =) - The comparation operator (=, !=, <, >, is, is not);</p>
+          <p>WhereCondition (<span class="type">string</span>)(Optional - Default: and) - The condition of the current where to the previous (and, or);</p>
           <p>&nbsp;</p>
           <p><strong><span class="var">$Options2</span> are the <a href="pdo-run.htm#Options" class="var">$Options</a> in the <a href="pdo-run.htm#Options" class="func">PhpLivePdo::Run</a> function</strong></p>
           <p>&nbsp;</p>
@@ -40,12 +46,14 @@
           <p>This special type put the value outside quotes to be executed by SQL.</p>
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
             <span class="func">$PDO->Update</span>([<br>
-            &nbsp;&nbsp;<span class="string">"Table"</span> => <span class="string">"products"</span>,<br>
-            &nbsp;&nbsp;<span class="string">"Fields"</span> => [<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"quantity"</span>, <span class="const">2</span>, <span class="const">PdoInt</span>],<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"price"</span>, <span class="const">2.99</span>, <span class="const">PdoInt</span>],<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"total"</span>, <span class="string">"quantity*price"</span>, <span class="const">PdoSql</span>],<br>
-            &nbsp;&nbsp;<span class="string">"Where"</span> => &nbsp;&nbsp;[<span class="string">"product"</span>, <span class="const">35</span>, <span class="const">PdoInt</span>]<br>
+            &nbsp;&nbsp;<span class="string">'Table'</span> => <span class="string">'products'</span>,<br>
+            &nbsp;&nbsp;<span class="string">'Fields'</span> => [<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">'quantity'</span>, <span class="const">2</span>, <span class="const">PdoInt</span>],<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">'price'</span>, <span class="const">2.99</span>, <span class="const">PdoInt</span>],<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">'total'</span>, <span class="string">'quantity*price'</span>, <span class="const">PdoSql</span>],<br>
+            &nbsp;&nbsp;<span class="string">'Where'</span> => &nbsp;&nbsp;[<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">'product'</span>, <span class="const">35</span>, <span class="const">PdoInt</span>]<br>
+            &nbsp;&nbsp;]<br>
             ]);<br>
             <span class="comment">//update products set quantity=2,price='2.99',total=quantity*price where product=35</span>
           </div>
@@ -81,24 +89,35 @@
           </p>
           <p>&nbsp;</p>
 
-          <div class="title">Limitations</div>
-          <p>- The clause where only use "=" comparator;</p>
-          <p>- The clause where only use one condition;</p>
-          <p>&nbsp;</p>
-
           <div class="title">Examples</div><br>
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
             <span class="comment">// Original data: email=a@a.com,pwd=123,name='adm'</span><br>
             <span class="func">$PDO->Update</span>([<br>
-              &nbsp;&nbsp;&nbsp;<span class="string">"Table"</span> => <span class="string">"users"</span>,<br>
-              &nbsp;&nbsp;&nbsp;<span class="string">"Fields"</span> => [<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"email"</span>, <span class="string">"a@a.com"</span>, <span class="const">PdoStr</span>],<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"pwd"</span>, <span class="string">"321"</span>, <span class="const">PdoStr</span>],<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"name"</span>, <span class="string">"adm"</span>, <span class="const">PdoStr</span>]<br>
-              &nbsp;&nbsp;&nbsp;],<br>
-              &nbsp;&nbsp;&nbsp;<span class="string">"Where"</span> => [<span class="string">"user_id"</span>, <span class="const">1</span>, <span class="const">PdoInt</span>]<br>
+            &nbsp;&nbsp;&nbsp;<span class="string">'Table'</span> => <span class="string">"users"</span>,<br>
+            &nbsp;&nbsp;&nbsp;<span class="string">'Fields'</span> => [<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">'email'</span>, <span class="string">'a@a.com'</span>, <span class="const">PdoStr</span>],<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">'pwd'</span>, <span class="string">'321'</span>, <span class="const">PdoStr</span>],<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">'name'</span>, <span class="string">'adm'</span>, <span class="const">PdoStr</span>]<br>
+            &nbsp;&nbsp;&nbsp;],<br>
+            &nbsp;&nbsp;&nbsp;<span class="string">'Where'</span> => [<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">'user_id'</span>, <span class="const">1</span>, <span class="const">PdoInt</span>]<br>
+            &nbsp;&nbsp;]<br>
             ]);<br>
-            <span class="comment">// Run: update users pwd='321' where user_id=1</span>
+            <span class="comment">// Run: update users set pwd='321' where user_id=1</span>
+          </div>
+          <p>&nbsp;</p>
+          <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
+            <span class="func">$PDO->Update</span>([<br>
+            &nbsp;&nbsp;&nbsp;<span class="string">'Table'</span> => <span class="string">'users'</span>,<br>
+            &nbsp;&nbsp;&nbsp;<span class="string">'Fields'</span> => [<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">'active'</span>, <span class="const">0</span>, <span class="const">PdoInt</span>],<br>
+            &nbsp;&nbsp;&nbsp;],<br>
+            &nbsp;&nbsp;&nbsp;<span class="string">'Where'</span> => [<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">'level'</span>, <span class="const">0</span>, <span class="const">PdoInt</span>, <span class="string">'>'</span>]<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">'lastlogin'</span>, <span class="string">'null'</span>, <span class="const">PdoSql</span>, <span class="string">'is'</span>, <span class="string">'and'</span>]<br>
+            &nbsp;&nbsp;&nbsp;]<br>
+            ]);<br>
+            <span class="comment">// Run: update users set active=0 where level>0 and lastlogin is null</span>
           </div>
           <p>&nbsp;</p>
 
