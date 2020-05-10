@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.07.03
+// Version 2020.05.09.00
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -160,21 +160,21 @@ class PhpLivePdo{
    */
   public function Insert(array $Options, array $Options2 = []):int{
     $return = 'insert into ' . $Options['Table'] . '(';
-    $holes = [];
+    $tokens = [];
     $i = 1;
     foreach($Options['Fields'] as $field):
       $return .= $this->Reserved($field[0]) . ',';
-      $holes[] = [$i, $field[1], $field[2]];
+      $tokens[] = [$i, $field[1], $field[2]];
       $i++;
     endforeach;
     $return = substr($return, 0, -1);
     $return .= ') values(';
-    for($j = 1; $j < $i; $j++):
+    foreach($Options['Fields'] as $field):
       $return .= '?,';
-    endfor;
+    endforeach;
     $return = substr($return, 0, -1);
     $return .= ');';
-    return $this->Run($return, $holes, $Options2);
+    return $this->Run($return, $tokens, $Options2);
   }
 
   /**
@@ -202,7 +202,8 @@ class PhpLivePdo{
       endforeach;
     endif;
     if(count($Options['Fields']) > 0):
-      return $this->RunUpdate($Options, $Options2);
+      $temp = $this->BuildUpdate($Options);
+      return $this->Run($temp['Query'], $temp['Tokens'], $Options2);
     else:
       return 0;
     endif;
@@ -251,7 +252,7 @@ class PhpLivePdo{
     return $Field;
   }
 
-  private function BuildUpdate(array $Options):int{
+  private function BuildUpdate(array $Options):array{
     $return = ['Query' => '', 'Tokens' => []];
     $return['Query'] = 'update ' . $Options['Table'] . ' set ';
     $i = 1;
@@ -263,7 +264,7 @@ class PhpLivePdo{
       endif;
     endforeach;
     $return['Query'] = substr($return['Query'], 0, -1);
-    $temp = BuildWhere($Options['Where'], $i);
+    $temp = $this->BuildWhere($Options['Where'], $i);
     $return['Query'] .= ' where ' . $temp['Query'];
     $return['Tokens'] = array_merge($return['Tokens'], $temp['Tokens']);
     return $return;
