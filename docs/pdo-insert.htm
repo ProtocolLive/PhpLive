@@ -27,7 +27,7 @@
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
             [TokenName, TokenData, TokenType]
           </div>
-          <p>TokenName (<span class="type">int</span> or <span class="type">string</span>) - A number or a string starting with ":";</p>
+          <p>TokenName (<span class="type">int</span> or <span class="type">string</span>) - A number or a string starting with ':';</p>
           <p>TokenData (<span class="type">int</span> or <span class="type">string</span>) - The value to be replaced;</p>
           <p>TokenType (<span class="type">int</span>) - The constants of <span class="func">PhpLivePdo</span> (<span class="const">PdoInt</span>, <span class="const">PdoStr</span>, <span class="const">PdoNull</span>, <span class="const">PdoBool</span>, <span class="const">PdoSql</span>) or the <a href="https://www.php.net/manual/pt_BR/pdo.constants.php" target="_blank">constants of PDO</a>;</p>
           <p>&nbsp;</p>
@@ -38,15 +38,15 @@
           <div class="title">The special type <span class="const">PdoSql</span></div>
           <p>This special type put the value outside quotes to be executed by SQL.</p>
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
-            <span class="func">$PDO->Insert</span>([<br>
-            &nbsp;&nbsp;<span class="string">"Table"</span> => <span class="string">"products"</span>,<br>
-            &nbsp;&nbsp;<span class="string">"Fields"</span> => [<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"quantity"</span>, <span class="const">2</span>, <span class="const">PdoInt</span>],<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"price"</span>, <span class="const">2.99</span>, <span class="const">PdoInt</span>],<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"total"</span>, <span class="string">"quantity*price"</span>, <span class="const">PdoSql</span>]<br>
-            &nbsp;&nbsp;]<br>
-            ]);<br>
-            <span class="comment">//insert into products(quantity,price,total) values(2,'2.99',quantity*price)</span>
+          <span class="func">$PDO->Insert</span>([<br>
+          &nbsp;&nbsp;&nbsp;<span class="string">'Table'</span> => <span class="string">'products'</span>,<br>
+          &nbsp;&nbsp;&nbsp;<span class="string">'Fields'</span> => [<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">'quantity'</span>, <span class="const">2</span>, <span class="const">PdoInt</span>],<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">'price'</span>, <span class="const">2.99</span>, <span class="const">PdoInt</span>],<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">'total'</span>, <span class="string">'quantity*price'</span>, <span class="const">PdoSql</span>]<br>
+          &nbsp;&nbsp;&nbsp;]<br>
+          ]);<br>
+          <span class="comment">//insert into products(quantity,price,total) values(2,'2.99',quantity*price)</span>
           </div>
           <p>&nbsp;</p>
 
@@ -84,12 +84,12 @@
           <br>
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
             <span class="func">$PDO->Insert</span>([<br>
-              &nbsp;&nbsp;&nbsp;<span class="string">"Table"</span> => <span class="string">"users"</span>,<br>
-              &nbsp;&nbsp;&nbsp;<span class="string">"Fields"</span> => [<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"email"</span>, <span class="string">"a@a.com"</span>, <span class="const">PdoStr</span>],<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"pwd"</span>, <span class="string">"123"</span>, <span class="const">PdoStr</span>],<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"name"</span>, <span class="string">"adm"</span>, <span class="const">PdoStr</span>],<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">"level"</span>, <span class="const">1</span>, <span class="const">PdoInt</span>]<br>
+              &nbsp;&nbsp;&nbsp;<span class="string">'Table'</span> => <span class="string">'users'</span>,<br>
+              &nbsp;&nbsp;&nbsp;<span class="string">'Fields'</span> => [<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">'email'</span>, <span class="string">'a@a.com'</span>, <span class="const">PdoStr</span>],<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">'pwd'</span>, <span class="string">'123'</span>, <span class="const">PdoStr</span>],<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">'name'</span>, <span class="string">'adm'</span>, <span class="const">PdoStr</span>],<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span class="string">'level'</span>, <span class="const">1</span>, <span class="const">PdoInt</span>]<br>
               &nbsp;&nbsp;&nbsp;]<br>
             ]);<br>
             <span class="comment">// insert into users(email,pwd,name,level) values('a@a.com','123','adm',1)</span>
