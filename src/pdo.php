@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.09.00
+// Version 2020.05.10.00
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -246,7 +246,8 @@ class PhpLivePdo{
    * @return string
    */
   public function Reserved(string $Field):string{
-    if($Field == 'order' or $Field == 'default'):
+    $names = ['order', 'default', 'group'];
+    if(in_array($Field)):
       $Field = '`' . $Field . '`';
     endif;
     return $Field;
