@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.07.00
+// Version 2020.05.10.00
 
 class PhpLiveDbBackup{
   private ?object $PhpLivePdo = null;
@@ -105,6 +105,7 @@ class PhpLiveDbBackup{
       from
         information_schema.referential_constraints rc
           left join information_schema.key_column_usage using(constraint_name)
+      order by rc.table_name
     ');
     $count = count($cols);
     if($Options['Progress'] == true):
