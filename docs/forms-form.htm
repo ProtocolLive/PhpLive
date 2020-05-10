@@ -20,15 +20,15 @@
 
           <div class="title">Parameters</div>
           <p><strong><span class="var">$Options</span>:</strong></p>
-          <p>&nbsp;&nbsp;Form (<span class="type">string</span>) - The form to be build;</p>
-          <p>&nbsp;&nbsp;Page (<span class="type">string</span>) - The target page of submit button;</p>
-          <p>&nbsp;&nbsp;Place (<span class="type">string</span>)(Optional) - The target of ajax function (See <a href="https://github.com/ProtocolLive/Ajax" target="_blank">ProtocolLive/Ajax</a>)</a>;</p>
-          <p>&nbsp;&nbsp;Data (<span class="type">array</span>)(Optional) - The data to be fill on the form to editing.</p>
-          <p>&nbsp;&nbsp;Selects (<span class="type">array</span>)(Optional) - The data of the selects fields.</p>
-          <p>&nbsp;&nbsp;PhpLivePdo (<span class="type">object</span>)(Optional) - An object created by <a href="pdo.htm" class="func">PhpLivePdo</a>;</p>
-          <p>&nbsp;&nbsp;PdoDebug (<span class="type">bool</span>)(Optional - Default <span class="const">false</span>) - Send the debug parameter to <span class="func">PhpLivePdo</span>;</p>
-          <p>&nbsp;&nbsp;AjaxAppend (<span class="type">int</span>)(Optional) - The line to be appended in a &lt;table>, indicated by "Place". (See <a href="https://github.com/ProtocolLive/Ajax" target="_blank">ProtocolLive/Ajax</a>);</p>
-          <p>&nbsp;&nbsp;Site (<span class="type">string</span>)(Optional) - Override the <span class="func">session_name()</span> as "Site" parameter;
+          <p class="ident">Form (<span class="type">string</span>) - The form to be build;</p>
+          <p class="ident">Page (<span class="type">string</span>) - The target page of submit button;</p>
+          <p class="ident">Place (<span class="type">string</span>)(Optional) - The target of ajax function (See <a href="https://github.com/ProtocolLive/Ajax" target="_blank">ProtocolLive/Ajax</a>)</a>;</p>
+          <p class="ident">Data (<span class="type">array</span>)(Optional) - The data to be fill on the form to editing.</p>
+          <p class="ident">Selects (<span class="type">array</span>)(Optional) - The data of the selects fields.</p>
+          <p class="ident">PhpLivePdo (<span class="type">object</span>)(Optional) - An object created by <a href="pdo.htm" class="func">PhpLivePdo</a>;</p>
+          <p class="ident">PdoDebug (<span class="type">bool</span>)(Optional - Default <span class="const">false</span>) - Send the debug parameter to <span class="func">PhpLivePdo</span>;</p>
+          <p class="ident">AjaxAppend (<span class="type">int</span>)(Optional) - The line to be appended in a &lt;table>, indicated by "Place". (See <a href="https://github.com/ProtocolLive/Ajax" target="_blank">ProtocolLive/Ajax</a>);</p>
+          <p class="ident">Site (<span class="type">string</span>)(Optional) - Override the <span class="func">session_name()</span> as "Site" parameter;
           <p>&nbsp;</p>
 
           <div class="title">Return Values</div>
@@ -45,29 +45,30 @@
           <strong>Simple form:</strong>
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
             <span class="func">$Forms->Form</span>([<br>
-              &nbsp;&nbsp;&nbsp;<span class="string">'Form'</span> => <span class="string">'login'</span>,<br>
-              &nbsp;&nbsp;&nbsp;<span class="string">'Page'</span> => <span class="string">'login.php?action=loginok'</span><br>
+            <span class="ident"><span class="string">'Form'</span> => <span class="string">'login'</span>,</span><br>
+            <span class="ident"><span class="string">'Page'</span> => <span class="string">'login.php?action=loginok'</span></span><br>
             ]);<br>
           </div>
           <p>&nbsp;</p>
+
           <strong>Complete form:</strong>
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
             <span class="var">$yesno</span> = [<br>
-            &nbsp;&nbsp;&nbsp;[<span class="const">1</span>, <span class="string">'Yes'</span>],<br>
-            &nbsp;&nbsp;&nbsp;[<span class="const">0</span>, <span class="string">'No'</span>]<br>
+            <span class="ident">[<span class="const">1</span>, <span class="string">'Yes'</span>],</span><br>
+            <span class="ident">[<span class="const">0</span>, <span class="string">'No'</span>]</span><br>
             ];<br>
             <span class="var">$citys</span> = <span class="func">$PDO->Run</span>(<span class="string">'select city_id,city from citys order by city'</span>);<br>
             <span class="var">$data</span> = <span class="func">$PDO->Run</span>(<span class="string">'select * from users where user_id=?'</span>, [<br>
-            &nbsp;&nbsp;&nbsp;[<span class="const">1</span>, <span class="var">$_GET</span>[<span class="string">"id"</span>], <span class="const">PdoInt</span>]<br>
+            <span class="ident">[<span class="const">1</span>, <span class="var">$_GET</span>[<span class="string">"id"</span>], <span class="const">PdoInt</span>]</span><br>
             ]);<br>
             <span class="func">$Forms->Form</span>([<br>
-            &nbsp;&nbsp;&nbsp;<span class="string">'Form'</span> => <span class="string">'edit'</span>,<br>
-            &nbsp;&nbsp;&nbsp;<span class="string">'Page'</span> => <span class="string">'user.php?action=formok'</span>,<br>
-            &nbsp;&nbsp;&nbsp;<span class="string">'Data'</span> => <span class="var">$data</span>,<br>
-            &nbsp;&nbsp;&nbsp;<span class="string">'Selects'</span> => [<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'active'</span> => <span class="var">$yesno</span>,<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'city_id'</span> => <span class="var">$citys</span><br>
-            &nbsp;&nbsp;&nbsp;]<br>
+            <span class="ident"><span class="string">'Form'</span> => <span class="string">'edit'</span>,</span><br>
+            <span class="ident"><span class="string">'Page'</span> => <span class="string">'user.php?action=formok'</span>,</span><br>
+            <span class="ident"><span class="string">'Data'</span> => <span class="var">$data</span>,</span><br>
+            <span class="ident"><span class="string">'Selects'</span> => [<br>
+            <span class="ident"><span class="ident"><span class="string">'active'</span> => <span class="var">$yesno</span>,</span><br>
+            <span class="ident"><span class="ident"><span class="string">'city_id'</span> => <span class="var">$citys</span></span><br>
+            <span class="ident">]<br>
             ]);<br>
           </div>
           <p>&nbsp;</p>

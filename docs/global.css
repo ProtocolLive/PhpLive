@@ -12,6 +12,9 @@ a:visited{
   color: #00f;
 }
 
+.ident{
+  margin-left: 10px;
+}
 .menu1{
   border: none;
   height: 150px;
