@@ -1,9 +1,9 @@
 <?php
 //Protocol Corporation Ltda.
 //https://github.com/protocollive
-//Version 2020.05.05.00
+//Version 2020.05.11.00
 
-function Cpf(string $Cpf):boolean{
+function Cpf(string $Cpf):bool{
   $Cpf = str_replace('.', '', $Cpf);
   $Cpf = str_replace('-', '', $Cpf);
   $Erro = ['00000000000', '11111111111', '22222222222', '33333333333', '44444444444',
