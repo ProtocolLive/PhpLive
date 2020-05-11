@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.06.00
+// Version 2020.05.10.02
 
 class GithubImport{
   private bool $Log = true;
@@ -13,7 +13,10 @@ class GithubImport{
 
   public function __construct($Options = null){
     if(extension_loaded('openssl') == false):
-      die('GithubImport error: PHP extension OpenSSL not loaded!');
+      if(ini_get('display_errors') == true):
+        print 'GithubImport error: PHP extension OpenSSL not loaded!';
+      endif;
+      return false;
     endif;
     $this->Status['Time'] = date('Y-m-d H:i:s');
     $this->Status['ApiIntegrity'] = $this->GetFile('https://raw.githubusercontent.com/ProtocolLive/GithubImport/master/src/GithubImport.php.md5') == md5_file(__FILE__);
@@ -30,22 +33,24 @@ class GithubImport{
     $fileway = $Options['Folder'] . $Options['Repo'] . '/' . $Options['File'];
 
     $this->Status['Files'][$Options['File']] = [
-      'Local' => false,
-      'Server' => false,
+      'Local' => @md5_file($fileway),
+      'Server' => $this->GetFile('https://raw.githubusercontent.com/' . $Options['User'] . '/' . $Options['Repo'] . '/' . $Options['Trunk'] . '/src/' . $Options['File'] . '.md5'),
       'ForceLocal' => !$Options['Download'],
       'Downloaded' => false,
       'Include' => null
     ];
-    if(file_exists($fileway) == true):
-      $this->Status['Files'][$Options['File']]['Local'] = md5_file($fileway);
-      $this->Status['Files'][$Options['File']]['Server'] = $this->GetFile('https://raw.githubusercontent.com/' . $Options['User'] . '/' . $Options['Repo'] . '/' . $Options['Trunk'] . '/src/' . $Options['File'] . '.md5');
-      if($Options['Download'] == true
-      and $this->Status['Files'][$Options['File']]['Server'] !== false
-      and $this->Status['Files'][$Options['File']]['Local'] != $this->Status['Files'][$Options['File']]['Server']):
-        unlink($fileway);
-      endif;
+    if(file_exists($fileway) == true
+    and $Options['Download'] == true
+    and $this->Status['Files'][$Options['File']]['Server'] !== false
+    and $this->Status['Files'][$Options['File']]['Local'] != $this->Status['Files'][$Options['File']]['Server']):
+      unlink($fileway);
     endif;
-    if(file_exists($fileway) == false and $Options['Download'] == true and $this->Status['Files'][$Options['File']]['Server'] !== false):
+    if(file_exists($fileway) == false and $this->Status['Files'][$Options['File']]['Server'] === false):
+      if(ini_get('display_errors') == true):
+        print 'GithubImport error: Cant download the library ' . $Options['Repo'] . '/' . $Options['File'];
+      endif;
+      return false;
+    elseif(file_exists($fileway) == false and $Options['Download'] == true and $this->Status['Files'][$Options['File']]['Server'] !== false):
       $file = $this->GetFile('https://raw.githubusercontent.com/' . $Options['User'] . '/' . $Options['Repo'] . '/' . $Options['Trunk'] . '/src/' . $Options['File']);
       if($file !== false):
         if(is_dir($Options['Folder']) == false):
