@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.10.02
+// Version 2020.05.10.03
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -194,7 +194,7 @@ class PhpLivePdo{
     $temp = $this->BuildWhere($Options['Where']);
     // Get fields list
     foreach($Options["Fields"] as $field):
-      $query .= $field[0] . ',';
+      $query .= $this->Reserved($field[0]) . ',';
     endforeach;
     $query = 'select ' . substr($query, 0, -1) . ' from ' . $Options['Table'] . ' where ' . $temp['Query'];
     $data = $this->Run($query, $temp['Tokens'], $Options2);
@@ -307,7 +307,7 @@ class PhpLivePdo{
       if(ini_get('html_errors')):
         print '<pre style="text-align:left">';
       endif;
-      var_dump(debug_backtrace());
+      var_dump(debug_print_backtrace());
       die();
     endif;
   }
