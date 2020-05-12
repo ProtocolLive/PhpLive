@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.12.00
+// Version 2020.05.12.01
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -205,12 +205,12 @@ class PhpLivePdo{
           unset($Options['Fields'][$id]);
         endif;
       endforeach;
-    endif;
-    if(count($Options['Fields']) > 0):
-      $temp = $this->BuildUpdate($Options);
-      return $this->Run($temp['Query'], $temp['Tokens'], $Options2);
-    else:
-      return 0;
+      if(count($Options['Fields']) > 0):
+        $temp = $this->BuildUpdate($Options);
+        return $this->Run($temp['Query'], $temp['Tokens'], $Options2);
+      else:
+        return 1;
+      endif;
     endif;
   }
 
