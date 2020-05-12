@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.10.03
+// Version 2020.05.12.01
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -205,12 +205,12 @@ class PhpLivePdo{
           unset($Options['Fields'][$id]);
         endif;
       endforeach;
-    endif;
-    if(count($Options['Fields']) > 0):
-      $temp = $this->BuildUpdate($Options);
-      return $this->Run($temp['Query'], $temp['Tokens'], $Options2);
-    else:
-      return 0;
+      if(count($Options['Fields']) > 0):
+        $temp = $this->BuildUpdate($Options);
+        return $this->Run($temp['Query'], $temp['Tokens'], $Options2);
+      else:
+        return 1;
+      endif;
     endif;
   }
 
@@ -222,20 +222,18 @@ class PhpLivePdo{
    * @return int
    */
   public function UpdateInsert(array $Options, array $Options2 = []):int{
-    $temp = $this->BuildWhere($Options['Where']);
-    $query = 'select ' . $Options['Fields'][0][0] . ' from ' . $Options['Table'] . ' where ' . $temp['Query'];
-    $data = $this->Run($query, $temp['Tokens'], $Options2);
-    if(count($data) == 1):
-      return $this->Update([
-        'Table' => $Options['Table'],
-        'Fields' => $Options['Fields'],
-        'Where' => $Options['Where']
-      ], $Options2);
-    else:
+    $return = $this->Update([
+      'Table' => $Options['Table'],
+      'Fields' => $Options['Fields'],
+      'Where' => $Options['Where']
+    ], $Options2);
+    if($return === 0):
       return $this->Insert([
         'Table' => $Options['Table'],
         'Fields' => $Options['Fields']
       ], $Options2);
+    else:
+      return $return;
     endif;
   }
 
