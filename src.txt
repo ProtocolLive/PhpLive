@@ -1,8 +1,8 @@
 {
     "APIs": {
         "cpf.php": {
-            "Version": "2020.05.05.00",
-            "md5": "43a8ed2a33da1e4c14228484204dcaf8"
+            "Version": "2020.05.11.00",
+            "md5": "d8a24aa4c30da3e81c1c167f9687340e"
         },
         "DbBackup.php": {
             "Version": "2020.05.10.00",
