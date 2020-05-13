@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.12.01
+// Version 2020.05.13.00
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -305,7 +305,7 @@ class PhpLivePdo{
       if(ini_get('html_errors')):
         print '<pre style="text-align:left">';
       endif;
-      var_dump(debug_print_backtrace());
+      debug_print_backtrace();
       die();
     endif;
   }
