@@ -15,7 +15,7 @@
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
             <span class="const">public</span> <span class="func">PhpLivePdo::Insert</span> ( 
             <span class="type">array</span> <span class="var">$Options</span> [,
-            <span class="type">array</span> <span class="var">$Options2</span> = [] ] ) : <span class="type">int</span>;
+            <span class="type">array</span> <span class="var">$Options2</span> = <span class="func">array</span>() ] ) : <span class="type">int</span>;
           </div>
           <p>&nbsp;</p>
 
@@ -25,7 +25,7 @@
           <p>Fields (<span class="type">array</span>) - The fields to be added;</p>
           <p>Sintaxe of <strong>Fields</strong> option:</p>
           <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
-            [TokenName, TokenData, TokenType]
+            <span class="func">array</span>(TokenName, TokenData, TokenType)
           </div>
           <p>TokenName (<span class="type">int</span> or <span class="type">string</span>) - A number or a string starting with ':';</p>
           <p>TokenData (<span class="type">int</span> or <span class="type">string</span>) - The value to be replaced;</p>
