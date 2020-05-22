@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.14.00
+// Version 2020.05.22.00
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -12,6 +12,7 @@ define('PdoSql', 6);
 class PhpLivePdo{
   private ?object $Conn = null;
   private string $Prefix = '';
+  private float $Duration = 0;
   private array $Error = [];
 
   /**
@@ -37,6 +38,14 @@ class PhpLivePdo{
       $Options['Pwd']
     );
     $this->Conn->setAttribute(PDO::ATTR_TIMEOUT, $Options['TimeOut']);
+
+    //Profiling
+    $result = $this->Conn->prepare('set profiling_history_size=1;set profiling=1;');
+    $result->execute();
+    $error = $result->errorInfo();
+    if($error[0] != '00000'):
+      $this->ErrorSet($error[0], $error[2]);
+    endif;
   }
 
   /**
@@ -111,6 +120,11 @@ class PhpLivePdo{
       endif;
       //Execute
       $result->execute();
+      //Duration
+      $profiles = $this->Conn->prepare('show profiles');
+      $profiles->execute();
+      $profiles = $profiles->fetchAll();
+      $this->Duration = $profiles[0]['Duration'];
       //Error
       $error = $result->errorInfo();
       if($error[0] != '00000'):
@@ -244,6 +258,13 @@ class PhpLivePdo{
    */
   public function ErrorGet():array{
     return $this->Error;
+  }
+
+    /**
+   * @return float
+   */
+  public function Duration():float{
+    return $this->Duration;
   }
 
   /**
