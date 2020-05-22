@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.22.00
+// Version 2020.05.22.01
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -39,7 +39,7 @@ class PhpLivePdo{
     );
     $this->Conn->setAttribute(PDO::ATTR_TIMEOUT, $Options['TimeOut']);
 
-    //Profiling
+    //Enabling profiling to get duration of querys
     $result = $this->Conn->prepare('set profiling_history_size=1;set profiling=1;');
     $result->execute();
     $error = $result->errorInfo();
@@ -120,11 +120,6 @@ class PhpLivePdo{
       endif;
       //Execute
       $result->execute();
-      //Duration
-      $profiles = $this->Conn->prepare('show profiles');
-      $profiles->execute();
-      $profiles = $profiles->fetchAll();
-      $this->Duration = $profiles[0]['Duration'];
       //Error
       $error = $result->errorInfo();
       if($error[0] != '00000'):
@@ -148,6 +143,11 @@ class PhpLivePdo{
       else:
         $return = true;
       endif;
+      //Duration
+      $profiles = $this->Conn->prepare('show profiles');
+      $profiles->execute();
+      $profiles = $profiles->fetchAll();
+      $this->Duration = $profiles[0]['Duration'];
       //Log
       if(isset($Options['Log']) and $Options['Log'] != null and isset($Options['User']) and $Options['User'] != null):
         ob_start();
