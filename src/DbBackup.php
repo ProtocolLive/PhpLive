@@ -1,15 +1,15 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.10.00
+// Version 2020.05.26.00
 
 class PhpLiveDbBackup{
-  private ?object $PhpLivePdo = null;
+  private ?PhpLivePdo $PhpLivePdo = null;
   private array $Delete = [];
   private string $Time;
   private object $Zip;
 
-  public function __construct(object &$PhpLivePdo = null){
+  public function __construct(PhpLivePdo &$PhpLivePdo = null){
     $this->PhpLivePdo = $PhpLivePdo;
   }
 

@@ -5,20 +5,20 @@
             "md5": "d8a24aa4c30da3e81c1c167f9687340e"
         },
         "DbBackup.php": {
-            "Version": "2020.05.10.00",
-            "md5": "fff04c6c73fbf731292ee2c189dc2cff"
+            "Version": "2020.05.26.00",
+            "md5": "38003135326efb3b552480a474f72085"
         },
         "forms.php": {
-            "Version": "2020.05.06.02",
-            "md5": "4ca16430ac5568feee81c335f1d5a4d1"
+            "Version": "2020.05.26.00",
+            "md5": "408c3c0bd09cc40d6a3e4c803729102d"
         },
         "pdo.php": {
             "Version": "2020.05.25.00",
             "md5": "5d69c52e7147f00c09861d1e63e5522c"
         },
         "perms.php": {
-            "Version": "2020.05.05.01",
-            "md5": "f0abd441a926b86297242beef72b9bb3"
+            "Version": "2020.05.26.00",
+            "md5": "7f13fea8d315e126f55ce85627732728"
         },
         "PhpUpdate.php": {
             "Version": "2020.05.05.00",
