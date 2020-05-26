@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.22.01
+// Version 2020.05.25.00
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -13,6 +13,7 @@ class PhpLivePdo{
   private ?object $Conn = null;
   private string $Prefix = '';
   private float $Duration = 0;
+  private bool $UpdateInsertFlag = false;
   private array $Error = [];
 
   /**
@@ -38,7 +39,6 @@ class PhpLivePdo{
       $Options['Pwd']
     );
     $this->Conn->setAttribute(PDO::ATTR_TIMEOUT, $Options['TimeOut']);
-
     //Enabling profiling to get duration of querys
     $result = $this->Conn->prepare('set profiling_history_size=1;set profiling=1;');
     $result->execute();
@@ -206,27 +206,32 @@ class PhpLivePdo{
   public function Update(array $Options, array $Options2 = []):int{
     $query = '';
     $temp = $this->BuildWhere($Options['Where']);
-    // Get fields list
+    //Prepare fields list
     foreach($Options["Fields"] as $field):
       $query .= $this->Reserved($field[0]) . ',';
     endforeach;
+    //Check if the entry exists
     $query = 'select ' . substr($query, 0, -1) . ' from ' . $Options['Table'] . ' where ' . $temp['Query'];
     $data = $this->Run($query, $temp['Tokens'], $Options2);
-    if(count($data) == 1):
+    if(count($data) == 0):
+      //Entry not found
+      $this->UpdateInsertFlag = true;
+      return 0;
+    else:
       $data = $data[0];
+      //Check fields for differences
       foreach($Options['Fields'] as $id => $field):
         if($field[1] == $data[$field[0]]):
           unset($Options['Fields'][$id]);
         endif;
       endforeach;
-      if(count($Options['Fields']) > 0):
+      if(count($Options['Fields']) == 0):
+        //None different field
+        return 0;
+      else:
         $temp = $this->BuildUpdate($Options);
         return $this->Run($temp['Query'], $temp['Tokens'], $Options2);
-      else:
-        return 1;
       endif;
-    else:
-      return 0;
     endif;
   }
 
@@ -243,13 +248,14 @@ class PhpLivePdo{
       'Fields' => $Options['Fields'],
       'Where' => $Options['Where']
     ], $Options2);
-    if($return === 0):
+    if($this->UpdateInsertFlag == false):
+      return $return;
+    else:
+      $this->UpdateInsertFlag = false;
       return $this->Insert([
         'Table' => $Options['Table'],
         'Fields' => $Options['Fields']
       ], $Options2);
-    else:
-      return $return;
     endif;
   }
 
