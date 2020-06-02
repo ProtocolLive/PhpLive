@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.25.00
+// Version 2020.06.01.00
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -212,7 +212,7 @@ class PhpLivePdo{
     endforeach;
     //Check if the entry exists
     $query = 'select ' . substr($query, 0, -1) . ' from ' . $Options['Table'] . ' where ' . $temp['Query'];
-    $data = $this->Run($query, $temp['Tokens'], $Options2);
+    $data = $this->Run($query, $temp['Tokens']);
     if(count($data) == 0):
       //Entry not found
       $this->UpdateInsertFlag = true;
