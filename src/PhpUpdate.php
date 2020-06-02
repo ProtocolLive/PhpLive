@@ -1,13 +1,13 @@
 <?php
 //Protocol Corporation Ltda.
 //https://github.com/ProtocolLive/PhpLive
-//Version 2020.06.01.00
+//Version 2020.06.02.00
 
 function PhpUpdate():string{
   if(extension_loaded('openssl') == false):
     return false;
   endif;
-  $version = @file_get_contents('https://www.php.net/releases/index.php?json&max=3');
+  $version = @file_get_contents('https://www.php.net/releases/index.php?json&max=1');
   if($version === false):
     return false;
   else:
