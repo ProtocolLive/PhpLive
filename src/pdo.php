@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.06.02.00
+// Version 2020.06.02.01
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -69,7 +69,7 @@ class PhpLivePdo{
         $Query = str_replace('##', '', $Query);
       endif;
       $command = explode(' ', trim($Query));
-      $command = strtolower($command[0]);
+      $command = strtolower(trim($command[0]));
       //Search from PdoSql and parse
       foreach($Params as $id => $Param):
         if($Param[2] == PdoSql):
