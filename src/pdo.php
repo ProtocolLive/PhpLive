@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.14.00
+// Version 2020.06.02.01
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -12,6 +12,8 @@ define('PdoSql', 6);
 class PhpLivePdo{
   private ?object $Conn = null;
   private string $Prefix = '';
+  private float $Duration = 0;
+  private bool $UpdateInsertFlag = false;
   private array $Error = [];
 
   /**
@@ -37,6 +39,13 @@ class PhpLivePdo{
       $Options['Pwd']
     );
     $this->Conn->setAttribute(PDO::ATTR_TIMEOUT, $Options['TimeOut']);
+    //Enabling profiling to get duration of querys
+    $result = $this->Conn->prepare('set profiling_history_size=1;set profiling=1;');
+    $result->execute();
+    $error = $result->errorInfo();
+    if($error[0] != '00000'):
+      $this->ErrorSet($error[0], $error[2]);
+    endif;
   }
 
   /**
@@ -54,14 +63,13 @@ class PhpLivePdo{
     $Options['Safe'] ??= true;
 
     try{
-      $Query = $this->Clean($Query);
       if($this->Prefix !== null):
         $Query = str_replace('##', $this->Prefix . '_', $Query);
       else:
         $Query = str_replace('##', '', $Query);
       endif;
-      $command = explode(' ', $Query);
-      $command = strtolower($command[0]);
+      $command = explode(' ', trim($Query));
+      $command = strtolower(trim($command[0]));
       //Search from PdoSql and parse
       foreach($Params as $id => $Param):
         if($Param[2] == PdoSql):
@@ -134,6 +142,11 @@ class PhpLivePdo{
       else:
         $return = true;
       endif;
+      //Duration
+      $profiles = $this->Conn->prepare('show profiles');
+      $profiles->execute();
+      $profiles = $profiles->fetchAll();
+      $this->Duration = $profiles[0]['Duration'];
       //Log
       if(isset($Options['Log']) and $Options['Log'] != null and isset($Options['User']) and $Options['User'] != null):
         ob_start();
@@ -192,27 +205,32 @@ class PhpLivePdo{
   public function Update(array $Options, array $Options2 = []):int{
     $query = '';
     $temp = $this->BuildWhere($Options['Where']);
-    // Get fields list
+    //Prepare fields list
     foreach($Options["Fields"] as $field):
       $query .= $this->Reserved($field[0]) . ',';
     endforeach;
+    //Check if the entry exists
     $query = 'select ' . substr($query, 0, -1) . ' from ' . $Options['Table'] . ' where ' . $temp['Query'];
-    $data = $this->Run($query, $temp['Tokens'], $Options2);
-    if(count($data) == 1):
+    $data = $this->Run($query, $temp['Tokens']);
+    if(count($data) == 0):
+      //Entry not found
+      $this->UpdateInsertFlag = true;
+      return 0;
+    else:
       $data = $data[0];
+      //Check fields for differences
       foreach($Options['Fields'] as $id => $field):
         if($field[1] == $data[$field[0]]):
           unset($Options['Fields'][$id]);
         endif;
       endforeach;
-      if(count($Options['Fields']) > 0):
+      if(count($Options['Fields']) == 0):
+        //None different field
+        return 0;
+      else:
         $temp = $this->BuildUpdate($Options);
         return $this->Run($temp['Query'], $temp['Tokens'], $Options2);
-      else:
-        return 1;
       endif;
-    else:
-      return 0;
     endif;
   }
 
@@ -229,13 +247,14 @@ class PhpLivePdo{
       'Fields' => $Options['Fields'],
       'Where' => $Options['Where']
     ], $Options2);
-    if($return === 0):
+    if($this->UpdateInsertFlag == false):
+      return $return;
+    else:
+      $this->UpdateInsertFlag = false;
       return $this->Insert([
         'Table' => $Options['Table'],
         'Fields' => $Options['Fields']
       ], $Options2);
-    else:
-      return $return;
     endif;
   }
 
@@ -244,6 +263,13 @@ class PhpLivePdo{
    */
   public function ErrorGet():array{
     return $this->Error;
+  }
+
+    /**
+   * @return float
+   */
+  public function Duration():float{
+    return $this->Duration;
   }
 
   /**
@@ -310,14 +336,6 @@ class PhpLivePdo{
       debug_print_backtrace();
       die();
     endif;
-  }
-
-  private function Clean(string $Query):string{
-    $Query = str_replace("\t", '', $Query);
-    $Query = str_replace("\r", '', $Query);
-    $Query = str_replace("\n", ' ', $Query);
-    $Query = trim($Query);
-    return $Query;
   }
 
   private function SqlLog(array $Options):void{

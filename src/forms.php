@@ -1,12 +1,12 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.06.02
+// Version 2020.05.26.00
 
 class PhpLiveForms{
-  private ?object $PhpLivePdo = null;
+  private ?PhpLivePdo $PhpLivePdo = null;
 
-  public function __construct(object &$PhpLivePdo = null){
+  public function __construct(PhpLivePdo &$PhpLivePdo = null){
     $this->PhpLivePdo = $PhpLivePdo;
   }
 
