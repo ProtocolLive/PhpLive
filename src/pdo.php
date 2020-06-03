@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.06.01.00
+// Version 2020.06.02.00
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -63,13 +63,12 @@ class PhpLivePdo{
     $Options['Safe'] ??= true;
 
     try{
-      $Query = $this->Clean($Query);
       if($this->Prefix !== null):
         $Query = str_replace('##', $this->Prefix . '_', $Query);
       else:
         $Query = str_replace('##', '', $Query);
       endif;
-      $command = explode(' ', $Query);
+      $command = explode(' ', trim($Query));
       $command = strtolower($command[0]);
       //Search from PdoSql and parse
       foreach($Params as $id => $Param):
@@ -337,14 +336,6 @@ class PhpLivePdo{
       debug_print_backtrace();
       die();
     endif;
-  }
-
-  private function Clean(string $Query):string{
-    $Query = str_replace("\t", '', $Query);
-    $Query = str_replace("\r", '', $Query);
-    $Query = str_replace("\n", ' ', $Query);
-    $Query = trim($Query);
-    return $Query;
   }
 
   private function SqlLog(array $Options):void{
