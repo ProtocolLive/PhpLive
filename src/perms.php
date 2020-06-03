@@ -1,12 +1,12 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.05.26.00
+// Version 2020.05.05.01
 
 class PhpLivePerms{
-  private ?PhpLivePdo $PhpLivePdo = null;
+  private ?object $PhpLivePdo = null;
 
-  public function __construct(PhpLivePdo &$PhpLivePdo = null){
+  public function __construct(object &$PhpLivePdo = null){
     $this->PhpLivePdo = $PhpLivePdo;
   }
 
