@@ -1,12 +1,11 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.06.06.00
+// Version 2020.06.06.01
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
 define('PdoNull', PDO::PARAM_NULL);
-define('PdoBool', PDO::PARAM_BOOL);
 define('PdoSql', 6);
 
 class PhpLivePdo{
@@ -106,8 +105,6 @@ class PhpLivePdo{
               if(strpos($Param[1], '.') !== false):
                 $Param[2] = PdoStr;
               endif;
-            elseif($Param[2] == PdoBool):
-              $Param[1] = $Param[1] == 'true'? true: false;
             endif;
             $result->bindValue($Param[0], $Param[1], $Param[2]);
           endif;
