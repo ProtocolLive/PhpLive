@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.06.06.06
+// Version 2020.06.06.07
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -79,7 +79,7 @@ class PhpLivePdo{
             unset($Params[$id]);
             //Reorder tokens
             $count = count($Params);
-            for($i = 1; $i <= $count; $i++):
+            for($i = 0; $i < $count; $i++):
               $Params[$i][0] = $i + 1;
             endfor;
           else:
