@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.06.06.08
+// Version 2020.06.06.09
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -188,11 +188,9 @@ class PhpLivePdo{
   public function Insert(array $Options, array $Options2 = []):int{
     $return = 'insert into ' . $Options['Table'] . '(';
     $tokens = [];
-    $i = 1;
     foreach($Options['Fields'] as $field):
       $return .= $this->Reserved($field[0]) . ',';
-      $tokens[] = [$i, $field[1], $field[2]];
-      $i++;
+      $tokens[] = [':' . $field[0], $field[1], $field[2]];
     endforeach;
     $return = substr($return, 0, -1);
     $return .= ') values(';
@@ -296,14 +294,12 @@ class PhpLivePdo{
   private function BuildUpdate(array $Options):array{
     $return = ['Query' => '', 'Tokens' => []];
     $return['Query'] = 'update ' . $Options['Table'] . ' set ';
-    $i = 1;
     foreach($Options['Fields'] as $field):
-      $return['Query'] .= $this->Reserved($field[0]) . '=?,';
-      $return['Tokens'][] = [$i, $field[1], $field[2]];
-      $i++;
+      $return['Query'] .= $this->Reserved($field[0]) . '=:' . $field[0] . ',';
+      $return['Tokens'][] = [':' . $field[0], $field[1], $field[2]];
     endforeach;
     $return['Query'] = substr($return['Query'], 0, -1);
-    $temp = $this->BuildWhere($Options['Where'], $i);
+    $temp = $this->BuildWhere($Options['Where']);
     $return['Query'] .= ' where ' . $temp['Query'];
     $return['Tokens'] = array_merge($return['Tokens'], $temp['Tokens']);
     return $return;
@@ -313,18 +309,17 @@ class PhpLivePdo{
     // 0 field, 1 value, 2 type, 3 operator, 4 condition
     $return = ['Query' => '', 'Tokens' => []];
     foreach($Wheres as $id => $where):
-      $where[0] = $this->Reserved($where[0]);
       $where[3] ??= '=';
       $where[4] ??= 'and';
       if($where[3] == 'is' or $where[3] == 'is not'):
         $where[3] = ' ' . $where[3] . ' ';
       endif;
       if($id == 0):
-        $return['Query'] = $where[0] . $where[3] . '?';
+        $return['Query'] = $this->Reserved($where[0]) . $where[3] . ':' . $where[0];
       else:
-        $return['Query'] .= ' ' . $where[4] . ' ' . $where[0] . $where[3] . '?';
+        $return['Query'] .= ' ' . $where[4] . ' ' . $where[0] . $where[3] . ':' . $where[0];
       endif;
-      $return['Tokens'][] = [$Count++, $where[1], $where[2]];
+      $return['Tokens'][] = [':' . $where[0], $where[1], $where[2]];
     endforeach;
     return $return;
   }
