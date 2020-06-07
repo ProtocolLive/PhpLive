@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.06.06.02
+// Version 2020.06.06.03
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -103,7 +103,7 @@ class PhpLivePdo{
       //Bind tokens
       if($Params != null):
         foreach($Params as &$Param):
-          if(count($Param) != 3):
+          if(count($Param) < 3 or count($Param) > 5):
             $this->ErrorSet(1, 'Incorrect number of parameters when specifying a token');
           else:
             if($Param[2] == PdoInt):
