@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.06.06.05
+// Version 2020.06.06.06
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -67,28 +67,28 @@ class PhpLivePdo{
       $command = explode(' ', trim($Query));
       $command = strtolower(trim($command[0]));
       //Search from PdoSql and parse
-      foreach($Params as $id => $Param):
-        if($Param[2] == PdoSql):
-          if(is_numeric($Param[0])):
+      foreach($Params as $id => $param):
+        if($param[2] == PdoSql):
+          if(is_numeric($param[0])):
             $out = 0;
-            for($i = 1; $i <= $Param[0]; $i++):
+            for($i = 1; $i <= $param[0]; $i++):
               $in = strpos($Query, '?', $out);
               $out = $in + 1;
             endfor;
-            $Query = substr_replace($Query, $Param[1], $in, 1);
+            $Query = substr_replace($Query, $param[1], $in, 1);
             unset($Params[$id]);
             //Reorder tokens
             $count = count($Params);
             for($i = 1; $i <= $count; $i++):
-              $Params[$i][0] = $i;
+              $Params[$i][0] = $i + 1;
             endfor;
           else:
-            $in = strpos($Query, $Param[0]);
+            $in = strpos($Query, $param[0]);
             $out = strpos($Query, ',', $in);
             if($out === false):
               $out = strpos($Query, ')', $in);
             endif;
-            $Query = substr_replace($Query, $Param[1], $in, $out);
+            $Query = substr_replace($Query, $param[1], $in, $out);
             unset($Params[$id]);
           endif;
         endif;
