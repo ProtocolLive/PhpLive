@@ -87,8 +87,13 @@
           </p>
           <p>&nbsp;</p>
 
-          <div class="title">Atention</div>
-          <p>- You have to specify the parameters as if you were going to use the function <a href="pdo-insert.htm" class="func">Insert</a>, in case it have to run this function;</p>
+          <div class="title">Advices</div>
+          <p>You have to specify the parameters as if you were going to use the function <a href="pdo-insert.htm" class="func">Insert</a>, in case it have to run this function;</p>
+          <p>
+            Because the <span class="func">PhpLivePdo</span> internaly uses named tokens, dont use <span class="func">PhpLivePdo::Update</span> with the same field in <strong>set</strong> and <strong>where</strong> parts.<br>
+            To do that, use the command <a href="pdo-run.htm" class="func">PdoLivePdo::Run</a>.
+          </p>
+          <p>&nbsp;</p>
           <p>&nbsp;</p>
 
           <div class="title">Examples</div><br>
