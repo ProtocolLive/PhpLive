@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.06.06.04
+// Version 2020.06.06.05
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -64,11 +64,6 @@ class PhpLivePdo{
     $Options['Safe'] ??= true;
 
     try{
-      if($this->Prefix !== null):
-        $Query = str_replace('##', $this->Prefix . '_', $Query);
-      else:
-        $Query = str_replace('##', '', $Query);
-      endif;
       $command = explode(' ', trim($Query));
       $command = strtolower(trim($command[0]));
       //Search from PdoSql and parse
@@ -98,6 +93,12 @@ class PhpLivePdo{
           endif;
         endif;
       endforeach;
+      //Table prefix
+      if($this->Prefix !== null):
+        $Query = str_replace('##', $this->Prefix . '_', $Query);
+      else:
+        $Query = str_replace('##', '', $Query);
+      endif;
       //Prepare
       $result = $this->Conn->prepare($Query);
       //Bind tokens
