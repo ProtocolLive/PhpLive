@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.06.06.01
+// Version 2020.06.06.02
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -81,6 +81,12 @@ class PhpLivePdo{
               $out = $in + 1;
             endfor;
             $Query = substr_replace($Query, $Param[1], $in, 1);
+            unset($Params[$id]);
+            //Reorder tokens
+            $count = count($Params);
+            for($i = 1; $i <= $count; $i++):
+              $Params[$i][0] = $i;
+            endfor;
           else:
             $in = strpos($Query, $Param[0]);
             $out = strpos($Query, ',', $in);
@@ -88,8 +94,8 @@ class PhpLivePdo{
               $out = strpos($Query, ')', $in);
             endif;
             $Query = substr_replace($Query, $Param[1], $in, $out);
+            unset($Params[$id]);
           endif;
-          unset($Params[$id]);
         endif;
       endforeach;
       //Prepare
@@ -290,9 +296,7 @@ class PhpLivePdo{
     foreach($Options['Fields'] as $field):
       $return['Query'] .= $this->Reserved($field[0]) . '=?,';
       $return['Tokens'][] = [$i, $field[1], $field[2]];
-      if($field[2] != PdoSql):
-        $i++;
-      endif;
+      $i++;
     endforeach;
     $return['Query'] = substr($return['Query'], 0, -1);
     $temp = $this->BuildWhere($Options['Where'], $i);
