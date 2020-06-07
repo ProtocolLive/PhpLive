@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.06.02.01
+// Version 2020.06.06.00
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -59,6 +59,8 @@ class PhpLivePdo{
    * @return mixed
    */
   public function Run(string $Query, array $Params = [], array $Options = []){
+    $Options['Log'] ??= null;
+    $Options['User'] ??= null;
     $Options['Target'] ??= null;
     $Options['Safe'] ??= true;
 
@@ -148,7 +150,7 @@ class PhpLivePdo{
       $profiles = $profiles->fetchAll();
       $this->Duration = $profiles[0]['Duration'];
       //Log
-      if(isset($Options['Log']) and $Options['Log'] != null and isset($Options['User']) and $Options['User'] != null):
+      if($Options['Log'] !== null and $Options['User'] !== null):
         ob_start();
         $result->debugDumpParams();
         $dump = ob_get_contents();
@@ -169,7 +171,7 @@ class PhpLivePdo{
       $this->ErrorSet($e->getCode, $e->getMessage);
       return false;
     }
-  }
+  } 
 
   /**
    * @param string Table
