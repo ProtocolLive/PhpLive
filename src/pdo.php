@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.06.06.09
+// Version 2020.06.07.00
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -195,7 +195,7 @@ class PhpLivePdo{
     $return = substr($return, 0, -1);
     $return .= ') values(';
     foreach($Options['Fields'] as $field):
-      $return .= '?,';
+      $return .= ':' . $field[0] . ',';
     endforeach;
     $return = substr($return, 0, -1);
     $return .= ');';
