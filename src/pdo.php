@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.06.06.07
+// Version 2020.06.06.08
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -87,8 +87,11 @@ class PhpLivePdo{
             $out = strpos($Query, ',', $in);
             if($out === false):
               $out = strpos($Query, ')', $in);
+              if($out === false):
+                $out = strpos($Query, ' ', $in);
+              endif;
             endif;
-            $Query = substr_replace($Query, $param[1], $in, $out);
+            $Query = substr_replace($Query, $param[1], $in, $out - $in);
             unset($Params[$id]);
           endif;
         endif;
