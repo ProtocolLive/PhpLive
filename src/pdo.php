@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.06.07.00
+// Version 2020.06.09.00
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -260,7 +260,7 @@ class PhpLivePdo{
       $this->UpdateInsertFlag = false;
       return $this->Insert([
         'Table' => $Options['Table'],
-        'Fields' => $Options['Fields']
+        'Fields' => array_merge($Options['Fields'], $Options['Where'])
       ], $Options2);
     endif;
   }
