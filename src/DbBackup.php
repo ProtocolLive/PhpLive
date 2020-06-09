@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.06.09.00
+// Version 2020.06.09.01
 
 class PhpLiveDbBackup{
   private ?PhpLivePdo $PhpLivePdo = null;
@@ -28,7 +28,7 @@ class PhpLiveDbBackup{
     $Options['Translate']['Tables'] ??= 'tables';
     $Options['Translate']['FK'] ??= 'foreign keys';
 
-    $this->ZipOpen($Options['Folder']);
+    $this->ZipOpen($Options['Folder'], 0);
     $tables = $PhpLivePdo->Run("show tables like '##%'");
     if($Options['Progress'] != 0):
       $TablesCount = count($tables);
@@ -159,7 +159,7 @@ class PhpLiveDbBackup{
     $Options['Translate']['Rows'] ??= 'rows';
 
     $last = null;
-    $this->ZipOpen($Options['Folder']);
+    $this->ZipOpen($Options['Folder'], 1);
     $tables = $PhpLivePdo->Run("show tables like '##%'");
     if($Options['Progress'] != 0):
       $TablesCount = count($tables);
@@ -215,13 +215,18 @@ class PhpLiveDbBackup{
     return substr($_SERVER['REQUEST_URI'], 0, strrpos($_SERVER['REQUEST_URI'], '/')) . $Options['Folder'] . $this->Time . '.zip';
   }
 
-  private function ZipOpen(string $Folder):void{
+  private function ZipOpen(string $Folder, int $Type):void{
     $this->Time = date('YmdHis');
     if(file_exists($Folder) == false):
       mkdir($Folder);
     endif;
     $this->Zip = new ZipArchive();
-    $this->Zip->open($Folder . $this->Time . '.zip', ZipArchive::CREATE);
+    if($Type == 0):
+      $temp = 'tables';
+    else:
+      $temp = 'data';
+    endif;
+    $this->Zip->open($Folder . $temp . $this->Time . '.zip', ZipArchive::CREATE);
   }
 
   private function ZipClose():void{
