@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.06.03.00
+// Version 2020.06.09.00
 
 class PhpLiveDbBackup{
   private ?PhpLivePdo $PhpLivePdo = null;
@@ -47,7 +47,8 @@ class PhpLiveDbBackup{
           COLUMN_DEFAULT,
           COLUMN_TYPE,
           EXTRA,
-          COLUMN_KEY
+          COLUMN_KEY,
+          COLLATION_NAME
         from information_schema.columns
         where table_name=?
         order by ordinal_position', [
@@ -59,6 +60,7 @@ class PhpLiveDbBackup{
         //Field size for integers is deprecated
         if($col['DATA_TYPE'] == 'varchar'):
           $line .= '(' . $col['CHARACTER_MAXIMUM_LENGTH'] . ')';
+          $line .= ' collate ' . $col['COLLATION_NAME'];
         elseif($col['DATA_TYPE'] == 'decimal'):
           $line .= '(' . $col['NUMERIC_PRECISION'] . ',' . $col['NUMERIC_SCALE'] . ')';
         endif;
@@ -87,7 +89,18 @@ class PhpLiveDbBackup{
         endif;
         $line .= ",\n";
       endforeach;
-      fwrite($file, substr($line, 0, -2) . "\n);\n\n");
+      fwrite($file, substr($line, 0, -2) . "\n) ");
+      $table = $PhpLivePdo->Run('
+        select
+          ENGINE,
+          TABLE_COLLATION
+        from information_schema.tables
+        where table_name=?
+      ',[
+        [1, $table[0], PdoStr]
+      ]);
+      fwrite($file, 'engine=' . $table[0]['ENGINE'] . ' ');
+      fwrite($file, 'collate=' . $table[0]['TABLE_COLLATION'] . ";\n\n");
       if($Options['Progress'] != 0):
         printf('%d%%<br>', ++$TablesLeft * 100 / $TablesCount);
       endif;
@@ -113,11 +126,11 @@ class PhpLiveDbBackup{
       printf('%d %s<br>0%%<br>', $TablesCount, $Options['Translate']['FK']);
     endif;
     foreach($cols as $col):
-      $line = 'alter table ' . $col['TABLE_NAME'] . "\n";
-      $line .= '  add constraint ' . $col['CONSTRAINT_NAME'];
+      $line = 'alter table ' . $col['table_name'] . "\n";
+      $line .= '  add constraint ' . $col['constraint_name'];
       $line .= ' foreign key(' . $col['column_name'] . ') references ';
-      $line .= $col['REFERENCED_TABLE_NAME'] . '(' . $col['referenced_column_name'] . ') ';
-      $line .= 'on delete ' . $col['DELETE_RULE'] . ' on update ' . $col['UPDATE_RULE'] . ",\n";
+      $line .= $col['referenced_table_name'] . '(' . $col['referenced_column_name'] . ') ';
+      $line .= 'on delete ' . $col['delete_rule'] . ' on update ' . $col['update_rule'] . ",\n";
       fwrite($file, substr($line, 0, -2) . ";\n\n");
       if($Options['Progress'] != 0):
         printf('%d%%<br>', ++$TablesLeft * 100 / $TablesCount);
