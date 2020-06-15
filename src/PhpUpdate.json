@@ -1,0 +1,12 @@
+{
+    "User": "ProtocolLive",
+    "Repository": "PhpLive",
+    "Library": "PhpUpdate",
+    "md5": "ac18a069c8e18b10e79ccc301361740f",
+    "Files": {
+        "/PhpUpdate.php": {
+            "Version": "2020.06.02.00",
+            "md5": "72f0f1514a9c664615e3adfee683d33d"
+        }
+    }
+}
