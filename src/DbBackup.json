@@ -3,6 +3,7 @@
     "Repository": "PhpLive",
     "Library": "DbBackup",
     "md5": "c1f7810769b8b84523893c083241a948",
+    "EntryPoint": "DbBackup.php",
     "Files": {
         "/DbBackup.php": {
             "Version": "2020.06.09.01",

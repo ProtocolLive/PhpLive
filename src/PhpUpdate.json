@@ -3,6 +3,7 @@
     "Repository": "PhpLive",
     "Library": "PhpUpdate",
     "md5": "ac18a069c8e18b10e79ccc301361740f",
+    "EntryPoint": "PhpUpdate.php",
     "Files": {
         "/PhpUpdate.php": {
             "Version": "2020.06.02.00",

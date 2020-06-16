@@ -3,6 +3,7 @@
     "Repository": "PhpLive",
     "Library": "PDO",
     "md5": "4d3737d2df9c55b388f2ae84a1f0f592",
+    "EntryPoint": "pdo.php",
     "Files": {
         "/pdo.php": {
             "Version": "2020.06.09.00",

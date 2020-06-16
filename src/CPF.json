@@ -3,6 +3,7 @@
     "Repository": "PhpLive",
     "Library": "CPF",
     "md5": "4550c637ad40b3889d05874a832728f1",
+    "EntryPoint": "cpf.php",
     "Files": {
         "/cpf.php": {
             "Version": "2020.05.11.00",
