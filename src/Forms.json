@@ -2,10 +2,11 @@
     "User": "ProtocolLive",
     "Repository": "PhpLive",
     "Library": "Forms",
+    "Version": "2020.05.26.00",
     "md5": "4c32598fbaf128b9d93e478782a38ae4",
     "EntryPoint": "forms.php",
     "Files": {
-        "Forms.php": {
+        "forms.php": {
             "Version": "2020.05.26.00",
             "md5": "d0566fc2459471f03820b8b9b7e7f003"
         }

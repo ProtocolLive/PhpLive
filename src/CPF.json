@@ -2,6 +2,7 @@
     "User": "ProtocolLive",
     "Repository": "PhpLive",
     "Library": "CPF",
+    "Version": "2020.05.11.00",
     "md5": "4550c637ad40b3889d05874a832728f1",
     "EntryPoint": "cpf.php",
     "Files": {
