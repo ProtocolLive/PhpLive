@@ -3,12 +3,12 @@
     "Repository": "PhpLive",
     "Library": "CPF",
     "Version": "2020.05.11.00",
-    "md5": "4550c637ad40b3889d05874a832728f1",
+    "md5": "e7bbcd783898599221fe3829a1702110",
     "EntryPoint": "cpf.php",
     "Files": {
         "cpf.php": {
             "Version": "2020.05.11.00",
-            "md5": "5a2759ed48666e30c1296f289b56f235"
+            "md5": "d8a24aa4c30da3e81c1c167f9687340e"
         }
     }
 }

@@ -3,12 +3,12 @@
     "Repository": "PhpLive",
     "Library": "Forms",
     "Version": "2020.05.26.00",
-    "md5": "4c32598fbaf128b9d93e478782a38ae4",
+    "md5": "e383af2d8d9b35b2d14a93257b2b77c5",
     "EntryPoint": "forms.php",
     "Files": {
         "forms.php": {
             "Version": "2020.05.26.00",
-            "md5": "d0566fc2459471f03820b8b9b7e7f003"
+            "md5": "408c3c0bd09cc40d6a3e4c803729102d"
         }
     }
 }
