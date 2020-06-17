@@ -3,9 +3,13 @@
     "Repository": "PhpLive",
     "Library": "PDO",
     "Version": "2020.06.09.00",
-    "md5": "a24547d211f755e9e5fad573e07e185f",
+    "md5": "c18170377fda618eff83a90a21861c26",
     "EntryPoint": "pdo.php",
     "Files": {
+        "system/constants.php": {
+            "Version": "2020.06.09.00",
+            "md5": "c94200733f7fb6382cac4826d81153ad"
+        },
         "pdo.php": {
             "Version": "2020.06.09.00",
             "md5": "d8d4878c2084124351dd246db16c47dd"
