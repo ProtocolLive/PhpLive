@@ -1,14 +1,14 @@
 {
-    "User": "ProtocolLive",
-    "Repository": "PhpLive",
-    "Library": "CPF",
-    "Version": "2020.05.11.00",
-    "md5": "e7bbcd783898599221fe3829a1702110",
-    "EntryPoint": "cpf.php",
-    "Files": {
-        "cpf.php": {
-            "Version": "2020.05.11.00",
-            "md5": "d8a24aa4c30da3e81c1c167f9687340e"
-        }
+  "User": "ProtocolLive",
+  "Repository": "PhpLive",
+  "Library": "CPF",
+  "Version": "2020.05.11.00",
+  "md5": "e7bbcd783898599221fe3829a1702110",
+  "EntryPoint": "cpf.php",
+  "Files": {
+    "cpf.php": {
+      "Version": "2020.05.11.00",
+      "md5": "d8a24aa4c30da3e81c1c167f9687340e"
     }
+  }
 }
