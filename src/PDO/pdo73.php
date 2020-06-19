@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.06.19.00
+// Version 2020.06.19.01
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -9,11 +9,11 @@ define('PdoNull', PDO::PARAM_NULL);
 define('PdoSql', 6);
 
 class PhpLivePdo{
-  private ?object $Conn = null;
-  private string $Prefix = '';
-  private float $Duration = 0;
-  private bool $UpdateInsertFlag = false;
-  private array $Error = [];
+  private $Conn = null;
+  private $Prefix = '';
+  private $Duration = 0;
+  private $UpdateInsertFlag = false;
+  private $Error = [];
 
   /**
    * @param string $Drive ($Options)(Optional) MySql as default
@@ -27,9 +27,9 @@ class PhpLivePdo{
    * @return object
    */
   public function __construct(array $Options){
-    $Options['Drive'] ??= 'mysql';
-    $Options['Charset'] ??= 'utf8';
-    $Options['TimeOut'] ??= 5;
+    $Options['Drive'] = $Options['Drive']?? 'mysql';
+    $Options['Charset'] = $Options['Charset']?? 'utf8';
+    $Options['TimeOut'] = $Options['TimeOut']?? 5;
     $this->Prefix = $Options['Prefix']?? '';
 
     $this->Conn = new PDO(
@@ -58,10 +58,10 @@ class PhpLivePdo{
    * @return mixed
    */
   public function Run(string $Query, array $Params = [], array $Options = []){
-    $Options['Log'] ??= null;
-    $Options['User'] ??= null;
-    $Options['Target'] ??= null;
-    $Options['Safe'] ??= true;
+    $Options['Log'] = $Options['Log']?? null;
+    $Options['User'] = $Options['User']?? null;
+    $Options['Target'] = $Options['Target']?? null;
+    $Options['Safe'] = $Options['Safe']?? true;
 
     try{
       $command = explode(' ', trim($Query));
@@ -309,8 +309,8 @@ class PhpLivePdo{
     // 0 field, 1 value, 2 type, 3 operator, 4 condition
     $return = ['Query' => '', 'Tokens' => []];
     foreach($Wheres as $id => $where):
-      $where[3] ??= '=';
-      $where[4] ??= 'and';
+      $where[3] = $where[3]?? '=';
+      $where[4] = $where[4]?? 'and';
       if($where[3] == 'is' or $where[3] == 'is not'):
         $where[3] = ' ' . $where[3] . ' ';
       endif;
