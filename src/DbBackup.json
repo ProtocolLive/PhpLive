@@ -1,0 +1,14 @@
+{
+  "User": "ProtocolLive",
+  "Repository": "PhpLive",
+  "Library": "DbBackup",
+  "Version": "2020.06.09.01",
+  "md5": "3735f2313e1f802c489926495da3d056",
+  "EntryPoint": "DbBackup.php",
+  "Files": {
+    "DbBackup.php": {
+      "Version": "2020.06.09.01",
+      "md5": "fdf14a63d3bf582e8239f949952e5843"
+    }
+  }
+}

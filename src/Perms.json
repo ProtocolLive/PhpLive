@@ -1,0 +1,14 @@
+{
+  "User": "ProtocolLive",
+  "Repository": "PhpLive",
+  "Library": "Perms",
+  "Version": "2020.05.26.00",
+  "md5": "a870e285422114f36ab3ac1d2b2aab2a",
+  "EntryPoint": "perms.php",
+  "Files": {
+    "perms.php": {
+      "Version": "2020.05.26.00",
+      "md5": "7f13fea8d315e126f55ce85627732728"
+    }
+  }
+}
