@@ -1,21 +1,21 @@
 {
-    "cpf": {
+    "CPF": {
         "Version": "2020.05.11.00",
         "md5": "70b367c03e09cc23772446dae38a142e"
     },
     "DbBackup": {
-        "Version": "2020.06.09.01",
+        "Version": "2020.06.19.00",
         "md5": "fe5a96bec8637f87df3b889c58594df4"
     },
     "Forms": {
         "Version": "2020.05.26.00",
         "md5": "add2865af2bfcef9df16dd540a3cccee"
     },
-    "pdo": {
-        "Version": "2020.06.09.00",
+    "PDO": {
+        "Version": "2020.06.19.00",
         "md5": "fdbd1f8b1ebd493321a4dcdc56620b04"
     },
-    "perms": {
+    "Perms": {
         "Version": "2020.05.26.00",
         "md5": "d76501bb8936cd8246a4719b5815866b"
     },

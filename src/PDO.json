@@ -2,13 +2,13 @@
   "User": "ProtocolLive",
   "Repository": "PhpLive",
   "Library": "PDO",
-  "Version": "2020.06.09.00",
-  "md5": "a24547d211f755e9e5fad573e07e185f",
+  "Version": "2020.06.19.00",
+  "md5": "7633062db9587ee60bc1a2af3a5c2955",
   "EntryPoint": "pdo.php",
   "Files": {
     "pdo.php": {
-      "Version": "2020.06.09.00",
-      "md5": "d8d4878c2084124351dd246db16c47dd"
+      "Version": "2020.06.19.00",
+      "md5": "b1b1f9bbf22d3cb470b9deda680ce1b1"
     }
   }
 }

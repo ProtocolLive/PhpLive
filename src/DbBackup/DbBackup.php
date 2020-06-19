@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.06.09.01
+// Version 2020.06.19.00
 
 class PhpLiveDbBackup{
   private ?PhpLivePdo $PhpLivePdo = null;
@@ -218,7 +218,7 @@ class PhpLiveDbBackup{
   private function ZipOpen(string $Folder, int $Type):void{
     $this->Time = date('YmdHis');
     if(file_exists($Folder) == false):
-      mkdir($Folder);
+      mkdir($Folder, 0755);
     endif;
     $this->Zip = new ZipArchive();
     if($Type == 0):
