@@ -8,8 +8,8 @@
         "md5": "fe5a96bec8637f87df3b889c58594df4"
     },
     "Forms": {
-        "Version": "2020.05.26.00",
-        "md5": "add2865af2bfcef9df16dd540a3cccee"
+        "Version": "2020.06.19.00",
+        "md5": "d76f68015859f059247af05a2d62a9dc"
     },
     "PDO": {
         "Version": "2020.06.19.02",
