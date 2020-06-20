@@ -16,8 +16,8 @@
         "md5": "5bdd8cd45551a704c3ae8f82c20ab96e"
     },
     "Perms": {
-        "Version": "2020.05.26.00",
-        "md5": "d76501bb8936cd8246a4719b5815866b"
+        "Version": "2020.06.19.00",
+        "md5": "2e0de89cbed2f6c762172b00f7b5e45c"
     },
     "PhpUpdate": {
         "Version": "2020.06.02.00",

@@ -2,11 +2,19 @@
   "User": "ProtocolLive",
   "Repository": "PhpLive",
   "Library": "Perms",
-  "Version": "2020.05.26.00",
-  "md5": "a870e285422114f36ab3ac1d2b2aab2a",
+  "Version": "2020.06.19.00",
+  "md5": "2e0de89cbed2f6c762172b00f7b5e45c",
   "EntryPoint": "perms.php",
   "Files": {
     "perms.php": {
+      "Version": "2020.06.19.00",
+      "md5": "b0334ad0b47f70562ceef397aaeb972f"
+    },
+    "perms73.php": {
+      "Version": "2020.06.19.00",
+      "md5": "836436d58e106c91ced0f4aced48666e"
+    },
+    "perms74.php": {
       "Version": "2020.05.26.00",
       "md5": "7f13fea8d315e126f55ce85627732728"
     }
