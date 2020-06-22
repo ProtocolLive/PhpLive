@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.06.20.00
+// Version 2020.06.21.00
 
 class PhpLiveForms{
   private ?PhpLivePdo $PhpLivePdo = null;
@@ -102,14 +102,14 @@ class PhpLiveForms{
         // Check the first option of select data
         // Show a default value if not specified
         // or a default value not specified
-        if($Options['Selects'][$field['name']][0][0] > 0 and $field['default'] === 'null'):
+        if($Options['Selects'][$field['name']][0][0] > 0 and $field['default'] === null):
           print '<option value="0" selected disabled></option>';
         endif;
         foreach($Options['Selects'][$field['name']] as $select):
           printf('<option value="%s"', $select[0]);
           if(isset($Options['Data']) and $select[0] === $Options['Data'][$field['name']]):
             print ' selected';
-          elseif($field['default'] !== 'null' and $select[0] === $field['default']):
+          elseif($field['default'] !== null and $select[0] === $field['default']):
             print ' selected';
           endif;
           printf('>%s</option>', $select[1]);
@@ -136,28 +136,28 @@ class PhpLiveForms{
         printf('<textarea name="%s">', $field['name']);
         if(isset($Options['Data'])):
           print $Options['Data'][$field['name']];
-        elseif($field['default'] !== 'null'):
+        elseif($field['default'] !== null):
           print $field['default'];
         endif;
         print '</textarea>';
       else:
         printf('%s:<br>', $field['label']);
         printf('<input type="%s" name="%s"', $field['type'], $field['name']);
-        if($field['size'] !== 'null'):
+        if($field['size'] !== null):
           printf(' size="%d"', $field['size']);
         endif;
         if(isset($Options['Data'])):
           printf(' value="%s"', $Options['Data'][$field['name']]);
-        elseif($field['default'] !== 'null'):
+        elseif($field['default'] !== null):
           printf(' value="%s"', $field['default']);
         endif;
-        if($field['style'] !== 'null'):
+        if($field['style'] !== null):
           printf(' style="%s"', $field['style']);
         endif;
-        if($field['class'] !== 'null'):
+        if($field['class'] !== null):
           printf(' class="%s"', $field['class']);
         endif;
-        if($field['js_event'] !== 'null'):
+        if($field['js_event'] !== null):
           printf('%s="%s"', $field['js_event'], $field['js_code']);
         endif;
         if($field['mode'] === 1 and isset($Options['Data'])):
