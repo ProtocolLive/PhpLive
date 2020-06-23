@@ -1,13 +1,26 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.06.21.00
+// Version 2020.06.23.00
 
 class PhpLiveForms{
   private $PhpLivePdo = null;
 
   public function __construct(PhpLivePdo &$PhpLivePdo = null){
     $this->PhpLivePdo = $PhpLivePdo;
+  }
+
+  private function PhpError(int $Type):bool{
+    return (ini_get('error_reporting') & $Type) === $Type;
+  }
+
+  private function Error(string $Msg):void{
+    if(ini_get('display_errors') === '1' and ($this->PhpError(E_ALL) or $this->PhpError(E_WARNING))):
+      $debug = debug_backtrace();
+      print 'PhpLiveForms warning: '. $Msg;
+      print ' in <b>' . $debug[1]['file'] . '</b>';
+      print ' line <b>' . $debug[1]['line'] . '</b><br>';
+    endif;
   }
 
   public function Form(array $Options):bool{
@@ -30,7 +43,7 @@ class PhpLiveForms{
         [':site', $Options['Site'], PdoStr],
         [':form', $Options['Form'], PdoStr]
       ];
-    elseif(session_name() !== 'PHPSESSID'):
+    elseif(session_name() != 'PHPSESSID'):
       $site[0] = 'site=:site';
       $site[1] = [
         [':site', session_name(), PdoStr],
@@ -51,13 +64,12 @@ class PhpLiveForms{
     );
     // check if form exist
     if(count($form) === 0):
-      if(ini_get('display_errors')):
-        printf('PhpLiveForms - Form %s', $Options['Form']);
-        if(session_name() !== 'PHPSESSID'):
-          printf(' (site %s)', session_name());
-        endif;
-        print ' not found';
+      if(session_name() !== 'PHPSESSID'):
+        $site = ' (site ' . session_name() . ')';
+      else:
+        $site = '';
       endif;
+      $this->Error('Form ' . $Options['Form'] . $site . ' not found');
       return false;
     endif;
     // Build form
@@ -88,13 +100,12 @@ class PhpLiveForms{
       if($field['type'] === 'select'):
         // Check if select data exist
         if(isset($Options['Selects'][$field['name']]) === false):
-          if(ini_get('display_errors')):
-            printf('PhpLiveForms - Data for select %s, form %s', $field['name'], $Options['Form']);
-            if(session_name() !== 'PHPSESSID'):
-              printf(' (site %s)', session_name());
-            endif;
-            print ' not found';
+          if(session_name() !== 'PHPSESSID'):
+            $site = ' (site ' . session_name() . ')';
+          else:
+            $site = '';
           endif;
+          $this->Error('Data for select ' . $field['name'] . ', form ' . $Options['Form'] . $site . ' not found');
           return false;
         endif;
         printf('%s:<br>', $field['label']);
@@ -136,28 +147,28 @@ class PhpLiveForms{
         printf('<textarea name="%s">', $field['name']);
         if(isset($Options['Data'])):
           print $Options['Data'][$field['name']];
-        elseif($field['default'] !== null):
+        elseif($field['default'] != null):
           print $field['default'];
         endif;
         print '</textarea>';
       else:
         printf('%s:<br>', $field['label']);
         printf('<input type="%s" name="%s"', $field['type'], $field['name']);
-        if($field['size'] !== null):
+        if($field['size'] != null):
           printf(' size="%d"', $field['size']);
         endif;
         if(isset($Options['Data'])):
           printf(' value="%s"', $Options['Data'][$field['name']]);
-        elseif($field['default'] !== null):
+        elseif($field['default'] != null):
           printf(' value="%s"', $field['default']);
         endif;
-        if($field['style'] !== null):
+        if($field['style'] != null):
           printf(' style="%s"', $field['style']);
         endif;
-        if($field['class'] !== null):
+        if($field['class'] != null):
           printf(' class="%s"', $field['class']);
         endif;
-        if($field['js_event'] !== null):
+        if($field['js_event'] != null):
           printf('%s="%s"', $field['js_event'], $field['js_code']);
         endif;
         if($field['mode'] === 1 and isset($Options['Data'])):
