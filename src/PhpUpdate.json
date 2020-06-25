@@ -2,13 +2,13 @@
   "User": "ProtocolLive",
   "Repository": "PhpLive",
   "Library": "PhpUpdate",
-  "Version": "2020.06.02.00",
-  "md5": "34df88315898d48f4efdd9bced9f65dd",
+  "Version": "2020.06.25.00",
+  "md5": "d44deb2e92d7c83cd46c9f72ba641970",
   "EntryPoint": "PhpUpdate.php",
   "Files": {
     "PhpUpdate.php": {
-      "Version": "2020.06.02.00",
-      "md5": "ddb9c7aa3495ea0c7374f3b3b4be076d"
+      "Version": "2020.06.25.00",
+      "md5": "2543f17ba7d75dd6edf4f075036ed910"
     }
   }
 }
