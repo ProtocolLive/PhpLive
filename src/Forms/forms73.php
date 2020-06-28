@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.06.26.00
+// Version 2020.06.28.00
 
 class PhpLiveForms{
   private $PhpLivePdo = null;
@@ -43,7 +43,7 @@ class PhpLiveForms{
         [':site', $Options['Site'], PdoStr],
         [':form', $Options['Form'], PdoStr]
       ];
-    elseif(session_name() != 'PHPSESSID'):
+    elseif(session_name() !== 'PHPSESSID'):
       $site[0] = 'site=:site';
       $site[1] = [
         [':site', session_name(), PdoStr],
@@ -145,33 +145,39 @@ class PhpLiveForms{
         printf('<textarea name="%s">', $field['name']);
         if(isset($Options['Data'])):
           print $Options['Data'][$field['name']];
-        elseif($field['default'] != null):
+        elseif($field['default'] !== null):
           print $field['default'];
         endif;
         print '</textarea>';
       else:
         printf('%s:<br>', $field['label']);
         printf('<input type="%s" name="%s"', $field['type'], $field['name']);
-        if($field['size'] != null):
+        if($field['size'] !== null):
           printf(' size="%d"', $field['size']);
         endif;
         if(isset($Options['Data'])):
           printf(' value="%s"', $Options['Data'][$field['name']]);
-        elseif($field['default'] != null):
+        elseif($field['default'] !== null):
           printf(' value="%s"', $field['default']);
         endif;
-        if($field['style'] != null):
+        if($field['style'] !== null):
           printf(' style="%s"', $field['style']);
         endif;
-        if($field['class'] != null):
+        if($field['class'] !== null):
           printf(' class="%s"', $field['class']);
         endif;
-        if($field['js_event'] != null):
+        //JS event onfocus - Allways select all
+        printf('onfocus="this.select();');
+        if($field['js_event'] !== null and $field['js_event'] === 'onfocus'):
+          print $field['js_code'];
+        endif;
+        print '" ';
+        if($field['js_event'] !== null):
           printf('%s="%s"', $field['js_event'], $field['js_code']);
         endif;
-        if($field['mode'] === 1 and isset($Options['Data'])):
+        if($field['mode'] === '1' and isset($Options['Data'])):
           print ' disabled';
-        elseif($field['mode'] === 2 and isset($Options['Data']) === false):
+        elseif($field['mode'] === '2' and isset($Options['Data']) === false):
           print ' disabled';
         endif;
         print '><br>';
