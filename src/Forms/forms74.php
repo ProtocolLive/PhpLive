@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.06.28.00
+// Version 2020.06.28.01
 
 class PhpLiveForms{
   private ?PhpLivePdo $PhpLivePdo = null;
@@ -167,13 +167,13 @@ class PhpLiveForms{
           printf(' class="%s"', $field['class']);
         endif;
         //JS event onfocus - Allways select all
-        printf('onfocus="this.select();');
+        printf(' onfocus="this.select();');
         if($field['js_event'] !== null and $field['js_event'] === 'onfocus'):
           print $field['js_code'];
         endif;
-        print '" ';
+        print '"';
         if($field['js_event'] !== null):
-          printf('%s="%s"', $field['js_event'], $field['js_code']);
+          printf(' %s="%s"', $field['js_event'], $field['js_code']);
         endif;
         if($field['mode'] === '1' and isset($Options['Data'])):
           print ' disabled';
