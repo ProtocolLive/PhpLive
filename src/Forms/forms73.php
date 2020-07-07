@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.06.28.01
+// Version 2020.07.07.00
 
 class PhpLiveForms{
   private $PhpLivePdo = null;
@@ -120,7 +120,7 @@ class PhpLiveForms{
           printf('<option value="%s"', $select[0]);
           if(isset($Options['Data']) and $select[0] === $Options['Data'][$field['name']]):
             print ' selected';
-          elseif($field['default'] !== null and $select[0] === $field['default']):
+          elseif(isset($Options['Data']) === false and $field['default'] !== null and $select[0] === $field['default']):
             print ' selected';
           endif;
           printf('>%s</option>', $select[1]);
