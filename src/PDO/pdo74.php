@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.06.19.00
+// Version 2020.07.07.00
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -42,7 +42,7 @@ class PhpLivePdo{
     $result = $this->Conn->prepare('set profiling_history_size=1;set profiling=1;');
     $result->execute();
     $error = $result->errorInfo();
-    if($error[0] != '00000'):
+    if($error[0] !== '00000'):
       $this->ErrorSet($error[0], $error[2]);
     endif;
   }
@@ -68,7 +68,7 @@ class PhpLivePdo{
       $command = strtolower(trim($command[0]));
       //Search from PdoSql and parse
       foreach($Params as $id => $param):
-        if($param[2] == PdoSql):
+        if($param[2] === PdoSql):
           if(is_numeric($param[0])):
             $out = 0;
             for($i = 1; $i <= $param[0]; $i++):
@@ -105,12 +105,12 @@ class PhpLivePdo{
       //Prepare
       $result = $this->Conn->prepare($Query);
       //Bind tokens
-      if($Params != null):
+      if($Params !== null):
         foreach($Params as &$Param):
           if(count($Param) < 3 and count($Param) > 5):
             $this->ErrorSet(1, 'Incorrect number of parameters when specifying a token');
           else:
-            if($Param[2] == PdoInt):
+            if($Param[2] === PdoInt):
               $Param[1] = str_replace(',', '.', $Param[1]);
               if(strpos($Param[1], '.') !== false):
                 $Param[2] = PdoStr;
@@ -121,8 +121,8 @@ class PhpLivePdo{
         endforeach;
       endif;
       //Safe execution
-      if($Options['Safe'] == true):
-        if($command == 'truncate' or (($command == 'update' or $command == 'delete') and strpos($Query, 'where') === false)):
+      if($Options['Safe'] === true):
+        if($command === 'truncate' or (($command === 'update' or $command === 'delete') and strpos($Query, 'where') === false)):
           $this->ErrorSet(2, 'Query not allowed in safe mode');
         endif;
       endif;
@@ -130,11 +130,11 @@ class PhpLivePdo{
       $result->execute();
       //Error
       $error = $result->errorInfo();
-      if($error[0] != '00000'):
+      if($error[0] !== '00000'):
         $this->ErrorSet($error[0], $error[2]);
       endif;
       //Debug
-      if(isset($Options['Debug']) and $Options['Debug'] == true):
+      if(isset($Options['Debug']) and $Options['Debug'] === true):
         print '<pre style="text-align:left">';
           $result->debugDumpParams();
           print '<br>';
@@ -142,11 +142,11 @@ class PhpLivePdo{
         print '</pre>';
       endif;
       //Return
-      if($command == 'select' or $command == 'show' or $command == 'call'):
+      if($command === 'select' or $command === 'show' or $command === 'call'):
         $return = $result->fetchAll();
-      elseif($command == 'insert'):
+      elseif($command === 'insert'):
         $return = $this->Conn->lastInsertId();
-      elseif($command == 'update' or $command == 'delete'):
+      elseif($command === 'update' or $command === 'delete'):
         $return = $result->rowCount();
       else:
         $return = true;
@@ -219,7 +219,7 @@ class PhpLivePdo{
     //Check if the entry exists
     $query = 'select ' . substr($query, 0, -1) . ' from ' . $Options['Table'] . ' where ' . $temp['Query'];
     $data = $this->Run($query, $temp['Tokens']);
-    if(count($data) == 0):
+    if(count($data) === 0):
       //Entry not found
       $this->UpdateInsertFlag = true;
       return 0;
@@ -227,11 +227,11 @@ class PhpLivePdo{
       $data = $data[0];
       //Check fields for differences
       foreach($Options['Fields'] as $id => $field):
-        if($field[1] == $data[$field[0]]):
+        if($field[1] === $data[$field[0]]):
           unset($Options['Fields'][$id]);
         endif;
       endforeach;
-      if(count($Options['Fields']) == 0):
+      if(count($Options['Fields']) === 0):
         //None different field
         return 0;
       else:
@@ -254,7 +254,7 @@ class PhpLivePdo{
       'Fields' => $Options['Fields'],
       'Where' => $Options['Where']
     ], $Options2);
-    if($this->UpdateInsertFlag == false):
+    if($this->UpdateInsertFlag === false):
       return $return;
     else:
       $this->UpdateInsertFlag = false;
@@ -311,10 +311,10 @@ class PhpLivePdo{
     foreach($Wheres as $id => $where):
       $where[3] ??= '=';
       $where[4] ??= 'and';
-      if($where[3] == 'is' or $where[3] == 'is not'):
+      if($where[3] === 'is' or $where[3] === 'is not'):
         $where[3] = ' ' . $where[3] . ' ';
       endif;
-      if($id == 0):
+      if($id === 0):
         $return['Query'] = $this->Reserved($where[0]) . $where[3] . ':' . $where[0];
       else:
         $return['Query'] .= ' ' . $where[4] . ' ' . $where[0] . $where[3] . ':' . $where[0];
@@ -327,7 +327,7 @@ class PhpLivePdo{
   private function ErrorSet(string $Number, string $Msg):void{
     $this->Error = [$Number, $Msg];
     $folder = __DIR__ . '/errors-pdo/';
-    if(is_dir($folder) == false):
+    if(is_dir($folder) === false):
       mkdir($folder, 0755);
     endif;
     file_put_contents($folder . date('Y-m-d_H-i-s') . '.txt', json_encode(debug_backtrace(), JSON_PRETTY_PRINT));
@@ -345,14 +345,14 @@ class PhpLivePdo{
       'Table' => 'sys_logs',
       'Fields' => [
         ['time', date('Y-m-d H:i:s'), PdoStr],
-        ['site', $this->Prefix, $this->Prefix == null? PdoNull: PdoStr],
+        ['site', $this->Prefix, $this->Prefix === null? PdoNull: PdoStr],
         ['user_id', $Options['User'], PdoInt],
         ['log', $Options['Log'], PdoInt],
         ['ip', $_SERVER['REMOTE_ADDR'], PdoStr],
         ['ipreverse', gethostbyaddr($_SERVER['REMOTE_ADDR']), PdoStr],
         ['agent', $_SERVER['HTTP_USER_AGENT'], PdoStr],
         ['query', $Options['Dump'], PdoStr],
-        ['target', $Options['Target'], $Options['Target'] == null? PdoNull: PdoInt]
+        ['target', $Options['Target'], $Options['Target'] === null? PdoNull: PdoInt]
       ]
     ]);
   }
