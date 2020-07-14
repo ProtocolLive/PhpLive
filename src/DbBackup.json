@@ -2,11 +2,19 @@
   "User": "ProtocolLive",
   "Repository": "PhpLive",
   "Library": "DbBackup",
-  "Version": "2020.06.19.00",
-  "md5": "11d5f724c24beb32e3f4b457efeb77fb",
+  "Version": "2020.07.14.00",
+  "md5": "42d5b4c1682ade1f91053f3957ff2fc7",
   "EntryPoint": "DbBackup.php",
   "Files": {
     "DbBackup.php": {
+      "Version": "2020.07.14.00",
+      "md5": "d546229af8b29a0a5dd51c61e82ddf40"
+    },
+    "DbBackup73.php": {
+      "Version": "2020.07.14.00",
+      "md5": "d3b18769db702da45d8d3057c0a54566"
+    },
+    "DbBackup74.php": {
       "Version": "2020.06.19.00",
       "md5": "ddb0a2f1d3d7bbb88f43b9e1db32f7a5"
     }
