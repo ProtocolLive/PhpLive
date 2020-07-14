@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.07.13.00
+// Version 2020.07.14.00
 
 class PhpLiveForms{
   private $PhpLivePdo = null;
@@ -146,7 +146,10 @@ class PhpLiveForms{
 
         //event onfocus for texts to always select all
         $onfocus = '';
-        if($field['type'] === 'text' or $field['type'] === 'textarea'):
+        if($field['type'] === 'text'
+        or $field['type'] === 'textarea'
+        or $field['type'] === 'email'
+        or $field['type'] === 'password'):
           $onfocus = 'this.select();';
         endif;
         if($field['js_event'] !== null and $field['js_event'] === 'onfocus'):
