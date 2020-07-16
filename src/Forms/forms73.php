@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.07.15.00
+// Version 2020.07.15.01
 
 class PhpLiveForms{
   private $PhpLivePdo = null;
@@ -149,6 +149,7 @@ class PhpLiveForms{
         if($field['type'] === 'text'
         or $field['type'] === 'textarea'
         or $field['type'] === 'email'
+        or $field['type'] === 'number'
         or $field['type'] === 'password'):
           $onfocus = 'this.select();';
         endif;
