@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.07.14.00
+// Version 2020.07.15.00
 
 class PhpLiveForms{
   private ?PhpLivePdo $PhpLivePdo = null;
@@ -193,7 +193,9 @@ class PhpLiveForms{
         //value
         if($field['type'] === 'hidden' and isset($Options['Hiddens'])):
           print ' value="' . $Options['Hiddens'][$field['name']] . '"';
-        elseif($field['type'] === 'text' or $field['type'] === 'date'):
+        elseif($field['type'] === 'text'
+        or $field['type'] === 'date'
+        or $field['type'] === 'number'):
           if(isset($Options['Data'])):
             print ' value="' . $Options['Data'][$field['name']] . '"';
           elseif($field['default'] !== null):
