@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.06.19.00
+// Version 2020.07.17.00
 
 class PhpLiveDbBackup{
   private ?PhpLivePdo $PhpLivePdo = null;
@@ -178,10 +178,11 @@ class PhpLiveDbBackup{
         $file = fopen($Options['Folder'] . $table[0] . '.sql', 'w');
         $this->Delete[] = $Options['Folder'] . $table[0] . '.sql';
         foreach($rows as $row):
-          fwrite($file, 'insert into ' . $table[0] . ' values(');
+          $cols = '';
           $values = '';
           foreach($row as $col => $value):
-            if(is_numeric($col) == true): // avoid duplicated rows returned by PDO
+            if(is_numeric($col) === false): // avoid duplicated rows returned by PDO
+              $cols .= $PhpLivePdo->Reserved($col) . ',';
               if($value == ''):
                 $values .= 'null,';
               elseif(is_numeric($value)):
@@ -191,9 +192,9 @@ class PhpLiveDbBackup{
               endif;
             endif;
           endforeach;
+          $cols = substr($cols, 0, -1);
           $values = substr($values, 0, -1);
-          fwrite($file, $values);
-          fwrite($file, ");\n");
+          fwrite($file, 'insert into ' . $table[0] . '(' . $cols . ') values(' . $values . ");\n");
           if($Options['Progress'] == 2):
             $percent = ++$RowsLeft * 100 / $RowsCount;
             if(($percent % 25) == 0 and floor($percent) !== $last):

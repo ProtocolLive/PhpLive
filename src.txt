@@ -4,8 +4,8 @@
     "md5": "70b367c03e09cc23772446dae38a142e"
   },
   "DbBackup": {
-    "Version": "2020.07.14.00",
-    "md5": "42d5b4c1682ade1f91053f3957ff2fc7"
+    "Version": "2020.07.17.00",
+    "md5": "f43e8dcad3bdc7892adfdb71de527f1a"
   },
   "Forms": {
     "Version": "2020.07.15.01",
