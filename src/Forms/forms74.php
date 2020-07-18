@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.07.15.01
+// Version 2020.07.18.00
 
 class PhpLiveForms{
   private ?PhpLivePdo $PhpLivePdo = null;
@@ -171,7 +171,7 @@ class PhpLiveForms{
           if($Options['AjaxAppend'] === true):
             $onclick .= ',' . $Options['AjaxAppend'];
           endif;
-          $onclick .= ')';
+          $onclick .= ');';
         endif;
         if($field['js_event'] !== null and $field['js_event'] === 'onclick'):
           $onclick .= $field['js_code'];
