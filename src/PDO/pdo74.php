@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.07.07.00
+// Version 2020.07.18.00
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -134,7 +134,7 @@ class PhpLivePdo{
         $this->ErrorSet($error[0], $error[2]);
       endif;
       //Debug
-      if(isset($Options['Debug']) and $Options['Debug'] === true):
+      if(isset($Options['Debug']) and $Options['Debug'] == true):
         print '<pre style="text-align:left">';
           $result->debugDumpParams();
           print '<br>';
