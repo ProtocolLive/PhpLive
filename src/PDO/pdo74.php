@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.07.18.00
+// Version 2020.07.19.00
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -97,7 +97,7 @@ class PhpLivePdo{
         endif;
       endforeach;
       //Table prefix
-      if($this->Prefix !== null):
+      if($this->Prefix !== ''):
         $Query = str_replace('##', $this->Prefix . '_', $Query);
       else:
         $Query = str_replace('##', '', $Query);
@@ -345,7 +345,7 @@ class PhpLivePdo{
       'Table' => 'sys_logs',
       'Fields' => [
         ['time', date('Y-m-d H:i:s'), PdoStr],
-        ['site', $this->Prefix, $this->Prefix === null? PdoNull: PdoStr],
+        ['site', $this->Prefix, $this->Prefix === ''? PdoNull: PdoStr],
         ['user_id', $Options['User'], PdoInt],
         ['log', $Options['Log'], PdoInt],
         ['ip', $_SERVER['REMOTE_ADDR'], PdoStr],
