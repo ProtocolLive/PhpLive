@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.07.19.00
+// Version 2020.07.21.00
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -62,8 +62,14 @@ class PhpLivePdo{
     $Options['User'] ??= null;
     $Options['Target'] ??= null;
     $Options['Safe'] ??= true;
+    $Options['Debug'] ??= false;
 
     try{
+      if($Options['Debug'] == true):
+        print '<pre style="text-align:left">';
+          debug_print_backtrace();
+        print '</pre>';
+      endif;
       $command = explode(' ', trim($Query));
       $command = strtolower(trim($command[0]));
       //Search from PdoSql and parse
@@ -134,11 +140,9 @@ class PhpLivePdo{
         $this->ErrorSet($error[0], $error[2]);
       endif;
       //Debug
-      if(isset($Options['Debug']) and $Options['Debug'] == true):
+      if($Options['Debug'] == true):
         print '<pre style="text-align:left">';
           $result->debugDumpParams();
-          print '<br>';
-          print debug_print_backtrace();
         print '</pre>';
       endif;
       //Return

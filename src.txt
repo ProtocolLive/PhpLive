@@ -12,8 +12,8 @@
     "md5": "0c45f002bf715f3ef8b9be5e18eeb037"
   },
   "PDO": {
-    "Version": "2020.07.19.00",
-    "md5": "6ce5a650c12b22a9e94b3531212cfe6a"
+    "Version": "2020.07.21.00",
+    "md5": "64e8a8d966ea3589e949e70d0eac42c0"
   },
   "Perms": {
     "Version": "2020.06.27.00",
