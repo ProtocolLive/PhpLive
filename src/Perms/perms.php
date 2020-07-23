@@ -1,10 +1,10 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.06.19.00
+// Version 2020.07.23.00
 
-if(version_compare(phpversion(), '7.3')):
+if(version_compare(phpversion(), '7.4', '<')):
   require(__DIR__ . '/perms73.php');
-elseif(version_compare(phpversion(), '7.4')):
+else:
   require(__DIR__ . '/perms74.php');
 endif;
