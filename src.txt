@@ -1,26 +1,38 @@
-{
-  "CPF": {
-    "Version": "2020.05.11.00",
-    "md5": "70b367c03e09cc23772446dae38a142e"
-  },
-  "DbBackup": {
-    "Version": "2020.07.17.00",
-    "md5": "f43e8dcad3bdc7892adfdb71de527f1a"
-  },
-  "Forms": {
-    "Version": "2020.07.22.00",
-    "md5": "e60757cbf0c52b1ff588ea8b75e11704"
-  },
-  "PDO": {
-    "Version": "2020.07.21.00",
-    "md5": "d64a3714394df0479671dee4e9466fd0"
-  },
-  "Perms": {
-    "Version": "2020.07.23.01",
-    "md5": "40413bdf3ade1ec6a686a810a551ce73"
-  },
-  "PhpUpdate": {
-    "Version": "2020.06.25.00",
-    "md5": "d44deb2e92d7c83cd46c9f72ba641970"
-  }
-}
+[
+    {
+        "CPF": {
+            "Version": "2020.05.11.00",
+            "md5": "e7bbcd783898599221fe3829a1702110"
+        }
+    },
+    {
+        "DbBackup": {
+            "Version": "2020.07.23.00",
+            "md5": "ec9116b0875e49e8761e9da02500a2f5"
+        }
+    },
+    {
+        "Forms": {
+            "Version": "2020.07.23.00",
+            "md5": "18b296c21ee13863dd4c68ffacce2e07"
+        }
+    },
+    {
+        "PDO": {
+            "Version": "2020.07.23.00",
+            "md5": "24b6c3c8b861a60d965e6f1e6ab94d9b"
+        }
+    },
+    {
+        "Perms": {
+            "Version": "2020.07.23.01",
+            "md5": "40413bdf3ade1ec6a686a810a551ce73"
+        }
+    },
+    {
+        "PhpUpdate": {
+            "Version": "2020.06.25.00",
+            "md5": "d44deb2e92d7c83cd46c9f72ba641970"
+        }
+    }
+]
