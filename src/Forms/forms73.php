@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.07.18.00
+// Version 2020.07.22.00
 
 class PhpLiveForms{
   private $PhpLivePdo = null;
@@ -94,7 +94,6 @@ class PhpLiveForms{
       ],
       ['Debug' => $Options['PdoDebug']]
     );
-    print '<p>';
     foreach($fields as $field):
       //Opening element
       {
@@ -114,7 +113,11 @@ class PhpLiveForms{
           print $field['label'] . ':<br>';
           print '<select name="' . $field['name'] . '"';
         elseif($field['type'] === 'checkbox'):
-          print '<p><input type="checkbox" name="' . $field['name'] . '"';
+          print "<p>";
+          if(strpos($field['class'], 'switch;') !== false):
+            print '<label class="switch">';
+          endif;
+          print '<input type="checkbox" name="' . $field['name'] . '"';
           if(isset($Options['Data']) and $Options['Data'][$field['name']] === '1'):
             print ' checked';
           elseif($field['default'] === '1'):
@@ -138,10 +141,11 @@ class PhpLiveForms{
           print ' size="' . $field['size'] . '"';
         endif;
         if($field['style'] !== null):
-          print' style="' . $field['style'] . '"';
+          print ' style="' . $field['style'] . '"';
         endif;
-        if($field['class'] !== null):
-          print ' class="' . $field['class'] . '"';
+        $class = str_replace('switch;', '', $field['class']);
+        if($class !== ''):
+          print ' class="' . $class . '"';
         endif;
 
         //event onfocus for texts to always select all
@@ -227,6 +231,9 @@ class PhpLiveForms{
             print '>' . $select[1] . '</option>';
           endforeach;
         elseif($field['type'] === 'checkbox'):
+          if(strpos($field['class'], 'switch;') !== false):
+            print '<span class="slider"></span></label> ';
+          endif;
           print $field['label'] . '</p>';
         elseif($field['type'] === 'textarea'):
           if(isset($Options['Data'])):
@@ -249,7 +256,7 @@ class PhpLiveForms{
         endif;
       }
     endforeach;
-    print '</p></form>';
+    print '</form>';
     return true;
   }
 }
