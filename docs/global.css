@@ -12,8 +12,15 @@ a:visited{
   color: #00f;
 }
 
+.code{
+  background-color: #fff;
+  padding: 10px; border: dotted 1px;
+  font-family: Consolas, 'Courier New', monospace;
+}
 .ident{
-  margin-left: 10px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 15px;
 }
 .menu1{
   border: none;

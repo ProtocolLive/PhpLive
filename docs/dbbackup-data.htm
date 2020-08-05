@@ -1,52 +1,66 @@
 <html>
-  <head>
-    <title>PhpLiveDbBackup::Data</title>
-    <link rel="stylesheet" href="global.css">
-  </head>
-  <body>
-    <table style="width:88%;margin-left: auto;margin-right: auto;">
-      <tr>
-        <td style="background-color: #F2F2F2; padding: 20px;">
-          <div class="maintitle">PhpLiveDbBackup::Data</div>
-          <p>Make backup of the data of the tables.</p>
-          <p>&nbsp;</p>
 
-          <div class="title">Sintaxe</div><br>
-          <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
-            <span class="const">public</span> <span class="func">PhpLiveDbBackup::Data</span> ( [
-            <span class="type">array</span> <span class="var">$Options</span> = [] ] ) : <span class="type">string</span>;
-          </div>
-          <p>&nbsp;</p>
+<head>
+  <title>PhpLiveDbBackup::Data</title>
+  <link rel="stylesheet" href="global.css">
+</head>
 
-          <div class="title">Parameters</div>
-          <p><strong><span class="var">$Options</span>:</strong></p>
-          <p class="ident">PhpLivePdo (<span class="type">object</span>)(Optional) - An object created by <a href="pdo.htm" class="func">PhpLivePdo</a>;</p>
-          <p class="ident">Folder (<span class="type">string</span>)(Optional - Default: /sql/) - A directory to put the files;</p>
-          <p class="ident">Progress (<span class="type">bool</span>)(Optional - Default: <span class="const">true</span>) - Dump the progression of the backup;</p>
-          <p class="ident">Translate (<span class="type">array</span>)(Optional) - Text to translate the progress dump;</p>
-          <p>Parameters of <strong>Translate</strong>:</p>
-          <p class="ident">Tables (<span class="type">string</span>) - Text of the tables count;</p>
+<body>
+  <table style="width:88%;margin-left: auto;margin-right: auto;">
+    <tr>
+      <td style="background-color: #F2F2F2; padding: 20px;">
+        <div class="maintitle">PhpLiveDbBackup::Data</div>
+        <p>Make backup of the data of the tables.</p>
+        <p>&nbsp;</p>
 
-          <p>&nbsp;</p>
+        <div class="title">Sintaxe</div><br>
+        <div class="code">
+          <span class="const">public</span> <span class="func">PhpLiveDbBackup::Data</span> ( [
+          <span class="type">array</span> <span class="var">$Options</span> = [] ] ) : <span class="type">string</span>;
+        </div>
+        <p>&nbsp;</p>
 
-          <div class="title">Return Values</div>
-          <p>Returns the url to download the backup.</p>
-          <p>&nbsp;</p>
+        <div class="title">Parameters</div>
+        <p><strong><span class="var">$Options</span>:</strong></p>
+        <p class="ident">
+          PhpLivePdo (<span class="type">object</span>)(Optional) - An object created by
+          <a href="pdo.htm" class="func">PhpLivePdo</a>;
+        </p>
+        <p class="ident">
+          Folder (<span class="type">string</span>)(Optional - Default: /sql/) - A directory to put the
+          files;
+        </p>
+        <p class="ident">
+          Progress (<span class="type">bool</span>)(Optional - Default: <span class="const">true</span>)
+          - Dump the progression of the backup;
+        </p>
+        <p class="ident">Translate (<span class="type">array</span>)(Optional) - Text to translate the progress dump;
+        </p>
+        <p>Parameters of <strong>Translate</strong>:</p>
+        <p class="ident">Tables (<span class="type">string</span>) - Text of the tables count;</p>
 
-          <div class="title">Examples</div>
-          <br>
-          <div style="background-color: #fff; padding: 10px; border: dotted 1px;">
-            <span class="var">$url</span> = <span class="func">$backup->Data</span>();<br>
-            <span class="var">printf</span>(<span class="string">'&lt;a href="%s">Download&lt;/a>'</span>, <span class="func">$url</span>);
-          </div>
-          <p>&nbsp;</p>
+        <p>&nbsp;</p>
 
-        </td>
-        <td style="width:300px; color: #ccc; font-size: 18px; vertical-align: top;">
-          <iframe src="menu-funcs.htm" class="menu1"></iframe>
-          <iframe src="menu-dbbackup.htm" class="menu2"></iframe>
-        </td>
-      </tr>
-    </table>
-  </body>
+        <div class="title">Return Values</div>
+        <p>Returns the url to download the backup.</p>
+        <p>&nbsp;</p>
+
+        <div class="title">Examples</div>
+        <br>
+        <div class="code">
+          <span class="var">$url</span> = <span class="func">$backup->Data</span>();<br>
+          <span class="var">printf</span>(<span class="string">'&lt;a href="%s">Download&lt;/a>'</span>,
+          <span class="func">$url</span>);
+        </div>
+        <p>&nbsp;</p>
+
+      </td>
+      <td style="width:300px; color: #ccc; font-size: 18px; vertical-align: top;">
+        <iframe src="menu-funcs.htm" class="menu1"></iframe>
+        <iframe src="menu-dbbackup.htm" class="menu2"></iframe>
+      </td>
+    </tr>
+  </table>
+</body>
+
 </html>
