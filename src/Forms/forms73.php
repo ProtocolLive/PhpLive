@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.07.22.00
+// Version 2020.08.05.00
 
 class PhpLiveForms{
   private $PhpLivePdo = null;
@@ -190,9 +190,9 @@ class PhpLiveForms{
           print ' ' . $field['js_event'] . '="' . $field['js_code'] . '"';
         endif;
         if($field['mode'] === '1' and isset($Options['Data'])):
-          print ' disabled';
+          print ' readonly';
         elseif($field['mode'] === '2' and isset($Options['Data']) === false):
-          print ' disabled';
+          print ' readonly';
         endif;
 
         //value

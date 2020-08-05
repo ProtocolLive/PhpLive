@@ -13,8 +13,8 @@
     },
     {
         "Forms": {
-            "Version": "2020.07.23.00",
-            "md5": "18b296c21ee13863dd4c68ffacce2e07"
+            "Version": "2020.08.05.00",
+            "md5": "4dea3ffa7f7d2f9145b67a37df6fbdc9"
         }
     },
     {
