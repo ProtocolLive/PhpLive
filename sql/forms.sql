@@ -11,7 +11,7 @@ create table forms_fields(
   form_id int unsigned not null,
   label varchar(50),
   name varchar(15),
-  type varchar(10) not null,
+  type varchar(15) not null,
   `default` varchar(20),
   mode tinyint unsigned not null default 0,
   size tinyint unsigned,
