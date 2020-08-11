@@ -2,8 +2,8 @@
   "User": "ProtocolLive",
   "Repository": "PhpLive",
   "Library": "Forms",
-  "Version": "2020.08.05.00",
-  "md5": "4dea3ffa7f7d2f9145b67a37df6fbdc9",
+  "Version": "2020.08.11.00",
+  "md5": "f51979cda0a01f6b7fb7608a74836b80",
   "EntryPoint": "forms.php",
   "Files": {
     "forms.php": {
@@ -11,12 +11,12 @@
       "md5": "53d2b164557cede943174fd0b41d6c77"
     },
     "forms73.php": {
-      "Version": "2020.08.05.00",
-      "md5": "64ba3024383ee4aeb03a28c2085601c9"
+      "Version": "2020.08.11.00",
+      "md5": "47571905a3f88ac49aa1a5282a249cdb"
     },
     "forms74.php": {
-      "Version": "2020.08.05.00",
-      "md5": "792f6a0f20ff82b48b5474297bbca492"
+      "Version": "2020.08.11.00",
+      "md5": "6af7189fc6bda64f19f22df4680075f7"
     }
   }
 }
