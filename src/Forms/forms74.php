@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.08.11.00
+// Version 2020.08.11.01
 
 class PhpLiveForms{
   private ?PhpLivePdo $PhpLivePdo = null;
@@ -207,7 +207,8 @@ class PhpLiveForms{
           elseif($field['default'] !== null):
             print ' value="' . $field['default'] . '"';
           endif;
-        elseif($field['type'] === 'button'):
+        elseif($field['type'] === 'button'
+        or $field['type'] === 'submit'):
           print ' value="' . $field['label'] . '"';
         endif;
 
