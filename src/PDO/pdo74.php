@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.07.21.00
+// Version 2020.08.18.00
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -10,6 +10,7 @@ define('PdoSql', 6);
 
 class PhpLivePdo{
   private ?object $Conn = null;
+  private ?object $LogConn = null;
   private string $Prefix = '';
   private float $Duration = 0;
   private bool $UpdateInsertFlag = false;
@@ -24,13 +25,15 @@ class PhpLivePdo{
    * @param string $Prefix ($Options)(Optional) Change ## for the tables prefix 
    * @param string $Charset ($Options)(Optional) UTF8 as default
    * @param int $TimeOut ($Options)(Optional) Connection timeout
+   * @param PhplivePdo $LogConn ($Options)(Optional) Another PhplivePdo instance to log in another database
    * @return object
    */
   public function __construct(array $Options){
     $Options['Drive'] ??= 'mysql';
     $Options['Charset'] ??= 'utf8';
     $Options['TimeOut'] ??= 5;
-    $this->Prefix = $Options['Prefix']?? '';
+    $this->Prefix = $Options['Prefix'] ?? '';
+    $this->LogConn = $Options['LogConn'] ?? null;
 
     $this->Conn = new PDO(
       $Options['Drive'] . ':host=' . $Options['Ip'] . ';dbname=' . $Options['Db'] . ';charset=' . $Options['Charset'],
@@ -345,7 +348,8 @@ class PhpLivePdo{
   }
 
   private function SqlLog(array $Options):void{
-    $this->Insert([
+    $con = $this->LogConn ?? $this;
+    $con->Insert([
       'Table' => 'sys_logs',
       'Fields' => [
         ['time', date('Y-m-d H:i:s'), PdoStr],

@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.07.21.00
+// Version 2020.08.18.00
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -10,6 +10,7 @@ define('PdoSql', 6);
 
 class PhpLivePdo{
   private $Conn = null;
+  private $LogConn = null;
   private $Prefix = '';
   private $Duration = 0;
   private $UpdateInsertFlag = false;
@@ -24,13 +25,15 @@ class PhpLivePdo{
    * @param string $Prefix ($Options)(Optional) Change ## for the tables prefix 
    * @param string $Charset ($Options)(Optional) UTF8 as default
    * @param int $TimeOut ($Options)(Optional) Connection timeout
+   * @param PhplivePdo $LogConn ($Options)(Optional) Another PhplivePdo instance to log in another database
    * @return object
    */
   public function __construct(array $Options){
-    $Options['Drive'] = $Options['Drive']?? 'mysql';
-    $Options['Charset'] = $Options['Charset']?? 'utf8';
-    $Options['TimeOut'] = $Options['TimeOut']?? 5;
-    $this->Prefix = $Options['Prefix']?? '';
+    $Options['Drive'] = $Options['Drive'] ?? 'mysql';
+    $Options['Charset'] = $Options['Charset'] ?? 'utf8';
+    $Options['TimeOut'] = $Options['TimeOut'] ?? 5;
+    $this->Prefix = $Options['Prefix'] ?? '';
+    $this->LogConn = $Options['LogConn'] ?? null;
 
     $this->Conn = new PDO(
       $Options['Drive'] . ':host=' . $Options['Ip'] . ';dbname=' . $Options['Db'] . ';charset=' . $Options['Charset'],
@@ -58,11 +61,11 @@ class PhpLivePdo{
    * @return mixed
    */
   public function Run(string $Query, array $Params = [], array $Options = []){
-    $Options['Log'] = $Options['Log']?? null;
-    $Options['User'] = $Options['User']?? null;
-    $Options['Target'] = $Options['Target']?? null;
-    $Options['Safe'] = $Options['Safe']?? true;
-    $Options['Debug'] = $Options['Debug']?? false;
+    $Options['Log'] = $Options['Log'] ?? null;
+    $Options['User'] = $Options['User'] ?? null;
+    $Options['Target'] = $Options['Target'] ?? null;
+    $Options['Safe'] = $Options['Safe'] ?? true;
+    $Options['Debug'] = $Options['Debug'] ?? false;
 
     try{
       if($Options['Debug'] == true):
@@ -313,8 +316,8 @@ class PhpLivePdo{
     // 0 field, 1 value, 2 type, 3 operator, 4 condition
     $return = ['Query' => '', 'Tokens' => []];
     foreach($Wheres as $id => $where):
-      $where[3] = $where[3]?? '=';
-      $where[4] = $where[4]?? 'and';
+      $where[3] = $where[3] ?? '=';
+      $where[4] = $where[4] ?? 'and';
       if($where[3] === 'is' or $where[3] === 'is not'):
         $where[3] = ' ' . $where[3] . ' ';
       endif;
@@ -345,7 +348,8 @@ class PhpLivePdo{
   }
 
   private function SqlLog(array $Options):void{
-    $this->Insert([
+    $con = $this->LogConn ?? $this;
+    $con->Insert([
       'Table' => 'sys_logs',
       'Fields' => [
         ['time', date('Y-m-d H:i:s'), PdoStr],
