@@ -1,26 +1,20 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.07.23.01
+// Version 2020.08.18.00
 
 class PhpLivePerms{
-  private ?PhpLivePdo $PhpLivePdo = null;
+  private PhpLivePdo $PhpLivePdo;
 
-  public function __construct(PhpLivePdo &$PhpLivePdo = null){
+  public function __construct(PhpLivePdo &$PhpLivePdo){
     $this->PhpLivePdo = $PhpLivePdo;
   }
 
   public function Access(array $Options){
-    $Options['User']??= null;
     if($this->PhpLivePdo === null):
-      if(isset($Options['PhpLivePdo']) === false):
-        return false;
-      else:
-        $PhpLivePdo = &$Options['PhpLivePdo'];
-      endif;
-    else:
-      $PhpLivePdo = $this->PhpLivePdo;
+      return false;
     endif;
+    $Options['User'] ??= null;
 
     $return = ['r' => null, 'w' => null, 'o' => null];
     //Get resource id by name
@@ -28,13 +22,13 @@ class PhpLivePerms{
       $result[1] = [
         [':resource', $Options['Resource'], PdoStr]
       ];
-      if(session_name() == 'PHPSESSID'):
+      if(session_name() === 'PHPSESSID'):
         $result[0] = 'site is null';
       else:
         $result[0] = 'site=:site';
         $result[1][] = [':site', session_name(), PdoStr];
       endif;
-      $result = $PhpLivePdo->Run("
+      $result = $this->PhpLivePdo->Run("
         select resource_id
         from sys_resources
         where resource=:resource
@@ -49,7 +43,7 @@ class PhpLivePerms{
       endif;
     endif;
     // Permissions for everyone
-    $result = $PhpLivePdo->Run("
+    $result = $this->PhpLivePdo->Run("
       select r,w,o
       from sys_perms
       where resource_id=?
@@ -65,7 +59,7 @@ class PhpLivePerms{
       return $return;
     endif;
     // Admin?
-    $result = $PhpLivePdo->Run("
+    $result = $this->PhpLivePdo->Run("
       select *
       from sys_usergroup
       where group_id=3
@@ -77,7 +71,7 @@ class PhpLivePerms{
       return ['r' => true, 'w' => true, 'o' => true];
     endif;
     // Others
-    $result = $PhpLivePdo->Run("
+    $result = $this->PhpLivePdo->Run("
       select r,w,o
       from sys_perms
       where resource_id=:resource
