@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.08.18.00
+// Version 2020.11.27.00
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -10,7 +10,6 @@ define('PdoSql', 6);
 
 class PhpLivePdo{
   private $Conn = null;
-  private $LogConn = null;
   private $Prefix = '';
   private $Duration = 0;
   private $UpdateInsertFlag = false;
@@ -25,7 +24,6 @@ class PhpLivePdo{
    * @param string $Prefix ($Options)(Optional) Change ## for the tables prefix 
    * @param string $Charset ($Options)(Optional) UTF8 as default
    * @param int $TimeOut ($Options)(Optional) Connection timeout
-   * @param PhplivePdo $LogConn ($Options)(Optional) Another PhplivePdo instance to log in another database
    * @return object
    */
   public function __construct(array $Options){
@@ -33,7 +31,6 @@ class PhpLivePdo{
     $Options['Charset'] = $Options['Charset'] ?? 'utf8';
     $Options['TimeOut'] = $Options['TimeOut'] ?? 5;
     $this->Prefix = $Options['Prefix'] ?? '';
-    $this->LogConn = $Options['LogConn'] ?? null;
 
     $this->Conn = new PDO(
       $Options['Drive'] . ':host=' . $Options['Ip'] . ';dbname=' . $Options['Db'] . ';charset=' . $Options['Charset'],
@@ -58,9 +55,12 @@ class PhpLivePdo{
    * @param int Target ($Options)(Optional) User efected
    * @param bool Debug ($Options)(Optional) Dump the query for debug
    * @param bool Safe ($Options)(Optional) Only runs a safe query
-   * @return mixed
+   * @return array|int
    */
   public function Run(string $Query, array $Params = [], array $Options = []){
+    if($this->Conn === null):
+      return false;
+    endif;
     $Options['Log'] = $Options['Log'] ?? null;
     $Options['User'] = $Options['User'] ?? null;
     $Options['Target'] = $Options['Target'] ?? null;
@@ -331,7 +331,7 @@ class PhpLivePdo{
     return $return;
   }
 
-  private function ErrorSet(string $Number, string $Msg):void{
+  private function ErrorSet(string $Number, string $Msg):bool{
     $this->Error = [$Number, $Msg];
     $folder = __DIR__ . '/errors-pdo/';
     if(is_dir($folder) === false):
@@ -345,11 +345,11 @@ class PhpLivePdo{
       debug_print_backtrace();
       die();
     endif;
+    return true;
   }
 
-  private function SqlLog(array $Options):void{
-    $con = $this->LogConn ?? $this;
-    $con->Insert([
+  private function SqlLog(array $Options):int{
+    return $this->Insert([
       'Table' => 'sys_logs',
       'Fields' => [
         ['time', date('Y-m-d H:i:s'), PdoStr],

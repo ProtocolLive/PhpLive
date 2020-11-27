@@ -61,7 +61,7 @@ class PhpLivePdo{
    * @param bool Safe ($Options)(Optional) Only runs a safe query
    * @return array|int
    */
-  public function Run(string $Query, array $Params = [], array $Options = []){
+  public function Run(string $Query, array $Params = [], array $Options = []):array|int{
     if($this->Conn === null):
       return false;
     endif;
@@ -335,7 +335,7 @@ class PhpLivePdo{
     return $return;
   }
 
-  private function ErrorSet(string $Number, string $Msg):void{
+  private function ErrorSet(string $Number, string $Msg):bool{
     $this->Error = [$Number, $Msg];
     $folder = __DIR__ . '/errors-pdo/';
     if(is_dir($folder) === false):
@@ -349,10 +349,11 @@ class PhpLivePdo{
       debug_print_backtrace();
       die();
     endif;
+    return true;
   }
 
-  private function SqlLog(array $Options):void{
-    $this->Insert([
+  private function SqlLog(array $Options):int{
+    return $this->Insert([
       'Table' => 'sys_logs',
       'Fields' => [
         ['time', date('Y-m-d H:i:s'), PdoStr],
