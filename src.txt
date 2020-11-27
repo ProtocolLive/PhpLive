@@ -8,19 +8,19 @@
     {
         "DbBackup": {
             "Version": "2020.11.27.01",
-            "md5": "ed8d9c6c70e9330372e1e9f3525a0f43"
+            "md5": "58db3b0c465e1758ad5e4ebdcf51ee2e"
         }
     },
     {
         "Forms": {
             "Version": "2020.11.27.01",
-            "md5": "1d3eafbf00e6746d56c3b4db200b437a"
+            "md5": "a1ca8f6e088ca42c9e9de4856224e460"
         }
     },
     {
         "PDO": {
             "Version": "2020.11.27.00",
-            "md5": "e419d9842c9aeb7c79d00c0947ee2ab9"
+            "md5": "73f3609f7715130646548b1a75ba63f1"
         }
     },
     {
