@@ -1,11 +1,10 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.11.27.00
+// Version 2020.11.27.01
 
 class PhpLiveForms{
   public function __construct(private PhpLivePdo &$PhpLivePdo){
-    $this->PhpLivePdo = $PhpLivePdo;
   }
 
   private function PhpError(int $Type):bool{
@@ -54,7 +53,7 @@ class PhpLiveForms{
       $site[1] = [[':form', $Form, PdoStr]];
     endif;
     // Get form
-    $form = $PhpLivePdo->Run('
+    $form = $this->PhpLivePdo->Run('
       select *
       from forms_forms
       where ' . $site[0] . '
@@ -84,7 +83,7 @@ class PhpLiveForms{
     endif;
     print '>';
     // Get fields
-    $fields = $PhpLivePdo->Run("
+    $fields = $this->PhpLivePdo->Run("
       select *
       from forms_fields
       where form_id=?

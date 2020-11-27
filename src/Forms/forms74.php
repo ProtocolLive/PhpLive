@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.11.27.00
+// Version 2020.11.27.01
 
 class PhpLiveForms{
   private PhpLivePdo $PhpLivePdo;
@@ -48,7 +48,7 @@ class PhpLiveForms{
       $site[1] = [[':form', $Options['Form'], PdoStr]];
     endif;
     // Get form
-    $form = $PhpLivePdo->Run('
+    $form = $this->PhpLivePdo->Run('
       select *
       from forms_forms
       where ' . $site[0] . '
@@ -78,7 +78,7 @@ class PhpLiveForms{
     endif;
     print '>';
     // Get fields
-    $fields = $PhpLivePdo->Run("
+    $fields = $this->PhpLivePdo->Run("
       select *
       from forms_fields
       where form_id=?
