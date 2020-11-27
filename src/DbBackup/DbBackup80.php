@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.11.27.01
+// Version 2020.11.27.02
 
 class PhpLiveDbBackup{
   private array $Delete = [];
@@ -60,7 +60,7 @@ class PhpLiveDbBackup{
           $line .= '(' . $col['NUMERIC_PRECISION'] . ',' . $col['NUMERIC_SCALE'] . ')';
         endif;
         //Unsigned for decimal is deprecated
-        if(strpos($col['COLUMN_TYPE'], 'unsigned') !== false and $col['DATA_TYPE'] != 'decimal'):
+        if(str_contains($col['COLUMN_TYPE'], 'unsigned') and $col['DATA_TYPE'] != 'decimal'):
           $line .= ' unsigned';
         endif;
         if($col['IS_NULLABLE'] == 'NO'):

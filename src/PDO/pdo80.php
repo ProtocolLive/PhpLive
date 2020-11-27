@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.11.27.00
+// Version 2020.11.27.01
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -125,7 +125,7 @@ class PhpLivePdo{
           else:
             if($Param[2] === PdoInt):
               $Param[1] = str_replace(',', '.', $Param[1]);
-              if(strpos($Param[1], '.') !== false):
+              if(str_contains($Param[1], '.')):
                 $Param[2] = PdoStr;
               endif;
             endif;
@@ -135,7 +135,7 @@ class PhpLivePdo{
       endif;
       //Safe execution
       if($Options['Safe'] === true):
-        if($command === 'truncate' or (($command === 'update' or $command === 'delete') and strpos($Query, 'where') === false)):
+        if($command === 'truncate' or (($command === 'update' or $command === 'delete') and str_contains($Query, 'where') === false)):
           $this->ErrorSet(2, 'Query not allowed in safe mode');
         endif;
       endif;
