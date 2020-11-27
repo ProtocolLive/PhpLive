@@ -24,10 +24,12 @@ a:visited{
 }
 .menu1{
   border: none;
+  width: 200px;
   height: 150px;
 }
 .menu2{
   border: none;
+  width: 200px;
   height: 200px;
 }
 .maintitle{

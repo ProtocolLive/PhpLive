@@ -6,9 +6,9 @@
 </head>
 
 <body>
-  <table style="width:88%;margin-left: auto;margin-right: auto;">
+  <table style="width:95%;margin-left: auto;margin-right: auto;" >
     <tr>
-      <td style="background-color: #F2F2F2; padding: 20px;">
+      <td style="width:100%; background-color: #F2F2F2; padding: 20px;">
         <div class="maintitle">
           <strong>PhpLivePdo::__construct</strong>
         </div>
@@ -16,7 +16,42 @@
         <p>&nbsp;</p>
 
         <div class="title">
-          <strong>Sintaxe</strong>
+          <strong>Sintaxe (PHP &gt; 8)</strong>
+        </div>
+        <br>
+        <div class="code">
+          <span class="const">public</span> <span class="func">PhpLivePdo::__construct</span> (
+          <span class="type">string</span> <span class="var">$Ip</span>,
+          <span class="type">string</span> <span class="var">$User</span>,
+          <span class="type">string</span> <span class="var">$Pwd</span>,
+          <span class="type">string</span> <span class="var">$Db</span>,
+          [ <span class="type">string</span> <span class="var">$Drive</span> = <span class="string">'mysql'</span>,
+          [ <span class="type">string</span> <span class="var">$Prefix</span> = '',
+          [ <span class="type">string</span> <span class="var">$Charset</span> = <span class="string">'utf8'</span>,
+          [ <span class="type">int</span> <span class="var">$TimeOut</span> = <span class="const">5</span>
+          ] ] ] ] );
+        </div>
+        <p>&nbsp;</p>
+
+        <div class="title">
+          <strong>Parameters</strong>
+        </div>
+        <p><span class="var">$Ip</span> - Database address, ip or dns;</p>
+        <p><span class="var">$User</span> - User to authenticate;</p>
+        <p><span class="var">$Pwd</span> - Password to authenticate;</p>
+        <p><span class="var">$Db</span> - Default database schema;</p>
+        <p><span class="var">$Drive</span> - The database used;</p>
+        <p>
+          <span class="var">$Prefix</span> - Text to be concated with "_" and table name;
+        </p>
+        <p><span class="var">$Charset</span> - The character set;</p>
+        <p>
+          <span class="var">$TimeOut</span> - Maximun seconds to run a query;
+        </p>
+        <p>&nbsp;</p>
+
+        <div class="title">
+          <strong>Sintaxe (PHP &lt; 8)</strong>
         </div>
         <br>
         <div class="code">
@@ -61,7 +96,7 @@
         <div class="title">
           <strong>Dependencies</strong>
         </div>
-        <p>- PHP 7.3;</p>
+        <p>- PHP >= 7.3;</p>
         <p>- One of the PDO PHP extensions;</p>
         <p>&nbsp;</p>
 
@@ -80,7 +115,7 @@
         <p>&nbsp;</p>
 
       </td>
-      <td style="width:300px; color: #ccc; font-size: 18px; vertical-align: top;">
+      <td style="color: #ccc; font-size: 18px; vertical-align: top;">
         <iframe src="menu-funcs.htm" class="menu1"></iframe>
         <iframe src="menu-pdo.htm" class="menu2"></iframe>
       </td>
