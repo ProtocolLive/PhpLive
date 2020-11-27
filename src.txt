@@ -7,14 +7,14 @@
     },
     {
         "DbBackup": {
-            "Version": "2020.07.23.00",
-            "md5": "ec9116b0875e49e8761e9da02500a2f5"
+            "Version": "2020.11.27.01",
+            "md5": "ed8d9c6c70e9330372e1e9f3525a0f43"
         }
     },
     {
         "Forms": {
-            "Version": "2020.08.11.01",
-            "md5": "234a56dc788cf6d9ec83cd537ec85225"
+            "Version": "2020.11.27.01",
+            "md5": "1d3eafbf00e6746d56c3b4db200b437a"
         }
     },
     {
