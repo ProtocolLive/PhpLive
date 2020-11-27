@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.11.27.00
+// Version 2020.11.27.01
 
 class PhpLiveDbBackup{
   private array $Delete = [];
@@ -11,14 +11,17 @@ class PhpLiveDbBackup{
   public function __construct(private PhpLivePdo &$PhpLivePdo){
   }
 
-  public function Tables(array $Options = []):string{
+  public function Tables(
+    string $Folder = '/sql/',
+    int $Progress = 1,
+    array $Translate = [
+      'Tables' => 'tables',
+      'FK' => 'foreign keys'
+    ]
+  ):string{
     if($this->PhpLivePdo === null):
       return false;
     endif;
-    $Options['Folder'] ??= '/sql/';
-    $Options['Progress'] ??= 1;
-    $Options['Translate']['Tables'] ??= 'tables';
-    $Options['Translate']['FK'] ??= 'foreign keys';
 
     $this->ZipOpen($Options['Folder'], 0);
     $tables = $this->PhpLivePdo->Run("show tables like '##%'");
@@ -135,14 +138,17 @@ class PhpLiveDbBackup{
     return substr($_SERVER['REQUEST_URI'], 0, strrpos($_SERVER['REQUEST_URI'], '/')) . $Options['Folder'] . $this->Time . '.zip';
   }
 
-  public function Data(array $Options = []):string{
+  public function Data(
+    string $Folder = '/sql/',
+    int $Progress = 2,
+    array $Translate = [
+      'Tables' => 'tables',
+      'Rows' => 'rows'
+    ]
+  ):string{
     if($this->PhpLivePdo === null):
       return false;
     endif;
-    $Options['Folder'] ??= '/sql/';
-    $Options['Progress'] ??= 2;
-    $Options['Translate']['Tables'] ??= 'tables';
-    $Options['Translate']['Rows'] ??= 'rows';
 
     $last = null;
     $this->ZipOpen($Options['Folder'], 1);
