@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.08.18.00
+// Version 2020.11.27.00
 
 class PhpLivePerms{
   private PhpLivePdo $PhpLivePdo;
