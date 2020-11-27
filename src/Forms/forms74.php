@@ -1,12 +1,12 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.08.11.01
+// Version 2020.11.27.00
 
 class PhpLiveForms{
-  private ?PhpLivePdo $PhpLivePdo = null;
+  private PhpLivePdo $PhpLivePdo;
 
-  public function __construct(PhpLivePdo &$PhpLivePdo = null){
+  public function __construct(PhpLivePdo &$PhpLivePdo){
     $this->PhpLivePdo = $PhpLivePdo;
   }
 
@@ -25,13 +25,7 @@ class PhpLiveForms{
 
   public function Form(array $Options):bool{
     if($this->PhpLivePdo === null):
-      if(isset($Options['PhpLivePdo']) === false):
-        return false;
-      else:
-        $PhpLivePdo = &$Options['PhpLivePdo'];
-      endif;
-    else:
-      $PhpLivePdo = $this->PhpLivePdo;
+      return false;
     endif;
     $Options['PdoDebug'] ??= false;
     $Options['AjaxAppend'] ??= false;
