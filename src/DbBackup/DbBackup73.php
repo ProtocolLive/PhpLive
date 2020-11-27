@@ -1,27 +1,21 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.07.17.00
+// Version 2020.11.27.00
 
 class PhpLiveDbBackup{
-  private $PhpLivePdo = null;
+  private $PhpLivePdo;
   private $Delete = [];
   private $Time;
   private $Zip;
 
-  public function __construct(PhpLivePdo &$PhpLivePdo = null){
+  public function __construct(PhpLivePdo &$PhpLivePdo){
     $this->PhpLivePdo = $PhpLivePdo;
   }
 
   public function Tables(array $Options = []):string{
     if($this->PhpLivePdo === null):
-      if(isset($Options['PhpLivePdo']) == false):
-        return false;
-      else:
-        $PhpLivePdo = &$Options['PhpLivePdo'];
-      endif;
-    else:
-      $PhpLivePdo = $this->PhpLivePdo;
+      return false;
     endif;
     $Options['Folder'] = $Options['Folder']?? '/sql/';
     $Options['Progress'] = $Options['Progress']?? 1;
@@ -29,7 +23,7 @@ class PhpLiveDbBackup{
     $Options['Translate']['FK'] = $Options['Translate']['FK']?? 'foreign keys';
 
     $this->ZipOpen($Options['Folder'], 0);
-    $tables = $PhpLivePdo->Run("show tables like '##%'");
+    $tables = $this->PhpLivePdo->Run("show tables like '##%'");
     if($Options['Progress'] != 0):
       $TablesCount = count($tables);
       $TablesLeft = 0;
@@ -38,7 +32,7 @@ class PhpLiveDbBackup{
 
     $file = fopen($Options['Folder'] . 'tables.sql', 'w');
     foreach($tables as $table):
-      $cols = $PhpLivePdo->Run('select COLUMN_NAME,
+      $cols = $this->PhpLivePdo->Run('select COLUMN_NAME,
           DATA_TYPE,
           CHARACTER_MAXIMUM_LENGTH,
           NUMERIC_PRECISION,
@@ -56,7 +50,7 @@ class PhpLiveDbBackup{
       ]);
       $line = 'create table ' . $table[0] . "(\n";
       foreach($cols as $col):
-        $line .= '  ' . $PhpLivePdo->Reserved($col['COLUMN_NAME']) . ' ' . $col['DATA_TYPE'];
+        $line .= '  ' . $this->PhpLivePdo->Reserved($col['COLUMN_NAME']) . ' ' . $col['DATA_TYPE'];
         //Field size for integers is deprecated
         if($col['DATA_TYPE'] == 'varchar'):
           $line .= '(' . $col['CHARACTER_MAXIMUM_LENGTH'] . ')';
@@ -90,7 +84,7 @@ class PhpLiveDbBackup{
         $line .= ",\n";
       endforeach;
       fwrite($file, substr($line, 0, -2) . "\n) ");
-      $table = $PhpLivePdo->Run('
+      $table = $this->PhpLivePdo->Run('
         select
           ENGINE,
           TABLE_COLLATION
@@ -106,7 +100,7 @@ class PhpLiveDbBackup{
       endif;
     endforeach;
     //foreign keys
-    $cols = $PhpLivePdo->Run('
+    $cols = $this->PhpLivePdo->Run('
       select
         rc.table_name,
         constraint_name,
@@ -145,13 +139,7 @@ class PhpLiveDbBackup{
 
   public function Data(array $Options = []):string{
     if($this->PhpLivePdo === null):
-      if(isset($Options['PhpLivePdo']) == false):
-        return false;
-      else:
-        $PhpLivePdo = &$Options['PhpLivePdo'];
-      endif;
-    else:
-      $PhpLivePdo = $this->PhpLivePdo;
+      return false;
     endif;
     $Options['Folder'] = $Options['Folder']?? '/sql/';
     $Options['Progress'] = $Options['Progress']?? 2;
@@ -160,15 +148,15 @@ class PhpLiveDbBackup{
 
     $last = null;
     $this->ZipOpen($Options['Folder'], 1);
-    $tables = $PhpLivePdo->Run("show tables like '##%'");
+    $tables = $this->PhpLivePdo->Run("show tables like '##%'");
     if($Options['Progress'] != 0):
       $TablesCount = count($tables);
       $TablesLeft = 0;
       printf('%d %s<br><br>0%%<br>', $TablesCount, $Options['Translate']['Tables']);
     endif;
     foreach($tables as $table):
-      $PhpLivePdo->Run('lock table ' . $table[0] . ' write');
-      $rows = $PhpLivePdo->Run('select * from ' . $table[0]);
+      $this->PhpLivePdo->Run('lock table ' . $table[0] . ' write');
+      $rows = $this->PhpLivePdo->Run('select * from ' . $table[0]);
       $RowsCount = count($rows);
       $RowsLeft = 0;
       if($Options['Progress'] == 2):
@@ -182,7 +170,7 @@ class PhpLiveDbBackup{
           $values = '';
           foreach($row as $col => $value):
             if(is_numeric($col) === false): // avoid duplicated rows returned by PDO
-              $cols .= $PhpLivePdo->Reserved($col) . ',';
+              $cols .= $this->PhpLivePdo->Reserved($col) . ',';
               if($value == ''):
                 $values .= 'null,';
               elseif(is_numeric($value)):
@@ -203,7 +191,7 @@ class PhpLiveDbBackup{
             endif;
           endif;
         endforeach;
-        $PhpLivePdo->Run('unlock tables');
+        $this->PhpLivePdo->Run('unlock tables');
         fclose($file);
         $this->Zip->addFile($Options['Folder'] . $table[0] . '.sql', $table[0] . '.sql');
       endif;
