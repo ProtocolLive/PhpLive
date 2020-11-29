@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.11.27.01
+// Version 2020.11.29.00
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -42,6 +42,7 @@ class PhpLivePdo{
       $Pwd
     );
     $this->Conn->setAttribute(PDO::ATTR_TIMEOUT, $TimeOut);
+    $this->Conn->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
     //Enabling profiling to get duration of querys
     $result = $this->Conn->prepare('set profiling_history_size=1;set profiling=1;');
     $result->execute();
@@ -59,9 +60,9 @@ class PhpLivePdo{
    * @param int Target ($Options)(Optional) User efected
    * @param bool Debug ($Options)(Optional) Dump the query for debug
    * @param bool Safe ($Options)(Optional) Only runs a safe query
-   * @return array|int
+   * @return array|int|bool
    */
-  public function Run(string $Query, array $Params = [], array $Options = []):array|int{
+  public function Run(string $Query, array $Params = [], array $Options = []):array|int|bool{
     if($this->Conn === null):
       return false;
     endif;
@@ -343,9 +344,7 @@ class PhpLivePdo{
     endif;
     file_put_contents($folder . date('Y-m-d_H-i-s') . '.txt', json_encode(debug_backtrace(), JSON_PRETTY_PRINT));
     if(ini_get('display_errors')):
-      if(ini_get('html_errors')):
-        print '<pre style="text-align:left">';
-      endif;
+      print '<pre style="text-align:left">';
       debug_print_backtrace();
       die();
     endif;

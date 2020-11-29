@@ -2,8 +2,8 @@
   "User": "ProtocolLive",
   "Repository": "PhpLive",
   "Library": "PDO",
-  "Version": "2020.11.27.00",
-  "md5": "73f3609f7715130646548b1a75ba63f1",
+  "Version": "2020.11.29.00",
+  "md5": "80ccc6f8a894df5aa51af6787347c8ff",
   "EntryPoint": "pdo.php",
   "Files": {
     "pdo.php": {
@@ -11,16 +11,16 @@
       "md5": "cb99ff413e0c757f650c72c009a8131a"
     },
     "pdo73.php": {
-      "Version": "2020.11.27.00",
-      "md5": "de35569bdc18a9710da0b208f9233c90"
+      "Version": "2020.11.29.00",
+      "md5": "e20f97aa81d622d32d95fb77cc98eb33"
     },
     "pdo74.php": {
-      "Version": "2020.11.27.00",
-      "md5": "3c204a9c6e308c7a8b41aadcfc5ab702"
+      "Version": "2020.11.29.00",
+      "md5": "020d076eb9a0ccc62860363e0fa8c62f"
     },
     "pdo80.php": {
-      "Version": "2020.11.27.00",
-      "md5": "888a204ff451f5f5af219fdd8c28d49b"
+      "Version": "2020.11.29.00",
+      "md5": "ad514f1135cde5b64799621acc8512b6"
     }
   }
 }
