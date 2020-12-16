@@ -2,37 +2,37 @@
     {
         "CPF": {
             "Version": "2020.05.11.00",
-            "md5": "e7bbcd783898599221fe3829a1702110"
+            "sha": "0374a33e26f033bd8ad0fc1cef777255631356d7"
         }
     },
     {
         "DbBackup": {
             "Version": "2020.11.29.00",
-            "md5": "a20171fd75df274928ed34762f3137c8"
+            "sha": "6bfb5596b112f5d0c390b9eac6955d81f57cf624"
         }
     },
     {
         "Forms": {
             "Version": "2020.11.29.00",
-            "md5": "e77437d9aafd966f732545c636b385fe"
+            "sha": "88778c1cfba4b8a54c895e1bc15378db3a26483e"
         }
     },
     {
         "PDO": {
-            "Version": "2020.11.29.01",
-            "md5": "9c0622fd44f6df722d3fb560c43b9840"
+            "Version": "2020.12.16.00",
+            "sha": "16996f0d531615bb7981238a30761df6b96dcaf9"
         }
     },
     {
         "Perms": {
             "Version": "2020.11.29.00",
-            "md5": "ba04c24029d773cea4ced7915b5ef231"
+            "sha": "d4b68bf48866906f490f3b8a478eca6b6ed4114e"
         }
     },
     {
         "PhpUpdate": {
             "Version": "2020.06.25.00",
-            "md5": "d44deb2e92d7c83cd46c9f72ba641970"
+            "sha": "d48024606d70230a2a6e152e333a48cf3f8412fd"
         }
     }
 ]
