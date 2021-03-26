@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2021.03.25.00
+// Version 2021.03.26.00
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -349,6 +349,11 @@ class PhpLivePdo{
   }
 
   private function SqlLog(array $Options):int{
+    if(isset($_SERVER['HTTP_USER_AGENT'])):
+      $Agent = $_SERVER['HTTP_USER_AGENT'];
+    else:
+      $Agent = '';
+    endif;
     return $this->Insert([
       'Table' => 'sys_logs',
       'Fields' => [
@@ -358,7 +363,7 @@ class PhpLivePdo{
         ['log', $Options['Log'], PdoInt],
         ['ip', $_SERVER['REMOTE_ADDR'], PdoStr],
         ['ipreverse', gethostbyaddr($_SERVER['REMOTE_ADDR']), PdoStr],
-        ['agent', $_SERVER['HTTP_USER_AGENT'], PdoStr],
+        ['agent', $Agent, $Agent === ''? PdoNull: PdoStr],
         ['query', $Options['Dump'], PdoStr],
         ['target', $Options['Target'], $Options['Target'] === null? PdoNull: PdoInt]
       ]

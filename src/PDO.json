@@ -2,20 +2,20 @@
   "User": "ProtocolLive",
   "Repository": "PhpLive",
   "Library": "PDO",
-  "Version": "2021.03.25.00",
-  "sha": "ddae6898d4f690c5ecf8bf8647e46e0604105e63",
+  "Version": "2021.03.26.00",
+  "sha": "2aeda1f8d3be581860be828040af2cdb65ca0e81",
   "Files": {
     "pdo.php": {
       "Version": "2020.11.29.00",
       "sha": "8d63b8781353b33036cf7ec268ae65e5f4af5c20"
     },
     "pdo74.php": {
-      "Version": "2021.03.25.00",
-      "sha": "5422d807a59eb68c75452f855429d3bb21b417c9"
+      "Version": "2021.03.26.00",
+      "sha": "357b956febc8e8938581d5754be1c766cea47162"
     },
     "pdo80.php": {
-      "Version": "2021.03.25.00",
-      "sha": "9469a4c6d5be1ed8d11edc60dfc9e3435ae7ea9b"
+      "Version": "2021.03.26.00",
+      "sha": "9f883425a50d9cb11f3a490e123bd3ac43191fd8"
     }
   }
 }

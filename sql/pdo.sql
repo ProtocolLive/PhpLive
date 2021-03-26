@@ -7,6 +7,6 @@ create table sys_logs(
   target int unsigned,
   ip varchar(100) not null,
   ipreverse varchar(255) not null,
-  agent varchar(255) not null,
+  agent varchar(255),
   query varchar(1024) not null
 );
