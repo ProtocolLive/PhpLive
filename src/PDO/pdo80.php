@@ -1,7 +1,7 @@
 <?php
 // Protocol Corporation Ltda.
 // https://github.com/ProtocolLive/PhpLive/
-// Version 2020.11.29.00
+// Version 2021.03.25.00
 
 define('PdoStr', PDO::PARAM_STR);
 define('PdoInt', PDO::PARAM_INT);
@@ -72,124 +72,121 @@ class PhpLivePdo{
     $Options['Safe'] ??= true;
     $Options['Debug'] ??= false;
 
-    try{
-      if($Options['Debug'] == true):
-        print '<pre style="text-align:left">';
-          debug_print_backtrace();
-        print '</pre>';
-      endif;
-      $command = explode(' ', trim($Query));
-      $command = strtolower(trim($command[0]));
-      //Search from PdoSql and parse
-      foreach($Params as $id => $param):
-        if($param[2] === PdoSql):
-          if(is_numeric($param[0])):
-            $out = 0;
-            for($i = 1; $i <= $param[0]; $i++):
-              $in = strpos($Query, '?', $out);
-              $out = $in + 1;
-            endfor;
-            $Query = substr_replace($Query, $param[1], $in, 1);
-            unset($Params[$id]);
-            //Reorder tokens
-            $count = count($Params);
-            for($i = 0; $i < $count; $i++):
-              $Params[$i][0] = $i + 1;
-            endfor;
-          else:
-            $in = strpos($Query, $param[0]);
-            $out = strpos($Query, ',', $in);
+    set_error_handler([$this, 'ErrorSet']);
+    if($Options['Debug'] == true):
+      print '<pre style="text-align:left">';
+        debug_print_backtrace();
+      print '</pre>';
+    endif;
+    $command = explode(' ', trim($Query));
+    $command = strtolower(trim($command[0]));
+    //Search from PdoSql and parse
+    foreach($Params as $id => $param):
+      if($param[2] === PdoSql):
+        if(is_numeric($param[0])):
+          $out = 0;
+          for($i = 1; $i <= $param[0]; $i++):
+            $in = strpos($Query, '?', $out);
+            $out = $in + 1;
+          endfor;
+          $Query = substr_replace($Query, $param[1], $in, 1);
+          unset($Params[$id]);
+          //Reorder tokens
+          $count = count($Params);
+          for($i = 0; $i < $count; $i++):
+            $Params[$i][0] = $i + 1;
+          endfor;
+        else:
+          $in = strpos($Query, $param[0]);
+          $out = strpos($Query, ',', $in);
+          if($out === false):
+            $out = strpos($Query, ')', $in);
             if($out === false):
-              $out = strpos($Query, ')', $in);
-              if($out === false):
-                $out = strpos($Query, ' ', $in);
-              endif;
+              $out = strpos($Query, ' ', $in);
             endif;
-            $Query = substr_replace($Query, $param[1], $in, $out - $in);
-            unset($Params[$id]);
           endif;
+          $Query = substr_replace($Query, $param[1], $in, $out - $in);
+          unset($Params[$id]);
+        endif;
+      endif;
+    endforeach;
+    //Table prefix
+    if($this->Prefix !== ''):
+      $Query = str_replace('##', $this->Prefix . '_', $Query);
+    else:
+      $Query = str_replace('##', '', $Query);
+    endif;
+    //Prepare
+    $result = $this->Conn->prepare($Query);
+    //Bind tokens
+    if($Params !== null):
+      foreach($Params as &$Param):
+        if(count($Param) < 3 and count($Param) > 5):
+          $this->ErrorSet(1, 'Incorrect number of parameters when specifying a token');
+        else:
+          if($Param[2] === PdoInt):
+            $Param[1] = str_replace(',', '.', $Param[1]);
+            if(str_contains($Param[1], '.')):
+              $Param[2] = PdoStr;
+            endif;
+          endif;
+          $result->bindValue($Param[0], $Param[1], $Param[2]);
         endif;
       endforeach;
-      //Table prefix
-      if($this->Prefix !== ''):
-        $Query = str_replace('##', $this->Prefix . '_', $Query);
-      else:
-        $Query = str_replace('##', '', $Query);
+    endif;
+    //Safe execution
+    if($Options['Safe'] === true):
+      if($command === 'truncate' or (($command === 'update' or $command === 'delete') and str_contains($Query, 'where') === false)):
+        $this->ErrorSet(2, 'Query not allowed in safe mode');
       endif;
-      //Prepare
-      $result = $this->Conn->prepare($Query);
-      //Bind tokens
-      if($Params !== null):
-        foreach($Params as &$Param):
-          if(count($Param) < 3 and count($Param) > 5):
-            $this->ErrorSet(1, 'Incorrect number of parameters when specifying a token');
-          else:
-            if($Param[2] === PdoInt):
-              $Param[1] = str_replace(',', '.', $Param[1]);
-              if(str_contains($Param[1], '.')):
-                $Param[2] = PdoStr;
-              endif;
-            endif;
-            $result->bindValue($Param[0], $Param[1], $Param[2]);
-          endif;
-        endforeach;
-      endif;
-      //Safe execution
-      if($Options['Safe'] === true):
-        if($command === 'truncate' or (($command === 'update' or $command === 'delete') and str_contains($Query, 'where') === false)):
-          $this->ErrorSet(2, 'Query not allowed in safe mode');
-        endif;
-      endif;
-      //Execute
-      $result->execute();
-      //Error
-      $error = $result->errorInfo();
-      if($error[0] !== '00000'):
-        $this->ErrorSet($error[0], $error[2]);
-      endif;
-      //Debug
-      if($Options['Debug'] == true):
-        print '<pre style="text-align:left">';
-          $result->debugDumpParams();
-        print '</pre>';
-      endif;
-      //Return
-      if($command === 'select' or $command === 'show' or $command === 'call'):
-        $return = $result->fetchAll();
-      elseif($command === 'insert'):
-        $return = $this->Conn->lastInsertId();
-      elseif($command === 'update' or $command === 'delete'):
-        $return = $result->rowCount();
-      else:
-        $return = true;
-      endif;
-      //Duration
-      $profiles = $this->Conn->prepare('show profiles');
-      $profiles->execute();
-      $profiles = $profiles->fetchAll();
-      $this->Duration = $profiles[0]['Duration'];
-      //Log
-      if($Options['Log'] !== null and $Options['User'] !== null):
-        ob_start();
+    endif;
+    //Execute
+    $result->execute();
+    //Error
+    $error = $result->errorInfo();
+    if($error[0] !== '00000'):
+      $this->ErrorSet($error[0], $error[2]);
+    endif;
+    //Debug
+    if($Options['Debug'] == true):
+      print '<pre style="text-align:left">';
         $result->debugDumpParams();
-        $dump = ob_get_contents();
-        ob_end_clean();
-        $dump = substr($dump, strpos($dump, 'Sent SQL: ['));
-        $dump = substr($dump, strpos($dump, '] ') + 2);
-        $dump = substr($dump, 0, strpos($dump, 'Params: '));
-        $dump = trim($dump);
-        $this->SqlLog([
-          'User' => $Options['User'],
-          'Dump' => $dump,
-          'Log' => $Options['Log'],
-          'Target' => $Options['Target']
-        ]);
-      endif;
-      return $return;
-    }catch(Exception $e){
-      $this->ErrorSet($e->getCode, $e->getMessage);
-      return false;
-    }
+      print '</pre>';
+    endif;
+    //Return
+    if($command === 'select' or $command === 'show' or $command === 'call'):
+      $return = $result->fetchAll();
+    elseif($command === 'insert'):
+      $return = $this->Conn->lastInsertId();
+    elseif($command === 'update' or $command === 'delete'):
+      $return = $result->rowCount();
+    else:
+      $return = true;
+    endif;
+    //Duration
+    $profiles = $this->Conn->prepare('show profiles');
+    $profiles->execute();
+    $profiles = $profiles->fetchAll();
+    $this->Duration = $profiles[0]['Duration'];
+    //Log
+    if($Options['Log'] !== null and $Options['User'] !== null):
+      ob_start();
+      $result->debugDumpParams();
+      $dump = ob_get_contents();
+      ob_end_clean();
+      $dump = substr($dump, strpos($dump, 'Sent SQL: ['));
+      $dump = substr($dump, strpos($dump, '] ') + 2);
+      $dump = substr($dump, 0, strpos($dump, 'Params: '));
+      $dump = trim($dump);
+      $this->SqlLog([
+        'User' => $Options['User'],
+        'Dump' => $dump,
+        'Log' => $Options['Log'],
+        'Target' => $Options['Target']
+      ]);
+    endif;
+    restore_error_handler();
+    return $return;
   }
 
   /**
@@ -303,6 +300,21 @@ class PhpLivePdo{
     return $Field;
   }
 
+  public function ErrorSet(int $errno, string $errstr, ?string $errfile = null, ?int $errline = null, ?array $errcontext = null):bool{
+    $this->Error = [$errno, $errstr];
+    $folder = __DIR__ . '/errors-pdo/';
+    if(is_dir($folder) === false):
+      mkdir($folder, 0755);
+    endif;
+    file_put_contents($folder . date('Y-m-d_H-i-s') . '.txt', json_encode(debug_backtrace(), JSON_PRETTY_PRINT));
+    if(ini_get('display_errors')):
+      print '<pre style="text-align:left">';
+      debug_print_backtrace();
+      die();
+    endif;
+    return true;
+  }
+
   private function BuildUpdate(array $Options):array{
     $return = ['Query' => '', 'Tokens' => []];
     $return['Query'] = 'update ' . $Options['Table'] . ' set ';
@@ -334,21 +346,6 @@ class PhpLivePdo{
       $return['Tokens'][] = [':' . $where[0], $where[1], $where[2]];
     endforeach;
     return $return;
-  }
-
-  private function ErrorSet(string $Number, string $Msg):bool{
-    $this->Error = [$Number, $Msg];
-    $folder = __DIR__ . '/errors-pdo/';
-    if(is_dir($folder) === false):
-      mkdir($folder, 0755);
-    endif;
-    file_put_contents($folder . date('Y-m-d_H-i-s') . '.txt', json_encode(debug_backtrace(), JSON_PRETTY_PRINT));
-    if(ini_get('display_errors')):
-      print '<pre style="text-align:left">';
-      debug_print_backtrace();
-      die();
-    endif;
-    return true;
   }
 
   private function SqlLog(array $Options):int{
